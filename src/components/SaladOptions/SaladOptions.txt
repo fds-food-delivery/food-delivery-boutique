@@ -1,0 +1,73 @@
+import React from "react";
+import "./SaladOptions.css";
+import FoodItem from "../FoodItem/FoodItem";
+
+const SaladOptions = ({
+	saladTypes,
+	sauces,
+	condiments,
+	cartItems,
+	addToCart,
+	removeFromCart,
+}) => {
+	return (
+		<div className="salad-options">
+			<div className="salad-category">
+				<h4>Types de salade</h4>
+				<div className="salad-cards">
+					{saladTypes.map((type) => (
+						<FoodItem
+							key={type._id}
+							id={type._id}
+							name={type.name}
+							description={type.description}
+							price={type.price}
+							image={type.image}
+							cartItems={cartItems}
+							addToCart={addToCart}
+							removeFromCart={removeFromCart}
+						/>
+					))}
+				</div>
+			</div>
+			<div className="salad-category">
+				<h4>Sauces</h4>
+				<div className="salad-cards">
+					{sauces.map((sauce) => (
+						<FoodItem
+							key={sauce._id}
+							id={sauce._id}
+							name={sauce.name}
+							description={sauce.description}
+							price={sauce.price}
+							image={sauce.image}
+							cartItems={cartItems}
+							addToCart={addToCart}
+							removeFromCart={removeFromCart}
+						/>
+					))}
+				</div>
+			</div>
+			<div className="salad-category">
+				<h4>Condiments</h4>
+				<div className="salad-cards">
+					{condiments.map((condiment) => (
+						<FoodItem
+							key={condiment._id}
+							id={condiment._id}
+							name={condiment.name}
+							description={condiment.description}
+							price={condiment.price}
+							image={condiment.image}
+							cartItems={cartItems}
+							addToCart={addToCart}
+							removeFromCart={removeFromCart}
+						/>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default SaladOptions;
