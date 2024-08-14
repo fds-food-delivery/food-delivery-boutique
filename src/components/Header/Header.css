@@ -30,6 +30,8 @@
  .header-contents h2{
     font-weight: 500;
     color : turquoise;
+    /* turquoise en hex */
+    color: #40E0D0;
     font-size: max(3.9vw, 22px);
  }
 

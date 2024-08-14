@@ -9,41 +9,20 @@ import CommandeForm from "../../components/CommandeForm/CommandeForm";
 const Panier = ({ onClose }) => {
 	const {
 		cartItems,
-		food_list,
+		foodList,
 		addToCart,
 		removeFromCart,
 		deleteFromCart,
-		isShowAlertPanier,
 		setIsShowAlertPanier,
-		totalPrice,
+
 	} = useContext(StoreContext);
 
 	const cartContent = Object.keys(cartItems).map((id) => {
-		const item = food_list.find((food) => food._id === id);
-		const ensureImageExtension = (imageName) => {
-			if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
-				return imageName;
-			} else {
-				return `${imageName}.png`;
-			}
-		};
-		const correctedImageName = ensureImageExtension(item.image);
+		const item = foodList.find((food) => food._id === id);
 
 		return (
 			<div key={id} className="panier-item">
-				{/* <img src={item.image} alt={item.name} className="panier-item-image" /> */}
-				<img
-					src={
-						item.image
-							? `https://backend-food-ordering.onrender.com/api/food/image/${correctedImageName}`
-							: "https://placehold.co/300"
-					}
-					alt={item.name}
-					className="food-item-image"
-					onError={(e) => {
-						e.target.src = "https://placehold.co/300";
-					}} // Fallback si l'image échoue à se charger
-				/>
+				<img src={item.image} alt={item.name} className="panier-item-image" />
 				<div className="panier-item-details">
 					<div className="panier-item-name">
 						<p>{item.name}</p>

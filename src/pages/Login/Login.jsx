@@ -1,29 +1,33 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../firebase/firebase";
+import { toast } from "react-toastify";
+
+import { StoreContext } from "./../../context/StoreContext";
 
 const LoginPage = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
+	const {
+		cartItems, addToCart, removeFromCart,
+		loginUser, // Fonction pour connect
+	} = useContext(StoreContext);
 
-	const handleLogin = (e) => {
+	const loginHandler = async (e) => {
 		e.preventDefault();
-		// Logique de connexion ici
-		console.log("Username:", username);
-		console.log("Password:", password);
-	};
-
-	const handleGoogleLogin = async () => {
 		try {
-			await signInWithPopup(auth, provider);
-			navigate("/"); // Redirige vers la page d'accueil après la connexion réussie
+			const response = await loginUser(username, password);
+			console.log("response", response);
+			toast.success("Connexion réussie");
+			navigate("/");
 		} catch (error) {
-			console.error("Erreur lors de la connexion avec Google", error);
+			toast.error("Erreur lors de la connexion");
+			console.error("Erreur lors de la connexion", error);
 		}
 	};
+
+
 
 	return (
 		<div className="login-page">
@@ -31,11 +35,12 @@ const LoginPage = () => {
 				<div className="login-banner">
 					<p>Connectez-vous pour accéder à notre application</p>
 				</div>
-				<form onSubmit={handleLogin} className="login-form">
+				<form onSubmit={loginHandler} className="login-form">
 					<div className="form-group">
-						<label htmlFor="username">Nom d'utilisateur</label>
+						<label htmlFor="username">Téléphone</label>
 						<input
 							type="text"
+							placeholder="Entrez votre numéro de téléphone"
 							id="username"
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
@@ -47,6 +52,7 @@ const LoginPage = () => {
 						<input
 							type="password"
 							id="password"
+							placeholder="Entrez votre mot de passe"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
@@ -56,13 +62,7 @@ const LoginPage = () => {
 						Se connecter
 					</button>
 				</form>
-				<button className="google-login-button" onClick={handleGoogleLogin}>
-					<img
-						src="https://img.icons8.com/color/48/000000/google-logo.png"
-						alt="Google logo"
-					/>
-					Connexion avec Google
-				</button>
+
 			</div>
 		</div>
 	);

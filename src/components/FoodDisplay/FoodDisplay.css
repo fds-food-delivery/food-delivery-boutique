@@ -2,7 +2,7 @@
     margin-top: 30px;
 }
 .food-display h2{
-    font-size: max (2vw,24px);
+    font-size: 24px;
     font-weight: 600;
 }
 
@@ -12,4 +12,27 @@
     margin-top: 30px;
     gap: 30px;
     row-gap: 50px ;
+}
+
+
+
+
+/*foods indisponible*/
+
+.no-food-available {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    justify-content: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    color: #666;
+    font-size: 18px;
+}
+
+.no-food-available p {
+    margin-top: 10px;
 }

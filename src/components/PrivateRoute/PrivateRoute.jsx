@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import  react, { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 const PrivateRoute = ({ children }) => {
-	const { currentUser } = useContext(AuthContext);
+	const { currentUser } = useContext(StoreContext);
 
 	return currentUser ? children : <Navigate to="/login" />;
 };

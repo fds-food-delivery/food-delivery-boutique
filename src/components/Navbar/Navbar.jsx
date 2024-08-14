@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
-import { AuthContext } from "../../context/AuthContext";
+
 import Panier from "../../pages/Panier/Panier";
 import { useNavigate } from "react-router-dom";
 import { AlertPanier } from "../Alert/AlertPanier";
+
+import { toast } from "react-toastify";
 
 const Navbar = () => {
 	// recupere le path url
@@ -19,7 +21,7 @@ const Navbar = () => {
 	const { isShowAlertPanier } = useContext(StoreContext);
 
 	const { cartItems } = useContext(StoreContext);
-	const { currentUser, logout } = useContext(AuthContext);
+	const { currentUser, logout } = useContext(StoreContext);
 	const navigate = useNavigate();
 	const totalItems = cartItems
 		? Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0)
@@ -63,7 +65,9 @@ const Navbar = () => {
 
 	return (
 		<div className={`navbar ${isFixed ? "fixed" : ""}`}>
+
 			<img src={assets.logo} alt="" className="logo" />
+			<p className="navbar-title text-red">Restaurant</p>
 			<ul className="navbar-menu">
 				<li
 					onClick={() => {
@@ -101,6 +105,24 @@ const Navbar = () => {
 					<img src={assets.basket_icon} alt="" />
 					{totalItems > 0 && <div className="dot">{totalItems}</div>}
 				</div>
+				{/*{currentUser ? (*/}
+				{/*	<div className="navbar-user">*/}
+				{/*		<span>{currentUser.displayName || currentUser.email}</span>*/}
+				{/*		<button className="logout-button" onClick={handleLogout}>*/}
+				{/*			Déconnexion*/}
+				{/*		</button>*/}
+				{/*	</div>*/}
+				{/*) : (*/}
+				{/*	<button*/}
+				{/*		className="login-button"*/}
+				{/*		onClick={() => {*/}
+				{/*			setMenu("");*/}
+				{/*			navigate("/login");*/}
+				{/*		}}>*/}
+				{/*		Connexion*/}
+				{/*	</button>*/}
+				{/*)}*/}
+
 				{currentUser ? (
 					<div className="navbar-user">
 						<span>{currentUser.displayName || currentUser.email}</span>
@@ -115,7 +137,7 @@ const Navbar = () => {
 							setMenu("");
 							navigate("/login");
 						}}>
-						Connexion
+						<i className="fas fa-user"></i>
 					</button>
 				)}
 			</div>

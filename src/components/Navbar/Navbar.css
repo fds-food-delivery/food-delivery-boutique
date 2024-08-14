@@ -99,28 +99,30 @@
 
 
 
-.login-button, .logout-button {
-   background-color: #ff6b6b;
-   color: white;
-   border: none;
-   padding: 5px 10px;
-   border-radius: 5px;
-   cursor: pointer;
-   transition: background-color 0.3s;
-}
-
-.login-button:hover, .logout-button:hover {
-   background-color: #ff4b4b;
-}
 
 .navbar-user {
    display: flex;
    align-items: center;
-   gap: 10px;
+   gap: 8px;
 }
 
-.navbar-user span {
-   font-weight: bold;
+.logout-button, .login-button {
+   background: none;
+   border: none;
+   color: white;
+   cursor: pointer;
+   font-size: 1rem;
+   display: flex;
+   align-items: center;
+
+   gap: 5px;
 }
 
+.logout-button:hover, .login-button:hover {
+   color: #ccc;
+}
+
+.login-button i {
+   font-size: 1.5rem;
+}
 

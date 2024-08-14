@@ -5,6 +5,8 @@ import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ key, id, name, price, description, image }) => {
 	const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
+	//https://backend-food-ordering.onrender.com
+	const urlBase = "http://localhost:5000/api/food/image/";
 	const ensureImageExtension = (imageName) => {
 		if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
 			return imageName;
@@ -20,10 +22,11 @@ const FoodItem = ({ key, id, name, price, description, image }) => {
 				{
 					// si image se terminer par .png ou .jpg sinon on ajouter .png a la fin
 				}
+				<span className="food-item-name">{image}</span>
 				<img
 					src={
 						image
-							? `https://backend-food-ordering.onrender.com/api/food/image/${correctedImageName}`
+							? `${urlBase}/api/food/image/${correctedImageName}`
 							: "https://placehold.co/300"
 					}
 					alt={name}
