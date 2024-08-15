@@ -5,7 +5,11 @@ import { StoreContext } from "../../context/StoreContext";
 
 import Panier from "../../pages/Panier/Panier";
 import { useNavigate } from "react-router-dom";
-import { AlertPanier } from "../Alert/AlertPanier";
+
+import { FaUser } from 'react-icons/fa';
+
+
+
 
 import { toast } from "react-toastify";
 
@@ -17,8 +21,9 @@ const Navbar = () => {
 	const [menu, setMenu] = useState(path === "/" ? "Accueil" : pathCapitalize);
 	const [isFixed, setIsFixed] = useState(false);
 	const [isPanierOpen, setIsPanierOpen] = useState(false);
-
-	const { isShowAlertPanier } = useContext(StoreContext);
+	// isAuthentified
+	const [isAuthentified, setIsAuthentified] = useState(true);
+	const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
 	const { cartItems } = useContext(StoreContext);
 	const { currentUser, logout } = useContext(StoreContext);
@@ -43,6 +48,12 @@ const Navbar = () => {
 		setIsPanierOpen(!isPanierOpen);
 	};
 
+
+	const handleProfileClick = () => {
+		history.push('/profil'); // Naviguer vers la page de profil
+		setIsUserMenuOpen(false); // Fermer le menu après avoir cliqué sur le profil
+	};
+
 	useEffect(() => {
 		const handleScroll = () => {
 			if (window.scrollY > 0) {
@@ -65,9 +76,8 @@ const Navbar = () => {
 
 	return (
 		<div className={`navbar ${isFixed ? "fixed" : ""}`}>
-
 			<img src={assets.logo} alt="" className="logo" />
-			<p className="navbar-title text-red">Restaurant</p>
+
 			<ul className="navbar-menu">
 				<li
 					onClick={() => {
@@ -105,44 +115,27 @@ const Navbar = () => {
 					<img src={assets.basket_icon} alt="" />
 					{totalItems > 0 && <div className="dot">{totalItems}</div>}
 				</div>
-				{/*{currentUser ? (*/}
-				{/*	<div className="navbar-user">*/}
-				{/*		<span>{currentUser.displayName || currentUser.email}</span>*/}
-				{/*		<button className="logout-button" onClick={handleLogout}>*/}
-				{/*			Déconnexion*/}
-				{/*		</button>*/}
-				{/*	</div>*/}
-				{/*) : (*/}
-				{/*	<button*/}
-				{/*		className="login-button"*/}
-				{/*		onClick={() => {*/}
-				{/*			setMenu("");*/}
-				{/*			navigate("/login");*/}
-				{/*		}}>*/}
-				{/*		Connexion*/}
-				{/*	</button>*/}
-				{/*)}*/}
 
-				{currentUser ? (
-					<div className="navbar-user">
-						<span>{currentUser.displayName || currentUser.email}</span>
-						<button className="logout-button" onClick={handleLogout}>
-							Déconnexion
-						</button>
+
+				{isAuthentified ? (
+					<div className="relative">
+						<div className="navbar-user flex items-center cursor-pointer" onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}>
+							<FaUser size={50} color="#f86c6b" className="text-red-500 text-5xl hover:text-red-700 hover:shadow-lg transition duration-300 ease-in-out" />
+						</div>
+						{isUserMenuOpen && (
+							<div className="user-menu absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+								<button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={handleProfileClick}>Profil</button>
+								<button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={handleLogout}>Déconnexion</button>
+							</div>
+						)}
 					</div>
 				) : (
-					<button
-						className="login-button"
-						onClick={() => {
-							setMenu("");
-							navigate("/login");
-						}}>
+					<button className="login-button" onClick={() => navigate("/login")}>
 						<i className="fas fa-user"></i>
 					</button>
 				)}
 			</div>
 			{isPanierOpen && <Panier onClose={togglePanier} />}
-			{isShowAlertPanier && <AlertPanier message="Produit ajouté au panier" />}
 		</div>
 	);
 };

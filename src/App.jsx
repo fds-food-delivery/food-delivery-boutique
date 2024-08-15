@@ -10,12 +10,14 @@ import OrderState from "./pages/Livraison/OrderState";
 import Contact from "./pages/Contact/Contact";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar2 from "./components/Navbar/Navbar2";
 
 const App = () => {
 	return (
 		<>
 			<div className="app">
 				<Navbar />
+				<Navbar2/>
 				<ToastContainer closeButton="{false}" position="bottom-right" />
 				<Routes>
 					<Route path="/" element={<Accueil />} />

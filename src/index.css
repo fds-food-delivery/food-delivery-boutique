@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@layer components {
+  /* .btn-primary {
+      @apply py-1.5 px-3 text-center bg-blue-700 rounded-md text-white;
+  } */
+}
 
 
-@import "bootstrap/scss/bootstrap";
+/*@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');*/
+
+
+/*@import "bootstrap/scss/bootstrap";*/
 
 *{
   padding: 0;
