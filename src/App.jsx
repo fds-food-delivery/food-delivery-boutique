@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar2 from "./components/Navbar/Navbar2";
 
 const App = () => {
+
 	return (
 		<>
 			<div className="app">

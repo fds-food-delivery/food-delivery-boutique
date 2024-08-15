@@ -3,13 +3,13 @@ import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 
-const StoreContext = createContext();
+export const StoreContext = createContext();
 
-const StoreContextProvider = (props) => {
+export const StoreProvider = ({ children }) => {
 	const [cartItems, setCartItems] = useState({});
 	const [token, setToken] = useState("");
-	const url = "http://backend-food-ordering.onrender.com";
-
+	// const url = "http://kend-food-ordering.onrender.com";
+	const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
@@ -131,48 +131,16 @@ const StoreContextProvider = (props) => {
 		setLoading(true);
 		try {
 			const response = await axios.get(
-				`${url}/api/food/list`,
-				{
-					headers: {
-						'Authorization': `Bearer ${token}`, // Par exemple, si vous avez un token à inclure
-						'Content-Type': 'application/json', // Assurez-vous que ce type correspond à celui attendu par votre API
-						'Access-Control-Allow-Origin': 'localhost:5173',
-						'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
-						'Access-Control-Allow-Headers' : 'Content-Type, Authorization'
-
-					}
-				}
-			);
-			setFoodList(response.data.data);
-		} catch (error) {
-			console.error("Error fetching food list:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const loadCartData = async (token) => {
-		setLoading(true);
-		try {
-			const response = await axios.post(
-				`${url}/api/cart/get`,
-				{},
-				{
-					headers: {
-						token,
-						'Access-Control-Allow-Origin': 'localhost:5173',
-						'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
-						'Access-Control-Allow-Headers' : 'Content-Type, Authorization'
-					}
-				}
+				`http://localhost:4000/api/v1/foods`, // Correction ici
 			);
 			if (response.data.success) {
-				setCartItems(response.data.cartData);
-			} else {
 				console.log("response.data", response.data);
+				setLoading(false);
+				setFoodList(response.data.foods);
 			}
 		} catch (error) {
-			console.error("Error loading cart data:", error);
+			setLoading(false);
+			console.error("Error fetching food list:", error);
 		} finally {
 			setLoading(false);
 		}
@@ -372,13 +340,34 @@ const StoreContextProvider = (props) => {
 		getOrders,
 		isAuthenticated,
 	};
+
 	return (
-		<StoreContext.Provider value={contextValue}>
-			{props.children}
+		<StoreContext.Provider value={{
+			foodList,
+			saladeTypesListe,
+			saladeSauce,
+			saladeSupplementaire,
+			cartItems,
+			setCartItems,
+			addToCart,
+			removeFromCart,
+			deleteFromCart,
+			url,
+			token,
+			loading,
+			totalPrice,
+			currentUser,
+			setCurrentUser,
+			loginUser,
+			register,
+			logout,
+			update,
+			order,
+			getOrders,
+			isAuthenticated,
+		}}>
+			{children}
 		</StoreContext.Provider>
 	);
+
 };
-
-
-// Exportation nommée
-export { StoreContext, StoreContextProvider };

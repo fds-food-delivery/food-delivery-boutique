@@ -9,7 +9,7 @@ import { FaUtensils } from "react-icons/fa"; // Import an icon from react-icons
 
 const FoodDisplay = ({ category }) => {
   const {
-      foodList, // Liste des plats disponibles
+     foodList, // Liste des plats disponibles
     salade_types_liste, // Liste des types de salade
     salade_sauce, // Liste des sauces pour la salade
     salade_supplementaire, // Liste des suppléments pour la salade

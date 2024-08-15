@@ -3,8 +3,6 @@ import {assets} from "../../assets/assets.js";
 import {FaCartPlus, FaSearch, FaUser} from "react-icons/fa";
 import {FaCartShopping} from "react-icons/fa6";
 import CartIconWithCount from "./CartIconWithCount";
-import "./Navbar.css";
-import PanierWithCount from "./PanierWithCount.jsx";
 
 const Navbar2 = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,7 +18,9 @@ const Navbar2 = () => {
         <div>
             <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
                 <div
-
+                    style={{
+                        border: '1px solid red'
+                    }}
                     className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
                     <a href="#" className="flex items-center">
 
@@ -57,11 +57,15 @@ const Navbar2 = () => {
                         id="mobile-menu-2"
                     >
                         <div
-                            className={`flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0`}
+                        className={`flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0`}
                         >
 
                             <ul
-
+                                style={
+                                    {
+                                        border: '1px solid red'
+                                    }
+                                }
                                 className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0
                             lg:space-y-0 dark:text-gray-400 dark:hover:text-white dark:border-gray-700
                             ">
@@ -71,73 +75,39 @@ const Navbar2 = () => {
                                    block py-2 pl-3 pr-4 text-white bg-purple-700 rounded lg:bg-transparent lg:text-purple-700 lg:p-0 dark:text-white text-3xl lg:text-3xl
                                    "
                                        aria-current="page">
-                                        Accueil
+                                        Home
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#"
                                        className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent text-3xl lg:text-3xl dark:border-gray-700">
-                                        Menu
+                                        Company
                                     </a>
                                 </li>
-
 
                                 <li>
                                     <a href="#"
                                        className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent text-3xl lg:text-3xl dark:border-gray-700">
-                                        Livraison</a>
+                                        Marketplace</a>
                                 </li>
-                                <li >
+                                <li>
                                     <a href="#"
                                        className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent text-3xl lg:text-3xl dark:border-gray-700">
-                                        Contact
-                                    </a>
-                                </li>
-
-                            {/*    affiche<li><a>panier</a></li> si en mode mobile */}
-
-                                <li className={"lg:hidden"}>
-                                    <PanierWithCount itemCount={15}/>
-                                </li>
-
-                                <li className={"lg:hidden"}>
-                                    <a href="#"
-                                       className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent text-3xl lg:text-3xl dark:border-gray-700">
-                                        Se Deconnecter</a>
+                                        Features</a>
                                 </li>
                             </ul>
                         </div>
                         <div
                             style={{
-
-                                margin : '0 auto 0'
-
+                                border: '1px solid red',
+                                marginLeft: 'auto'
                             }
                             }
-                            className=" ml-4 border-teal-900 hidden lg:flex justify-between items-stretch" id="profil-menu">
-                            <div
-                                style={{
-
-                                    marginLeft: '40px',
-                                }}
-                                className="flex items-center">
-                                <CartIconWithCount size={30} itemCount={15}/>
-                            </div>
-                            <div
-                                style={{
-
-                                    marginLeft: '40px',
-                                }}
-                                className="flex items-center m-lg-5">
-                                <FaUser size={30} color="#f86c6b"
-                                        className="text-red-500 text-5xl hover:text-red-700 hover:shadow-lg transition duration-300 ease-in-out"/>
-
-                            </div>
-
-                        {/*    create tailwind droptdown*/}
-
+                            className=" ml-4 border-teal-900 hidden lg:flex items-center" id="profil-menu">
+                            <CartIconWithCount size={30} itemCount={15}/>
+                            <FaUser size={30} color="#f86c6b"
+                                    className="text-red-500 text-5xl hover:text-red-700 hover:shadow-lg transition duration-300 ease-in-out"/>
                         </div>
-
                     </div>
                 </div>
             </nav>
