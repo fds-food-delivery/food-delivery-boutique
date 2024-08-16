@@ -149,7 +149,7 @@ const StoreContextProvider = (props) => {
 				toast.success("Vous êtes connecté");
 			} else {
 				toast.error(response.data.message);
-
+				console.log("response", response.data);
 			}
 		} catch (error) {
 			console.error("Error logging in:", error);
