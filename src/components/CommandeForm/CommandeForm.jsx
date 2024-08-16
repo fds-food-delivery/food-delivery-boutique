@@ -1,15 +1,23 @@
 import React, { useState, useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
-
 import "./CommandeForm.css";
+import { toast } from "react-toastify";
 
 const CommandeForm = () => {
 	const [selectedPayment, setSelectedPayment] = useState(null);
-	const { totalPrice, cartItems } = useContext(StoreContext);
+	const { totalPrice, cartItems, validerCommande } = useContext(StoreContext);
 
 	const handlePaymentChange = (event) => {
 		setSelectedPayment(event.target.value);
 	};
+	const handleValidation = () => {
+		const reponse = validerCommande();
+		if (reponse) {
+			toast.success("Commande validée");
+		} else {
+			toast.error("Erreur lors de la validation de la commande");
+		}
+	}
 
 	return (
 		<div className="commande-form">
@@ -60,8 +68,29 @@ const CommandeForm = () => {
 					Prix total : {totalPrice()} FCFA
 				</label>
 			</div>
-
-			<button className="panier-commande-btn">Valider ma commande</button>
+			{/*desgn tailwind*/}
+			<button
+				className="
+					bg-blue-500
+					hover:bg-blue-700
+					text-white
+					font-bold
+					py-2
+					px-4
+					rounded
+					focus:outline-none
+					focus:shadow-outline
+					transition duration-300
+					ease-in-out
+					disabled:cursor-not-allowed
+					disabled:bg-gray-400
+					disabled:opacity-50
+					disabled:hover:bg-gray-400
+					disabled:hover:cursor-not-allowed
+				"
+				disabled = {!selectedPayment}
+				onClick={handleValidation}
+			>Valider ma commande</button>
 		</div>
 	);
 };

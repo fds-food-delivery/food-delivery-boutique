@@ -18,11 +18,33 @@ const Panier = ({ onClose }) => {
 	} = useContext(StoreContext);
 
 	const cartContent = Object.keys(cartItems).map((id) => {
-		const item = foodList.find((food) => food._id === id);
+		const ensureImageExtension = (imageName) => {
+			if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
+				return imageName;
+			} else {
+				return `${imageName}.png`;
+			}
+		};
 
+
+		const item = foodList.find((food) => food._id === id);
+		const correctedImageName = ensureImageExtension(item.image);
+		const urlBase = "http://localhost:4000";
 		return (
 			<div key={id} className="panier-item">
-				<img src={item.image} alt={item.name} className="panier-item-image" />
+				{/*<img src={item.image} alt={item.name} className="panier-item-image" />*/}
+				<img
+					src={
+						item.image
+							? `${urlBase}/api/v1/foods/image/${correctedImageName}`
+							: "https://placehold.co/300"
+					}
+					alt={item.name}
+					className="panier-item-image"
+					onError={(e) => {
+						e.target.src = "https://placehold.co/300";
+					}} // Fallback si l'image échoue à se charger
+				/>
 				<div className="panier-item-details">
 					<div className="panier-item-name">
 						<p>{item.name}</p>
@@ -66,7 +88,7 @@ const Panier = ({ onClose }) => {
 								marginLeft: "auto",
 							}}
 							onClick={() => deleteFromCart(id)}>
-							<FontAwesomeIcon icon={faTrash} />
+							<FontAwesomeIcon icon={faTrash}/>
 						</span>
 					</div>
 				</div>

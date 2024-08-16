@@ -1,11 +1,17 @@
 import { createContext, useEffect, useState } from "react";
+import { food_list } from "../assets/assets";
 import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
+import {
+	salade_sauce,
+	salade_supplementaire,
+	salade_types_liste,
+} from "../assets/assets";
 
-export const StoreContext = createContext();
+export const StoreContext = createContext(null);
 
-export const StoreProvider = ({ children }) => {
+const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 	const [token, setToken] = useState("");
 	// const url = "http://kend-food-ordering.onrender.com";
@@ -127,24 +133,6 @@ export const StoreProvider = ({ children }) => {
 		setCartItems(newCartItems);
 	};
 
-	const fetchFoodList = async () => {
-		setLoading(true);
-		try {
-			const response = await axios.get(
-				`http://localhost:4000/api/v1/foods`, // Correction ici
-			);
-			if (response.data.success) {
-				console.log("response.data", response.data);
-				setLoading(false);
-				setFoodList(response.data.foods);
-			}
-		} catch (error) {
-			setLoading(false);
-			console.error("Error fetching food list:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	const loginUser = async (username, password) => {
 		try {
@@ -271,12 +259,32 @@ export const StoreProvider = ({ children }) => {
 			setLoading(false);
 		}
 	};
+	const validerCommande = async () => {
+
+		setLoading(true);
+		try {
+			const response = await axios.post(
+				`${url}/api/v1/orders`,
+				{ cartItems },
+				{ headers: { token } }
+			);
+			if (response.data.success) {
+				toast.success("Commande passée avec succès");
+			} else {
+				toast.error(response.data.message);
+			}
+		} catch (error) {
+			console.error("Error ordering:", error);
+		} finally {
+			setLoading(false);
+		}
+	}
 
 	const getOrders = async () => {
 		setLoading(true);
 		try {
-			const response = await axios.post(
-				`${url}/api/cart/orders`,
+			const response = await axios.get(
+				`${url}/api/v1/orders`,
 				{},
 				{ headers: { token } }
 			);
@@ -292,29 +300,10 @@ export const StoreProvider = ({ children }) => {
 		}
 	};
 
+
 	useEffect(() => {
 		console.log(cartItems);
 	}, [cartItems]);
-
-	useEffect(() => {
-		async function loadData() {
-			console.log("call loadData ");
-			await fetchFoodList();
-			if (localStorage.getItem("token")) {
-				setToken(localStorage.getItem("token"));
-				// await loadCartData(localStorage.getItem("token"));
-			}
-		}
-		async function verifyUser() {
-			if (localStorage.getItem("token")) {
-				setToken(localStorage.getItem("token"));
-				await verify();
-			}
-		}
-
-		loadData();
-		//verifyUser();
-	}, []);
 
 	const contextValue = {
 		foodList,
@@ -332,6 +321,7 @@ export const StoreProvider = ({ children }) => {
 		totalPrice,
 		currentUser,
 		setCurrentUser,
+		validerCommande,
 		loginUser,
 		register,
 		logout,
@@ -340,34 +330,35 @@ export const StoreProvider = ({ children }) => {
 		getOrders,
 		isAuthenticated,
 	};
+	const fetchFoodList = async () => {
+		setLoading(true);
+		try {
+			const response = await axios.get(`${url}/api/v1/foods`);
+			console.log("food_list", response.data.data); // Use the fetched data directly
+			setFoodList(response.data.data);
+		} catch (error) {
+			console.error("Error fetching food list:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
+	useEffect(() => {
+		async function loadData() {
+			console.log("call loadData ");
+			await fetchFoodList();
+			if (localStorage.getItem("token")) {
+				setToken(localStorage.getItem("token"));
+				await loadCartData(localStorage.getItem("token"));
+			}
+		}
+		loadData();
+	}, []);
 	return (
-		<StoreContext.Provider value={{
-			foodList,
-			saladeTypesListe,
-			saladeSauce,
-			saladeSupplementaire,
-			cartItems,
-			setCartItems,
-			addToCart,
-			removeFromCart,
-			deleteFromCart,
-			url,
-			token,
-			loading,
-			totalPrice,
-			currentUser,
-			setCurrentUser,
-			loginUser,
-			register,
-			logout,
-			update,
-			order,
-			getOrders,
-			isAuthenticated,
-		}}>
-			{children}
+		<StoreContext.Provider value={contextValue}>
+			{props.children}
 		</StoreContext.Provider>
 	);
-
 };
+
+export default StoreContextProvider;
