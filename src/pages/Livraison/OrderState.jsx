@@ -1,81 +1,81 @@
-import { useContext } from "react";
-import "./OrderState.css";
-import "./circle.css";
+import React, { useContext, useEffect } from "react";
 import { StoreContext } from "../../context/StoreContext";
 
-const OrderState = () => {
-	const { totalPrice } = useContext(StoreContext);
+const Orderstate = () => {
+	const { Orders, getOrders } = useContext(StoreContext);
 
-	// Logic to determine if delivery is available
-	// const showDeliveryMessage = !deliveryAvailable;
-	const showDeliveryMessage = false;
+	useEffect(() => {
+		getOrders(); // Fetch Orders when the component mounts
+	}, [getOrders]);
+
+	if (!Orders || Orders.length === 0) {
+		return (
+			<div className="container mx-auto p-4">
+				<div className="bg-white shadow-md rounded-lg p-6">
+					<div className="text-center text-red-600 font-semibold">
+						<p>La livraison n'est pas disponible pour cette commande.</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
-		<div className="container-order">
-			<div className="header-order">
-				<span>Faites Vous Livrer Rapidement !</span>
-				{!showDeliveryMessage && (
-					<>
-						<span>Montant De La Commande: {totalPrice()} FCFA</span>
-						<span className="close-button">X</span>
-					</>
-				)}
-			</div>
-			{showDeliveryMessage ? (
-				<div className="delivery-message">
-					<p>La livraison n'est pas disponible pour cette commande.</p>
-				</div>
-			) : (
-				<div>
-					<div className="progress-circle">
-						<div className="circle">
-							<div className="inner-circle" />
-							<span className="validation">Validation</span>
-						</div>
-						<div className="circle">
-							<span className="preparation">Préparation</span>
-						</div>
-						<div className="circle">
-							<span className="livraison">Livraison</span>
-						</div>
-					</div>
-					<div
-						style={{
-							marginTop: "20px",
-							textAlign: "center",
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							gap: "20px",
-							justifyContent: "center",
-						}}>
-						<p
-							style={{
-								fontSize: "1.2em",
-								fontWeight: "bold",
-								color: "black",
-								marginBottom: "10px",
-							}}>
-							Etat de la commande :
-							<span style={{ color: "green", fontWeight: "bold" }}>
-								{" "}
-								En cours de préparation
-							</span>
-						</p>
+		<div className="container mx-auto p-4">
+			<div className="bg-white shadow-md rounded-lg p-6">
+				<table className="w-full text-left table-auto">
+					<thead>
+					<tr>
+						<th className="px-4 py-2">Commande #</th>
+						<th className="px-4 py-2">État</th>
+						<th className="px-4 py-2">Progression</th>
+						<th className="px-4 py-2">Montant</th>
+					{/*	action*/}
+						<th className="px-4 py-2">Action</th>
+					</tr>
+					</thead>
+					<tbody>
+					{Orders.map((order, index) => (
+						<tr key={index} className="border-b border-gray-200">
+							<td className="px-4 py-2">{order._id}</td>
+							<td className={`px-4 py-2 text-${order.status === "Delivered" ? "green" : order.status === "Out for delivery" ? "yellow" : "gray"}-600 font-bold`}>
+								{order.status === "Delivered"
+									? "Livré"
+									: order.status === "Out for delivery"
+										? "En cours de livraison"
+										: "En cours de préparation"}
+							</td>
+							<td className="px-4 py-2">
+								<div
+									className={`c100 p${order.status === "Delivered" ? 100 : order.status === "Out for delivery" ? 85 : 50} big green mt-4 mx-auto`}>
+									<span>{order.status === "Delivered" ? 100 : order.status === "Out for delivery" ? 85 : 50}%</span>
+									<div className="slice">
+										<div className="bar"></div>
+										<div className="fill"></div>
+									</div>
+								</div>
+							</td>
+							<td className="px-4 py-2">{order.amount} FCFA</td>
+							<td className="px-4 py-2">
+								<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">
+									Voir
+								</button>
+							</td>
+						</tr>
+					))}
+					</tbody>
+				</table>
 
-						<div class="c100 p85 big green">
-							{" "}
-							<span>85%</span>
-							<div class="slice">
-								<div class="bar"></div>
-								<div class="fill"></div>
-							</div>
-						</div>
-					</div>
+			</div>
+			<div className="bg-white shadow-md rounded-lg p-6 mt-4">
+				<div className="text-center text-gray-600 font-semibold">
+					<p>Vous pouvez suivre l'état de votre commande ici.</p>
+					<p>Vous pouvez également nous contacter pour plus d'informations.</p>
 				</div>
-			)}
+			</div>
 		</div>
+
 	);
 };
 
-export default OrderState;
+export default Orderstate;

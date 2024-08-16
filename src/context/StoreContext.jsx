@@ -19,6 +19,7 @@ const StoreContextProvider = (props) => {
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
+	const [Orders, setOrders] = useState([]);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	const [saladeTypesListe, setSaladeTypesListe] = useState([
@@ -259,6 +260,24 @@ const StoreContextProvider = (props) => {
 			setLoading(false);
 		}
 	};
+
+	const fetchOrders = async () => {
+		setLoading(true);
+		try {
+			const response = await axios.get(`${url}/api/v1/orders`, {
+				headers: { token },
+			});
+			if (response.data.success) {
+				console.log("Orders:", response.data.orders);
+			} else {
+				toast.error(response.data.message);
+			}
+		} catch (error) {
+			console.error("Error fetching orders:", error);
+		} finally {
+			setLoading(false);
+		}
+	}
 	const validerCommande = async () => {
 
 		setLoading(true);
@@ -289,7 +308,8 @@ const StoreContextProvider = (props) => {
 				{ headers: { token } }
 			);
 			if (response.data.success) {
-				console.log("Orders:", response.data.orders);
+				console.log("Orders:", response.data.data);
+				setOrders(response.data.data);
 			} else {
 				toast.error(response.data.message);
 			}
@@ -299,6 +319,7 @@ const StoreContextProvider = (props) => {
 			setLoading(false);
 		}
 	};
+
 
 
 	useEffect(() => {
@@ -324,6 +345,9 @@ const StoreContextProvider = (props) => {
 		validerCommande,
 		loginUser,
 		register,
+		Orders,
+		setOrders,
+		fetchOrders,
 		logout,
 		update,
 		order,
