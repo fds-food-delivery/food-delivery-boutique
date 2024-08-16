@@ -11,7 +11,7 @@ const Orderstate = () => {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			getOrders(); // Fetch Orders every 30 seconds
-		}, 15000); // 30000 milliseconds = 30 seconds
+		}, 1000); // 30000 milliseconds = 30 seconds
 
 		// Cleanup interval on component unmount
 		return () => clearInterval(intervalId);
