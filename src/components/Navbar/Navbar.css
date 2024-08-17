@@ -1,4 +1,4 @@
-.navbar {
+.navbar2 {
    padding: 20px 0px;
    display: flex;
    justify-content: space-between;
@@ -8,7 +8,7 @@
    z-index: 1000; /* Ensure the navbar stays on top */
 }
 
-.navbar.fixed {
+.navbar2.fixed {
    position: fixed;
    top: 0;
    left: 0;
@@ -16,29 +16,29 @@
    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
 }
 
-.navbar .logo {
+.navbar2 .logo {
    width: 150px;
 }
 
-.navbar-menu {
+.navbar2-menu {
    display: flex;
    list-style: none;
    gap: 20px;
    color: palevioletred;
    font-size: 18px;
 }
-.navbar-menu li{
+.navbar2-menu li{
    font-size: 1.7em;
 }
 
 
-.navbar-right {
+.navbar2-right {
    display: flex;
    align-items: center;
    gap: 40px;
 }
 
-.navbar button {
+.navbar2 button {
    background: transparent;
    font-size: 16px;
    color: palevioletred;
@@ -49,35 +49,35 @@
    transition: 0.3s;
 }
 
-.navbar button:hover {
+.navbar2 button:hover {
    background-color: #fff4f2;
 }
 
-.navbar .active {
+.navbar2 .active {
    padding-bottom: 2px;
    border-bottom: 2px solid turquoise;
 }
 
-.navbar li {
+.navbar2 li {
    cursor: pointer;
 }
-.navbar-right img {
+.navbar2-right img {
    width: 3.5em ;
 
 }
 
-.navbar-search-icon {
+.navbar2-search-icon {
    position: relative;
 
 }
 
-.navbar-search-icon img {
+.navbar2-search-icon img {
    /* rem */
    width:3.5em;
    cursor: pointer;
 }
 
-.navbar-search-icon .dot {
+.navbar2-search-icon .dot {
    position: absolute;
    padding: 5px;
    min-width: 10px;
@@ -92,7 +92,7 @@
 }
 
 
-.navbar-search-icon .dot:hover{
+.navbar2-search-icon .dot:hover{
    cursor: pointer;
 }
 
@@ -100,7 +100,7 @@
 
 
 
-.navbar-user {
+.navbar2-user {
    display: flex;
    align-items: center;
    gap: 8px;

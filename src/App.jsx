@@ -10,6 +10,9 @@ import Contact from "./pages/Contact/Contact";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar2 from "./components/Navbar/Navbar2";
+import Navbar3 from "./components/Navbar/Navbar3";
+import "./App.css";
+
 import { ClipLoader } from "react-spinners";
 import { useContext } from "react";
 import { StoreContext } from "./context/StoreContext.jsx";
@@ -25,9 +28,11 @@ const App = () => {
     		<ClipLoader color="#f86c6b" size={150} />
 		</div>
             ) : (
-                <div className="app">
-                    <Navbar />
-                    <Navbar2 />
+                <div className="app1e">
+                    <Navbar3 />
+                    {/*<Navbar />*/}
+                    {/*<Navbar2 />*/}
+
 
                     <ToastContainer closeButton={false} position="bottom-right" />
                     <Routes>
