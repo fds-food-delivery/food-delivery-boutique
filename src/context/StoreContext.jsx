@@ -300,7 +300,6 @@ const StoreContextProvider = (props) => {
 	}
 
 	const getOrders = async () => {
-		setLoading(true);
 		try {
 			const response = await axios.get(
 				`${url}/api/v1/orders`,
