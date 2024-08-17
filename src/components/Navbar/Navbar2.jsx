@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { assets } from "../../assets/assets.js";
 import { FaCartPlus, FaSearch, FaUser, FaSignInAlt } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import CartIconWithCount from "./CartIconWithCount";
 import PanierWithCount from "./PanierWithCount.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 const Navbar2 = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +13,7 @@ const Navbar2 = () => {
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const toggleProfileDropdown = () => setIsProfileDropdownOpen(!isProfileDropdownOpen);
-
+const { cartItems, addToCart,currentUser, removeFromCart, isAuthenticated } = useContext(StoreContext);
     useEffect(() => {
         setIsMenuOpen(false);
     }, []);
@@ -78,7 +79,7 @@ const Navbar2 = () => {
                             <li className="lg:hidden">
                                 <PanierWithCount itemCount={15}/>
                             </li>
-                            {isUserLoggedIn && (
+                            {isAuthenticated && (
                                 <li className="lg:hidden">
                                     <a href="/logout"
                                        className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent text-3xl lg:text-3xl">
@@ -95,13 +96,14 @@ const Navbar2 = () => {
                                 <CartIconWithCount size={30} itemCount={15}/>
                             </div>
                             <div className="flex items-center">
-                                {isUserLoggedIn ? (
+                                {isAuthenticated ? (
                                     <div className="relative">
                                         <button onClick={toggleProfileDropdown} className="flex items-center focus:outline-none">
                                             <FaUser size={30} className="text-red-500 hover:text-red-700 transition duration-300 ease-in-out"/>
                                         </button>
                                         {isProfileDropdownOpen && (
                                             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+                                                <span className="block px-4 py-2 text-gray-800 text-uppercase">{currentUser.username || 'Utilisateur'}</span>
                                                 <a href="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profil</a>
                                                 <a href="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Déconnexion</a>
                                             </div>

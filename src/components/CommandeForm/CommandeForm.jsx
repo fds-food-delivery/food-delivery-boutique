@@ -6,6 +6,10 @@ import { toast } from "react-toastify";
 const CommandeForm = () => {
 	const [selectedPayment, setSelectedPayment] = useState(null);
 	const { totalPrice, cartItems, validerCommande } = useContext(StoreContext);
+	const [nomComplet, setNomComplet] = useState("");
+	const [contact, setContact] = useState("");
+
+	const {currentUser} = useContext(StoreContext);
 
 	const handlePaymentChange = (event) => {
 		setSelectedPayment(event.target.value);
@@ -21,19 +25,25 @@ const CommandeForm = () => {
 
 	return (
 		<div className="commande-form">
-			<div className="form-group-info">
+			<div className="form-group-info
+			disabled:bg-gray-400
+			">
 				<input
 					type="text"
 					id="name"
 					className="nomComplet"
 					placeholder="Nom Premon"
+					value={currentUser?.name}
 				/>
 
 				<input
 					type="tel"
 					id="phone"
-					className="contact"
+					className="contact
+					disabled:bg-gray-400
+					"
 					placeholder="Numero de telephone"
+					value={currentUser?.phone}
 				/>
 			</div>
 

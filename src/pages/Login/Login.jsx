@@ -18,9 +18,8 @@ const LoginPage = () => {
 		e.preventDefault();
 		try {
 			const response = await loginUser(username, password);
-			console.log("response", response);
 			toast.success("Connexion réussie");
-			navigate("/");
+			// navigate("/");
 		} catch (error) {
 			toast.error("Erreur lors de la connexion");
 			console.error("Erreur lors de la connexion", error);

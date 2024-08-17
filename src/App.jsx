@@ -1,4 +1,3 @@
-
 import Navbar from "./components/Navbar/Navbar";
 import { Route, Routes } from "react-router-dom";
 import Accueil from "./pages/Accueil/Accueil";
@@ -11,29 +10,39 @@ import Contact from "./pages/Contact/Contact";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar2 from "./components/Navbar/Navbar2";
+import { ClipLoader } from "react-spinners";
+import { useContext } from "react";
+import { StoreContext } from "./context/StoreContext.jsx";
+
 
 const App = () => {
+    const { loading } = useContext(StoreContext);
 
-	return (
-		<>
-			<div className="app">
-				<Navbar />
-				<Navbar2/>
-				<ToastContainer closeButton="{false}" position="bottom-right" />
-				<Routes>
-					<Route path="/" element={<Accueil />} />
-					<Route path="/panier" element={<Panier />} />
-					<Route path="/commande" element={<Commande />} />
-					<Route path="/login" element={<LoginPage />} />
-					<Route path="/livraison" element={<OrderState />} />
-					{/* Contact */}
-					<Route path="/contact" element={<Contact />} />
-				</Routes>
-			</div>
-			<Footer />
-			{/* {true && <AlertPanier message="Votre plat a été ajouté au panier" />} */}
-		</>
-	);
+    return (
+        <>
+            {loading ? (
+                <div className="loader flex justify-center items-center h-screen">
+    		<ClipLoader color="#f86c6b" size={150} />
+		</div>
+            ) : (
+                <div className="app">
+                    <Navbar />
+                    <Navbar2 />
+
+                    <ToastContainer closeButton={false} position="bottom-right" />
+                    <Routes>
+                        <Route path="/" element={<Accueil />} />
+                        <Route path="/panier" element={<Panier />} />
+                        <Route path="/commande" element={<Commande />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/livraison" element={<OrderState />} />
+                        <Route path="/contact" element={<Contact />} />
+                    </Routes>
+                    <Footer />
+                </div>
+            )}
+        </>
+    );
 };
 
 export default App;

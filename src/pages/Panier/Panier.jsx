@@ -14,6 +14,7 @@ const Panier = ({ onClose }) => {
 		removeFromCart,
 		deleteFromCart,
 		setIsShowAlertPanier,
+		currentUser,
 
 	} = useContext(StoreContext);
 

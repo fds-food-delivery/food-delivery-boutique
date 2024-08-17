@@ -17,7 +17,7 @@ const StoreContextProvider = (props) => {
 	const url = "https://backend-food-ordering.onrender.com";
 	//const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [currentUser, setCurrentUser] = useState(null);
 	const [Orders, setOrders] = useState([]);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -141,16 +141,11 @@ const StoreContextProvider = (props) => {
 				username: username,
 				password : password
 			});
-			if (response.data.success) {
-				console.log("response", response.data);
-				setToken(response.data.token);
-				setCurrentUser(response.data.user);
-				setIsAuthenticated(true);
-				toast.success("Vous êtes connecté");
-			} else {
-				toast.error(response.data.message);
-				console.log("response", response.data);
-			}
+			setCurrentUser(response.data.user);
+			setToken(response.data.token);
+			localStorage.setItem("token", response.data.token);
+			setIsAuthenticated(true);
+			console.log("response de login ", response.data);
 		} catch (error) {
 			console.error("Error logging in:", error);
 		} finally {
@@ -159,7 +154,7 @@ const StoreContextProvider = (props) => {
 	};
 
 	const register = async (email, password) => {
-		setLoading(true);
+
 		try {
 			const response = await axios.post(`${url}/api/user/register`, {
 				email,
@@ -201,7 +196,7 @@ const StoreContextProvider = (props) => {
 	};
 
 	const verify = async () => {
-		setLoading(true);
+
 		const token = localStorage.getItem("token");
 		try {
 			const response = await axios.post(
@@ -209,14 +204,19 @@ const StoreContextProvider = (props) => {
 				{},
 				{ headers: { token } }
 			);
-			if (response.data.success) {
+
+				setCurrentUser(response.data.user);
 				setIsAuthenticated(true);
-			} else {
-				setIsAuthenticated(false);
-			}
+				console.log("response de verify ", response.data);
+			setTimeout(() => {
+				setLoading(false);
+			}, 5000);
+
 		} catch (error) {
 			console.error("Error verifying:", error);
-		} finally {
+			setCurrentUser(null);
+			setIsAuthenticated(false);
+			setToken("");
 			setLoading(false);
 		}
 	};
@@ -279,7 +279,6 @@ const StoreContextProvider = (props) => {
 		}
 	}
 	const validerCommande = async () => {
-
 		setLoading(true);
 		try {
 			const response = await axios.post(
@@ -287,11 +286,12 @@ const StoreContextProvider = (props) => {
 				{ cartItems },
 				{ headers: { token } }
 			);
-			if (response.data.success) {
+			if (response.status === 200) {
+				console.log("Commande validée");
+				setCartItems({});
 				toast.success("Commande passée avec succès");
-			} else {
-				toast.error(response.data.message);
 			}
+
 		} catch (error) {
 			console.error("Error ordering:", error);
 		} finally {
@@ -322,9 +322,6 @@ const StoreContextProvider = (props) => {
 
 
 
-	useEffect(() => {
-		console.log(cartItems);
-	}, [cartItems]);
 
 	const contextValue = {
 		foodList,
@@ -376,7 +373,16 @@ const StoreContextProvider = (props) => {
 				await loadCartData(localStorage.getItem("token"));
 			}
 		}
+		// verify user auth
+		async function verifyUser() {
+
+			console.log("call verifyUser ");
+			const response = await verify();
+		}
+
+		verifyUser();
 		loadData();
+
 	}, []);
 	return (
 		<StoreContext.Provider value={contextValue}>
