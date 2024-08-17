@@ -1,6 +1,13 @@
 .custom-navbar {
-  background-color: #40E0D0; /* Couleur Turquoise */
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background-color: #cccccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-toggler-icon {
+  background-color: #ffffff;
+  color: #000000;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .custom-navbar .navbar-brand {
@@ -15,15 +22,20 @@
   color: #fff;
 }
 
+.navbar-toggler-icon {
+  background-color: #cccccc;
+  color: #000000;
+
+}
 .custom-nav-link {
-  color: #fff !important; /* Liens blancs */
+  color: #000; /* Couleur noire */
   font-weight: bold;
   margin-right: 20px;
   transition: color 0.3s ease-in-out;
 }
 
 .custom-nav-link:hover, .navbar-light .navbar-nav .nav-link.active {
-  color: #FFD700 !important; /* Couleur dorée au survol */
+  color: #FF6347 !important; /* Couleur dorée au survol */
 }
 
 .navbar-sticky {
@@ -51,6 +63,6 @@
 .custom-header {
   background-color: #40E0D0; /* Couleur Turquoise */
   color: #fff;
-  padding: 100px 0;
+
   text-align: center;
 }
