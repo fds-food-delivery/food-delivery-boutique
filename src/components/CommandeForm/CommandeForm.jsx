@@ -31,7 +31,7 @@ const CommandeForm = () => {
 		<div className="commande-form">
 			{/*confirmation de commande */}
 			<Modal show={openModalHandle}>
-				<div className="modal-content container">
+				<div className="modal-content container bg-white p-3">
 					<h2>Confirmation de commande</h2>
 					<p>Voulez-vous vraiment valider votre commande ?</p>
 					<div className="row">
