@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Navbar, Container, Nav, NavDropdown, Badge } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser } from 'react-icons/fa';
+import {FaCartPlus, FaUser} from 'react-icons/fa';
 import { StoreContext } from '../../context/StoreContext';
 import Panier from '../../pages/Panier/Panier';
 import CartIconWithCount from "./CartIconWithCount.jsx";
@@ -9,7 +9,9 @@ import CartIconWithCount from "./CartIconWithCount.jsx";
 function NavigationBar() {
     const [isPanierOpen, setIsPanierOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const { cartItems, currentUser, logout } = useContext(StoreContext);
+    const { cartItems, currentUser, logout,
+        isAuthenticated } = useContext(StoreContext);
+
     const navigate = useNavigate();
 
     const totalItems = cartItems
@@ -27,16 +29,15 @@ function NavigationBar() {
 
     const handleLogout = async () => {
         await logout();
-        navigate("/login");
     };
 
     useEffect(() => {
         const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
-                navbar.classList.add('', 'navbar-sticky', 'shadow-sm');
+                navbar.classList.add('', 'navbar-sticky', 'shadow-sm', 'navbar-transparent');
             } else {
-                navbar.classList.remove('', 'navbar-sticky', 'shadow-sm');
+                navbar.classList.remove('', 'navbar-sticky', 'shadow-sm', 'navbar-transparent');
             }
         };
 
@@ -45,10 +46,10 @@ function NavigationBar() {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [navigate], currentUser, isAuthenticated);
 
     return (
-        <Navbar className="custom-navbar pt-3 navbar-expand-lg fixed-top navbar-light" expand="md">
+        <Navbar className="custom-navbar pt-3 pb-3 navbar-expand-lg fixed-top navbar-light" expand="md">
             <Container>
                 <Navbar.Brand as={Link} to="/">
                     <img
@@ -63,15 +64,40 @@ function NavigationBar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
                         <Nav.Link as={Link} to="/" className="custom-nav-link">Accueil</Nav.Link>
-                        <Nav.Link as={Link} to="/menu" className="custom-nav-link">Menu</Nav.Link>
+                        <Nav.Link as={Link} to="#menu" className="custom-nav-link">Menu</Nav.Link>
                         <Nav.Link as={Link} to="/livraison" className="custom-nav-link">Livraison</Nav.Link>
                         <Nav.Link as={Link} to="/contact" className="custom-nav-link">Contact</Nav.Link>
-                        <Nav.Link as={Link} to="/cart" className="custom-nav-link" onClick={togglePanier}>
-                            <div className="flex items-center">
-                                <CartIconWithCount size={28} itemCount={totalItems}/>
+                        {/*<Nav.Link as={Link} to="/cart" className="custom-nav-link custom-nav-link-cart" onClick={togglePanier}>*/}
+                        {/*    <div className="flex items-center">*/}
+                        {/*    /!*    <CartIconWithCount size={28} itemCount={totalItems}/>*!/*/}
+                        {/*    <Badge pill bg="danger">*/}
+                        {/*    <FaCartPlus size={20} />*/}
+                        {/*    {totalItems}*/}
+                        {/*    </Badge>*/}
+                        {/*    </div>*/}
+                        {/*</Nav.Link>*/}
+
+
+                        <Nav.Link
+                            as={Link}
+                            to="#menu-item"
+                            className="custom-nav-link-cart custom-nav-link "
+                            onClick={togglePanier} >
+                            <div className="custom-nav-link-cart">
+                                {/* Icône du panier avec le nombre d'articles */}
+                                <div>
+                                <FaCartPlus size={30} className="text-dark" />
+                                </div>
+                                <div>
+                                <Badge pill bg="success" className="ml-2">
+
+                                    {(totalItems > 0) && totalItems}
+                                </Badge>
+                                </div>
                             </div>
-                            {/*Panier <Badge pill bg="danger">{totalItems}</Badge>*/}
+
                         </Nav.Link>
+
                         {currentUser ? (
                             <NavDropdown title={<FaUser size={28}  />} id="basic-nav-dropdown" className="custom-nav-link ">
                                 {/*show username*/}
@@ -84,7 +110,8 @@ function NavigationBar() {
                                 <NavDropdown.Item onClick={handleLogout}>Déconnexion</NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <Nav.Link as={Link} to="/login" className="custom-nav-link">Login</Nav.Link>
+                            <Nav.Link as={Link} to="/login" className="custom-nav-link custom-nav-link-btn">Login</Nav.Link>
+
                         )}
                     </Nav>
                 </Navbar.Collapse>

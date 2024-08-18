@@ -4,7 +4,7 @@ import { menu_list } from "../../assets/assets";
 
 const ExploreMenu = ({ category, setCategory }) => {
 	return (
-		<div className="explore-menu" id="explore-menu">
+		<div className="explore-menu row" id="explore-menu">
 			{/* <h1>Decouvrir nos menus</h1> */}
 			{/* <p className="explore-menu-text">
 				Choisissez parmi un menu varié comprenant une gamme détectable de plats
@@ -13,6 +13,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 				{menu_list.map((item, index) => {
 					return (
 						<div
+							id="menu-item"
 							onClick={() =>
 								setCategory((prev) =>
 									prev === item.menu_name ? "All" : item.menu_name

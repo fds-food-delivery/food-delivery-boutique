@@ -19,7 +19,7 @@ const FoodDisplay = ({ category }) => {
 
     if (category === "Salade") {
         return (
-            <div className="food-display" id="food-display">
+            <div className="food-display row" id="food-display">
                 <h2>Composez votre salade</h2>
                 <SaladOptions
                     saladTypes={salade_types_liste}

@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import {useContext, useState} from "react";
 import "./Accueil.css";
 import Header from "../../components/Header/Header";
 import ExploreMenu from "../../components/ExploreMenu/ExploreMenu";
 import FoodDisplay from "../../components/FoodDisplay/FoodDisplay";
+import {StoreContext} from "../../context/StoreContext.jsx";
+// ClipLoader
+import { ClipLoader } from "react-spinners";
 
 const Accueil = () => {
 	const [category, setCategory] = useState("All");
+	const {loading, setLoading} = useContext(StoreContext);
 	return (
-		<div>
+		<div className="container custom-container">
 			<Header />
-			<ExploreMenu category={category} setCategory={setCategory} />
-			<FoodDisplay category={category} />
+			{loading ? (
+				<div className="loader">
+					<ClipLoader color="#f86c6b" loading={loading} size={150} />
+				</div>
+			) : (
+				<>
+					<ExploreMenu category={category} setCategory={setCategory} />
+						<FoodDisplay category={category} />
+					</>
+				)}
 		</div>
 	);
 };

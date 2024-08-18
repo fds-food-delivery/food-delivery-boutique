@@ -3,6 +3,8 @@ import { food_list } from "../assets/assets";
 import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 import {
 	salade_sauce,
 	salade_supplementaire,
@@ -14,13 +16,19 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 	const [token, setToken] = useState("");
-	const url = "https://backend-food-ordering.onrender.com";
-	//const url = "http://localhost:4000";
+	// const url = "https://backend-food-ordering.onrender.com";
+	const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [currentUser, setCurrentUser] = useState(null);
 	const [Orders, setOrders] = useState([]);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalChildren, setModalChildren] = useState(null);
+
+
+	// navigate
+	const navigate = useNavigate();
 
 	const [saladeTypesListe, setSaladeTypesListe] = useState([
 		{
@@ -48,6 +56,11 @@ const StoreContextProvider = (props) => {
 			category: "Salade",
 		},
 	]);
+
+	const openModalHandle = (children) => {
+		setIsModalOpen(true);
+		setModalChildren(children);
+	}
 
 	const [saladeSauce, setSaladeSauce] = useState([
 		{
@@ -141,11 +154,17 @@ const StoreContextProvider = (props) => {
 				username: username,
 				password : password
 			});
-			setCurrentUser(response.data.user);
-			setToken(response.data.token);
-			localStorage.setItem("token", response.data.token);
-			setIsAuthenticated(true);
-			console.log("response de login ", response.data);
+			if (response.data.success) {
+				setCurrentUser(response.data.user);
+				setToken(response.data.token);
+				localStorage.setItem("token", response.data.token);
+				setIsAuthenticated(true);
+				// link to accueil
+				navigate("/");
+				toast.success("Vous êtes connecté");
+			} else {
+				toast.error(response.data.message);
+			}
 		} catch (error) {
 			console.error("Error logging in:", error);
 		} finally {
@@ -176,7 +195,7 @@ const StoreContextProvider = (props) => {
 		setLoading(true);
 		try {
 			const response = await axios.post(
-				`${url}/api/user/logout`,
+				`${url}/api/v1/auth/logout`,
 				{},
 				{ headers: { token } }
 			);
@@ -184,7 +203,9 @@ const StoreContextProvider = (props) => {
 				localStorage.removeItem("token");
 				setToken("");
 				setIsAuthenticated(false);
+				setCurrentUser(null);
 				toast.success("Vous êtes déconnecté");
+				navigate("/");
 			} else {
 				toast.error(response.data.message);
 			}
@@ -237,7 +258,9 @@ const StoreContextProvider = (props) => {
 		} catch (error) {
 			console.error("Error updating:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 5000);
 		}
 	};
 
@@ -257,7 +280,9 @@ const StoreContextProvider = (props) => {
 		} catch (error) {
 			console.error("Error ordering:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 5000);
 		}
 	};
 
@@ -287,7 +312,6 @@ const StoreContextProvider = (props) => {
 				{ headers: { token } }
 			);
 			if (response.status === 200) {
-				console.log("Commande validée");
 				setCartItems({});
 				toast.success("Commande passée avec succès");
 			}
@@ -301,6 +325,7 @@ const StoreContextProvider = (props) => {
 
 	const getOrders = async () => {
 		try {
+			setLoading(true);
 			const response = await axios.get(
 				`${url}/api/v1/orders`,
 				{},
@@ -309,13 +334,23 @@ const StoreContextProvider = (props) => {
 			if (response.data.success) {
 				console.log("Orders:", response.data.data);
 				setOrders(response.data.data);
+			// 	5 seconds aprese
+				setTimeout(() => {
+					setLoading(false);
+				}, 5000);
 			} else {
+				setTimeout(() => {
+					setLoading(false);
+				}, 5000);
 				toast.error(response.data.message);
+
 			}
 		} catch (error) {
 			console.error("Error getting orders:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 5000);
 		}
 	};
 
@@ -349,15 +384,44 @@ const StoreContextProvider = (props) => {
 		order,
 		getOrders,
 		isAuthenticated,
+		openModalHandle,
+		isModalOpen,
+		modalChildren,
+		setModalChildren,
+
 	};
 	const fetchFoodList = async () => {
 		setLoading(true);
 		try {
 			const response = await axios.get(`${url}/api/v1/foods`);
-			console.log("food_list", response.data.data); // Use the fetched data directly
-			setFoodList(response.data.data);
+			if (response.data.success) {
+				console.log("food_list", response.data.data); // Use the fetched data directly
+				setFoodList(response.data.data);
+			}else {
+				toast.error(response.data.message);
+			}
+
 		} catch (error) {
 			console.error("Error fetching food list:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+	// loadCartData
+	const loadCartData = async (token) => {
+		setLoading(true);
+		try {
+			const response = await axios.get(`${url}/api/v1/cart`, {
+				headers: { token },
+			});
+			if (response.data.success) {
+				console.log("cartItems", response.data.data);
+				setCartItems(response.data.data);
+			} else {
+				toast.error(response.data.message);
+			}
+		} catch (error) {
+			console.error("Error loading cart data:", error);
 		} finally {
 			setLoading(false);
 		}

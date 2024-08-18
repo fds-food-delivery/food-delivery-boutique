@@ -8,10 +8,12 @@ import { StoreContext } from "./../../context/StoreContext";
 const LoginPage = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [loading, setLoading] = useState(false);
+
 	const navigate = useNavigate();
 	const {
 		cartItems, addToCart, removeFromCart,
-		loginUser, // Fonction pour connect
+		loginUser, isAuthenticated, currentUser, logout
 	} = useContext(StoreContext);
 
 	const loginHandler = async (e) => {
@@ -25,9 +27,9 @@ const LoginPage = () => {
 			console.error("Erreur lors de la connexion", error);
 		}
 	};
-
-
-
+	if (isAuthenticated) {
+		navigate("/");
+	}
 	return (
 		<div className="login-page">
 			<div className="login-container">

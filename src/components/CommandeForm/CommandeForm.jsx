@@ -2,12 +2,15 @@ import React, { useState, useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
+import Modal from "../Modal/Modal.jsx";
 
 const CommandeForm = () => {
 	const [selectedPayment, setSelectedPayment] = useState(null);
-	const { totalPrice, cartItems, validerCommande } = useContext(StoreContext);
+	const { totalPrice, cartItems, validerCommande} = useContext(StoreContext);
 	const [nomComplet, setNomComplet] = useState("");
 	const [contact, setContact] = useState("");
+	const [openModalHandle, setOpenModalHandle] = useState(false);
+
 
 	const {currentUser} = useContext(StoreContext);
 
@@ -17,6 +20,7 @@ const CommandeForm = () => {
 	const handleValidation = () => {
 		const reponse = validerCommande();
 		if (reponse) {
+			openModalHandle("vous avez validé votre commande");
 			toast.success("Commande validée");
 		} else {
 			toast.error("Erreur lors de la validation de la commande");
@@ -25,6 +29,27 @@ const CommandeForm = () => {
 
 	return (
 		<div className="commande-form">
+			{/*confirmation de commande */}
+			<Modal show={openModalHandle}>
+				<div className="modal-content container">
+					<h2>Confirmation de commande</h2>
+					<p>Voulez-vous vraiment valider votre commande ?</p>
+					<div className="row">
+						<div className="col-6">
+					<button
+						onClick={handleValidation}
+						className="btn btn-primary"
+					>Valider</button>
+						</div>
+						<div className="col-6">
+					<button
+						onClick={() => setOpenModalHandle(false)}
+						className="btn btn-warning"
+					>Annuler</button>
+						</div>
+						</div>
+				</div>
+			</Modal>
 			<div className="form-group-info
 			disabled:bg-gray-400
 			">
@@ -34,6 +59,7 @@ const CommandeForm = () => {
 					className="nomComplet"
 					placeholder="Nom Premon"
 					value={currentUser?.name}
+					disabled
 				/>
 
 				<input
@@ -44,7 +70,9 @@ const CommandeForm = () => {
 					"
 					placeholder="Numero de telephone"
 					value={currentUser?.phone}
+					disabled
 				/>
+
 			</div>
 
 			<div className="form-group-payment">
@@ -99,7 +127,10 @@ const CommandeForm = () => {
 					disabled:hover:cursor-not-allowed
 				"
 				disabled = {!selectedPayment}
-				onClick={handleValidation}
+				onClick={ () => {
+					setOpenModalHandle(true);
+				}
+				}
 			>Valider ma commande</button>
 		</div>
 	);
