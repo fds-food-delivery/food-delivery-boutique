@@ -4,9 +4,9 @@ import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ key, id, name, price, description, image }) => {
-	const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
-	const urlBase = "https://backend-food-ordering.onrender.com";
-	//const urlBase = "http://localhost:4000";
+	const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
+	// const url = "https://backend-food-ordering.onrender.com";
+	//const url = "http://localhost:4000";
 	const ensureImageExtension = (imageName) => {
 		if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
 			return imageName;
@@ -26,7 +26,7 @@ const FoodItem = ({ key, id, name, price, description, image }) => {
 				<img
 					src={
 						image
-							? `${urlBase}/api/v1/foods/image/${correctedImageName}`
+							? `${url}/api/v1/foods/image/${correctedImageName}`
 							: "https://placehold.co/300"
 					}
 					alt={name}

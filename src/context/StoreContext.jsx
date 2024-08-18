@@ -383,6 +383,7 @@ const StoreContextProvider = (props) => {
 		update,
 		order,
 		getOrders,
+
 		isAuthenticated,
 		openModalHandle,
 		isModalOpen,
