@@ -24,6 +24,8 @@
     bottom: 10%;
     left: 6vw;
     animation: fadeIn 3s;
+
+    margin-top: 100px;
     /* width: 100%; */
 
  }

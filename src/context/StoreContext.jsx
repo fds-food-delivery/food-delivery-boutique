@@ -5,7 +5,6 @@ import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-
 import {
 	salade_sauce,
 	salade_supplementaire,
@@ -26,7 +25,6 @@ const StoreContextProvider = (props) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
-
 
 	// navigate
 	const navigate = useNavigate();
@@ -61,7 +59,7 @@ const StoreContextProvider = (props) => {
 	const openModalHandle = (children) => {
 		setIsModalOpen(true);
 		setModalChildren(children);
-	}
+	};
 
 	const [saladeSauce, setSaladeSauce] = useState([
 		{
@@ -148,14 +146,14 @@ const StoreContextProvider = (props) => {
 		setCartItems(newCartItems);
 	};
 
-
 	const loginUser = async (username, password) => {
 		try {
 			const response = await axios.post(`${url}/api/v1/auth/login`, {
 				username: username,
-				password : password
+				password: password,
 			});
 			if (response.data.success) {
+				console.log("response.data", response.data);
 				setCurrentUser(response.data.user);
 				setToken(response.data.token);
 				localStorage.setItem("token", response.data.token);
@@ -174,7 +172,6 @@ const StoreContextProvider = (props) => {
 	};
 
 	const register = async (email, password) => {
-
 		try {
 			const response = await axios.post(`${url}/api/user/register`, {
 				email,
@@ -218,7 +215,6 @@ const StoreContextProvider = (props) => {
 	};
 
 	const verify = async () => {
-
 		const token = localStorage.getItem("token");
 		try {
 			const response = await axios.post(
@@ -227,13 +223,12 @@ const StoreContextProvider = (props) => {
 				{ headers: { token } }
 			);
 
-				setCurrentUser(response.data.user);
-				setIsAuthenticated(true);
-				console.log("response de verify ", response.data);
+			setCurrentUser(response.data.user);
+			setIsAuthenticated(true);
+			console.log("response de verify ", response.data);
 			setTimeout(() => {
 				setLoading(false);
 			}, 5000);
-
 		} catch (error) {
 			console.error("Error verifying:", error);
 			setCurrentUser(null);
@@ -243,20 +238,22 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-
 	// Function to create an order using the orderModel
 	const createOrder = (userId, cartItems, address, status, payment) => {
-		const items = Object.keys(cartItems).map(itemId => {
-			const item = foodList.find(food => food._id === itemId);
+		const items = Object.keys(cartItems).map((itemId) => {
+			const item = foodList.find((food) => food._id === itemId);
 			return {
 				itemId: item._id,
 				name: item.name,
 				quantity: cartItems[itemId],
-				price: item.price
+				price: item.price,
 			};
 		});
 
-		const amount = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+		const amount = items.reduce(
+			(total, item) => total + item.price * item.quantity,
+			0
+		);
 
 		return {
 			...orderModel,
@@ -265,7 +262,7 @@ const StoreContextProvider = (props) => {
 			amount,
 			address,
 			status,
-			payment
+			payment,
 		};
 	};
 
@@ -329,7 +326,7 @@ const StoreContextProvider = (props) => {
 		} finally {
 			setLoading(false);
 		}
-	}
+	};
 	const validerCommande = async () => {
 		setLoading(true);
 
@@ -354,13 +351,12 @@ const StoreContextProvider = (props) => {
 				setCartItems({});
 				toast.success("Commande passée avec succès");
 			}
-
 		} catch (error) {
 			console.error("Error ordering:", error);
 		} finally {
 			setLoading(false);
 		}
-	}
+	};
 
 	const getOrders = async () => {
 		// setLoading(true);
@@ -389,9 +385,6 @@ const StoreContextProvider = (props) => {
 			}, 5000);
 		}
 	};
-
-
-
 
 	const contextValue = {
 		foodList,
@@ -426,7 +419,6 @@ const StoreContextProvider = (props) => {
 		isModalOpen,
 		modalChildren,
 		setModalChildren,
-
 	};
 	const fetchFoodList = async () => {
 		setLoading(true);
@@ -435,10 +427,9 @@ const StoreContextProvider = (props) => {
 			if (response.data.success) {
 				console.log("food_list", response.data.data); // Use the fetched data directly
 				setFoodList(response.data.data);
-			}else {
+			} else {
 				toast.error(response.data.message);
 			}
-
 		} catch (error) {
 			console.error("Error fetching food list:", error);
 		} finally {
@@ -476,14 +467,12 @@ const StoreContextProvider = (props) => {
 		}
 		// verify user auth
 		async function verifyUser() {
-
 			console.log("call verifyUser ");
 			const response = await verify();
 		}
 
 		verifyUser();
 		loadData();
-
 	}, []);
 	return (
 		<StoreContext.Provider value={contextValue}>
