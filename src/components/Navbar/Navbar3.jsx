@@ -103,7 +103,7 @@ function NavigationBar() {
                                 {/*show username*/}
                                 <NavDropdown.Item className="text-uppercase
                                 text-gray-800
-                                ">{currentUser.username || 'Utilisateur'}</NavDropdown.Item>
+                                ">{currentUser.firstName + ' ' + currentUser.lastName}</NavDropdown.Item>
                                 {/*bar */}
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={handleProfileClick}>Profil</NavDropdown.Item>

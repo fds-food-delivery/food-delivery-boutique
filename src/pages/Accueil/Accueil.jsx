@@ -12,6 +12,7 @@ const Accueil = () => {
 	const {loading, setLoading} = useContext(StoreContext);
 	return (
 		<div className="container custom-container">
+			<div className="mt-5"></div>
 			<Header />
 			{loading ? (
 				<div className="loader">
