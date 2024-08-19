@@ -5,6 +5,7 @@ import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+
 import {
 	salade_sauce,
 	salade_supplementaire,
@@ -128,7 +129,7 @@ const StoreContextProvider = (props) => {
 			toast.success("Votre plat a été ajouté au panier");
 			setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
 		} else {
-			toast.error("Votre plat a déjà été ajouté au panier");
+			toast.success("Votre plat a été ajouté au panier");
 			setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
 		}
 	};
@@ -242,6 +243,32 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
+
+	// Function to create an order using the orderModel
+	const createOrder = (userId, cartItems, address, status, payment) => {
+		const items = Object.keys(cartItems).map(itemId => {
+			const item = foodList.find(food => food._id === itemId);
+			return {
+				itemId: item._id,
+				name: item.name,
+				quantity: cartItems[itemId],
+				price: item.price
+			};
+		});
+
+		const amount = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+		return {
+			...orderModel,
+			userId,
+			items,
+			amount,
+			address,
+			status,
+			payment
+		};
+	};
+
 	const update = async (email, password) => {
 		setLoading(true);
 		try {
@@ -305,10 +332,22 @@ const StoreContextProvider = (props) => {
 	}
 	const validerCommande = async () => {
 		setLoading(true);
+
 		try {
+			// Example usage
+			if (!currentUser) {
+				toast.error("Veuillez vous connecter pour passer une commande");
+				return;
+			}
+			const userId = currentUser._id;
+			const address = currentUser.address;
+			const status = "Pending";
+			const payment = true;
+			const order = createOrder(userId, cartItems, address, status, payment);
+
 			const response = await axios.post(
 				`${url}/api/v1/orders`,
-				{ cartItems },
+				{ order },
 				{ headers: { token } }
 			);
 			if (response.status === 200) {
@@ -324,8 +363,8 @@ const StoreContextProvider = (props) => {
 	}
 
 	const getOrders = async () => {
+		// setLoading(true);
 		try {
-			setLoading(true);
 			const response = await axios.get(
 				`${url}/api/v1/orders`,
 				{},
@@ -334,7 +373,6 @@ const StoreContextProvider = (props) => {
 			if (response.data.success) {
 				console.log("Orders:", response.data.data);
 				setOrders(response.data.data);
-			// 	5 seconds aprese
 				setTimeout(() => {
 					setLoading(false);
 				}, 5000);
@@ -343,11 +381,9 @@ const StoreContextProvider = (props) => {
 					setLoading(false);
 				}, 5000);
 				toast.error(response.data.message);
-
 			}
 		} catch (error) {
 			console.error("Error getting orders:", error);
-		} finally {
 			setTimeout(() => {
 				setLoading(false);
 			}, 5000);
@@ -382,6 +418,7 @@ const StoreContextProvider = (props) => {
 		logout,
 		update,
 		order,
+		createOrder,
 		getOrders,
 
 		isAuthenticated,
@@ -434,7 +471,7 @@ const StoreContextProvider = (props) => {
 			await fetchFoodList();
 			if (localStorage.getItem("token")) {
 				setToken(localStorage.getItem("token"));
-				await loadCartData(localStorage.getItem("token"));
+				// await loadCartData(localStorage.getItem("token"));
 			}
 		}
 		// verify user auth

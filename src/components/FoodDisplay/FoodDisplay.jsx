@@ -17,7 +17,7 @@ const FoodDisplay = ({ category }) => {
         removeFromCart,
     } = useContext(StoreContext);
 
-    if (category === "Salade") {
+    if (category === "Salade" && foodList.length > 0) {
         return (
             <div className="food-display row" id="food-display">
                 <h2>Composez votre salade</h2>
@@ -60,10 +60,10 @@ const FoodDisplay = ({ category }) => {
                 <div className="food-display-list">
                     {foodList.map((item) => {
                         if (category === "All" || category === item.category) {
-                            if (!item.image) {
-                                item.image =
-                                    "https://res.cloudinary.com/dkzv1m5v0/image/upload/v1633089826/food_25_bq1z7v.png";
-                            }
+                            // if (!item.image) {
+                            //     item.image =
+                            //         "https://res.cloudinary.com/dkzv1m5v0/image/upload/v1633089826/food_25_bq1z7v.png";
+                            // }
 
                             return (
                                 <FoodItem

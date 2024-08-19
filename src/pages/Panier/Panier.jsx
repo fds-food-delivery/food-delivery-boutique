@@ -15,6 +15,7 @@ const Panier = ({ onClose }) => {
 		deleteFromCart,
 		setIsShowAlertPanier,
 		currentUser,
+		url
 
 	} = useContext(StoreContext);
 
@@ -30,14 +31,14 @@ const Panier = ({ onClose }) => {
 
 		const item = foodList.find((food) => food._id === id);
 		const correctedImageName = ensureImageExtension(item.image);
-		const urlBase = "http://localhost:4000";
+
 		return (
 			<div key={id} className="panier-item">
 				{/*<img src={item.image} alt={item.name} className="panier-item-image" />*/}
 				<img
 					src={
 						item.image
-							? `${urlBase}/api/v1/foods/image/${correctedImageName}`
+							? `${url}/api/v1/foods/image/${correctedImageName}`
 							: "https://placehold.co/300"
 					}
 					alt={item.name}

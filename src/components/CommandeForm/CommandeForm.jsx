@@ -3,6 +3,8 @@ import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
+// toast
+
 
 const CommandeForm = () => {
 	const [selectedPayment, setSelectedPayment] = useState(null);
@@ -17,6 +19,14 @@ const CommandeForm = () => {
 	const handlePaymentChange = (event) => {
 		setSelectedPayment(event.target.value);
 	};
+	const handleConfirmed = () => {
+		const reponse =  validerCommande();
+		if (reponse) {
+			toast.success("Commande validée");
+		} else {
+			toast.error("Erreur lors de la validation de la commande");
+		}
+	}
 	const handleValidation = () => {
 		const reponse = validerCommande();
 		if (reponse) {
@@ -37,7 +47,7 @@ const CommandeForm = () => {
 					<div className="row">
 						<div className="col-6">
 					<button
-						onClick={handleValidation}
+						onClick={handleConfirmed}
 						className="btn btn-primary"
 					>Valider</button>
 						</div>

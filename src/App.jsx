@@ -30,7 +30,7 @@ const App = () => {
 
                 <div className="app1e">
                     <Navbar3 />
-                    <ToastContainer closeButton={false} position="bottom-left" />
+                    <ToastContainer closeButton={false} position="bottom-left" autoClose={1000} />
                     <Routes>
                         <Route path="/" element={<Accueil />} />
                         <Route path="/panier" element={<Panier />} />

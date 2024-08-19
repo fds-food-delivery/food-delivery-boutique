@@ -9,13 +9,8 @@ const Orderstate = () => {
 
 
 	useEffect(() => {
-		const intervalId = setInterval(() => {
-			getOrders(); // Fetch Orders every 30 seconds
-		}, 30000); // 30000 milliseconds = 30 seconds
-
-		// Cleanup interval on component unmount
-		return () => clearInterval(intervalId);
-	}, []);
+		getOrders();
+	}, [getOrders]);
 
 
 	// if (Orders.length === 0 ) {
@@ -45,8 +40,19 @@ const Orderstate = () => {
 	};
 
 	return (
+		loading ? (
+				<div className="container mt-5 pt-2 custom-container">
+					<div className="row mt-5 pt-5 "></div>
+					<div className="row">
+						<div className="col-6 text-center justify-content-center align-items-center mx-auto">
+							<ClipLoader color="#f86c6b" size={150}/>
+						</div>
+					</div>
+				</div>
 
-		<div className="container mt-5 custom-container">
+			) :
+			<div className="container mt-5 pt-2 custom-container">
+				<div className="row mt-5 pt-5 "></div>
 			{/* Tableau pour les commandes non livrées */}
 			<div className="card mb-4">
 				<div className="card-header">

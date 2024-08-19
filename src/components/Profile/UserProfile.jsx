@@ -4,10 +4,10 @@ import './UserProfile.css';
 const UserProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [userInfo, setUserInfo] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '123-456-7890',
-        address: '123 Main St, Anytown, USA'
+        name: 'Tahir Fall',
+        email: 'tahirfall@gmail.com',
+        phone: '+221 77 777 77 77',
+        address: 'Grand dakar'
     });
 
     const handleEditClick = () => {
