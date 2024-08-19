@@ -18,6 +18,7 @@ import { ClipLoader } from "react-spinners";
 import ScrollToTop from 'react-scroll-to-top';
 import { useContext } from "react";
 import { StoreContext } from "./context/StoreContext.jsx";
+import UserProfile from "./components/Profile/UserProfile.jsx";
 
 
 const App = () => {
@@ -37,9 +38,10 @@ const App = () => {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/livraison" element={<OrderState />} />
                         <Route path="/contact" element={<Contact />} />
+                    {/*    profile*/}
+                        <Route path="/profil" element={<UserProfile />} />
                     </Routes>
                     <Footer />
-
                     <ScrollToTop fill="#f86c6b" color="#f86c6b" />
                 </div>
 
