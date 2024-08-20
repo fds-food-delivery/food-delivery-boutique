@@ -1,29 +1,41 @@
 import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import "./UserProfile.css";
 import { StoreContext } from "../../context/StoreContext";
 
 const UserProfile = () => {
 	const [isEditing, setIsEditing] = useState(false);
-	const { getCurrentUser, currentUser } = useContext(StoreContext);
+	const { getCurrentUser, loading, setLoading, currentUser } =
+		useContext(StoreContext);
 	const [userInfo, setUserInfo] = useState({
-		name: "Tahir Fall",
-		email: "tahirfall@gmail.com",
-		phone: "+221 77 777 77 77",
-		address: "Grand dakar",
+		name: "",
+		email: "",
+		phone: "",
+		address: "",
 	});
+
 	useEffect(() => {
-		const fetchUSerInfo = async () => {
-			// Fetch user info from the server
-			await getCurrentUser();
-			setUserInfo({
-				// name: currentUser.name,
-				email: currentUser.email,
-				phone: currentUser.phone,
-				// address: currentUser.address,
-			});
+		const fetchUserData = async () => {
+			setLoading(true);
+			try {
+				const user = await getCurrentUser();
+				if (user) {
+					setUserInfo({
+						name: user.name || "",
+						email: user.email || "",
+						phone: user.phone || "",
+						address: user.address || "",
+					});
+				}
+			} catch (error) {
+				console.error("Error fetching user data:", error);
+			} finally {
+				setLoading(false);
+			}
 		};
-		fetchUSerInfo();
-	}, []);
+
+		fetchUserData();
+	}, [getCurrentUser, setLoading]);
 
 	const handleEditClick = () => {
 		setIsEditing(!isEditing);

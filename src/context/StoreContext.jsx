@@ -358,38 +358,58 @@ const StoreContextProvider = (props) => {
 		}
 	};
 	//getCurrentUser and return users
-	const getCurrentUser = async () => {
+	const getCurrentUser = () => {
 		setLoading(true);
-		try {
-			if (!token) {
-				throw new Error("Token is missing");
-			}
 
-			const response = await axios.get(`${url}/api/v1/auth/user`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
-
-			if (response.data.success) {
-				console.log("Get from getCurrentUser");
-				console.log("User:", response.data.user);
-				setCurrentUser(response.data.user);
-			} else {
-				console.error("Failed to fetch user:", response.data.message);
-				toast.error(response.data.message);
-			}
-		} catch (error) {
-			if (error.response && error.response.status === 403) {
-				console.error("Authentication error:", error.response.data);
-				toast.error("Veuillez vous connecter pour voir vos commandes");
-			} else {
-				console.error("Error getting user:", error);
-				toast.error(
-					"Une erreur est survenue lors de la récupération de l'utilisateur"
-				);
-			}
-		} finally {
+		if (!token) {
 			setLoading(false);
+			toast.error("Token is missing");
+			return Promise.reject(new Error("Token is missing"));
 		}
+
+		return fetch(`${url}/api/v1/auth/user`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) => {
+				if (!response.ok) {
+					if (response.status === 403) {
+						throw new Error("Authentication error");
+					} else {
+						throw new Error("Failed to fetch user");
+					}
+				}
+				return response.json();
+			})
+			.then((data) => {
+				if (data.success) {
+					console.log("Get from getCurrentUser");
+					console.log("User:", data.user);
+					setCurrentUser(data.user);
+					return data.user;
+				} else {
+					console.error("Failed to fetch user:", data.message);
+					toast.error(data.message);
+					return;
+				}
+			})
+			.catch((error) => {
+				if (error.message === "Authentication error") {
+					console.error("Authentication error");
+					toast.error("Veuillez vous connecter pour voir vos commandes");
+				} else {
+					console.error("Error getting user:", error);
+					toast.error(
+						"Une erreur est survenue lors de la récupération de l'utilisateur"
+					);
+				}
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	};
 
 	const getOrders = async () => {
@@ -463,6 +483,8 @@ const StoreContextProvider = (props) => {
 		update,
 		order,
 		createOrder,
+		setLoading,
+
 		getOrders,
 		getCurrentUser,
 

@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Navbar, Container, Nav, NavDropdown, Badge } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaCartPlus, FaUser } from "react-icons/fa";
+import { FaCartPlus, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { StoreContext } from "../../context/StoreContext";
 import Panier from "../../pages/Panier/Panier";
-import CartIconWithCount from "./CartIconWithCount.jsx";
-import { FaBars } from "react-icons/fa";
+import "./NavigationBar.css"; // Assurez-vous de créer ce fichier CSS
 
 function NavigationBar() {
 	const [isPanierOpen, setIsPanierOpen] = useState(false);
-	const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 	const { cartItems, currentUser, logout, isAuthenticated } =
 		useContext(StoreContext);
 
 	const navigate = useNavigate();
+	const menuRef = useRef(null);
+
+	const [expanded, setExpanded] = useState(false);
 
 	const totalItems = cartItems
 		? Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0)
@@ -25,49 +26,32 @@ function NavigationBar() {
 
 	const handleProfileClick = () => {
 		navigate("/profil"); // Naviguer vers la page de profil
-		setIsUserMenuOpen(false); // Fermer le menu après avoir cliqué sur le profil
 	};
 
 	const handleLogout = async () => {
 		await logout();
 	};
 
-	useEffect(
-		() => {
-			const handleScroll = () => {
-				const navbar = document.querySelector(".navbar");
-				if (window.scrollY > 50) {
-					navbar.classList.add(
-						"",
-						"navbar-sticky",
-						"shadow-sm",
-						"navbar-transparent"
-					);
-				} else {
-					navbar.classList.remove(
-						"",
-						"navbar-sticky",
-						"shadow-sm",
-						"navbar-transparent"
-					);
-				}
-			};
+	const handleClickOutside = (event) => {
+		if (menuRef.current && !menuRef.current.contains(event.target)) {
+			setExpanded(false);
+		}
+	};
 
-			window.addEventListener("scroll", handleScroll);
-
-			return () => {
-				window.removeEventListener("scroll", handleScroll);
-			};
-		},
-		[navigate],
-		currentUser,
-		isAuthenticated
-	);
+	useEffect(() => {
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
 
 	return (
 		<Navbar
+			ref={menuRef}
 			className="custom-navbar pt-3 pb-3 navbar-expand-lg fixed-top navbar-light"
 			expand="md"
+			expanded={expanded}
+			onToggle={() => setExpanded(!expanded)}
 		>
 			<Container>
 				<Navbar.Brand as={Link} to="/">
@@ -77,14 +61,13 @@ function NavigationBar() {
 						className="d-inline-block align-top"
 						width="70"
 					/>
-					{/*<span className="brand-name">Thurquoise</span>*/}
 				</Navbar.Brand>
-				{/* <Navbar.Toggle aria-controls="custom-basic-navbar-nav basic-navbar-nav"  /> */}
 				<Navbar.Toggle aria-controls="basic-navbar-nav">
-					{/*
-                        f86c6b
-                     thurquoise */}
-					<FaBars size={24} style={{ color: "#f86c6b" }} />
+					{expanded ? (
+						<FaTimes size={24} style={{ color: "#f86c6b" }} />
+					) : (
+						<FaBars size={24} style={{ color: "#f86c6b" }} />
+					)}
 				</Navbar.Toggle>
 
 				<Navbar.Collapse id="basic-navbar-nav">
@@ -101,32 +84,17 @@ function NavigationBar() {
 						<Nav.Link as={Link} to="/contact" className="custom-nav-link">
 							Contact
 						</Nav.Link>
-						{/*<Nav.Link as={Link} to="/cart" className="custom-nav-link custom-nav-link-cart" onClick={togglePanier}>*/}
-						{/*    <div className="flex items-center">*/}
-						{/*    /!*    <CartIconWithCount size={28} itemCount={totalItems}/>*!/*/}
-						{/*    <Badge pill bg="danger">*/}
-						{/*    <FaCartPlus size={20} />*/}
-						{/*    {totalItems}*/}
-						{/*    </Badge>*/}
-						{/*    </div>*/}
-						{/*</Nav.Link>*/}
-
 						<Nav.Link
 							as={Link}
 							to="#menu-item"
-							className="custom-nav-link-cart custom-nav-link "
+							className="custom-nav-link-cart custom-nav-link"
 							onClick={togglePanier}
 						>
 							<div className="custom-nav-link-cart">
-								{/* Icône du panier avec le nombre d'articles */}
-								<div>
-									<FaCartPlus size={30} className="text-dark" />
-								</div>
-								<div>
-									<Badge pill bg="success" className="ml-2">
-										{totalItems > 0 && totalItems}
-									</Badge>
-								</div>
+								<FaCartPlus size={30} className="text-dark" />
+								<Badge pill bg="success" className="ml-2">
+									{totalItems > 0 && totalItems}
+								</Badge>
 							</div>
 						</Nav.Link>
 
@@ -134,17 +102,11 @@ function NavigationBar() {
 							<NavDropdown
 								title={<FaUser size={28} />}
 								id="basic-nav-dropdown"
-								className="custom-nav-link "
+								className="custom-nav-link"
 							>
-								{/*show username*/}
-								<NavDropdown.Item
-									className="text-uppercase
-                                text-gray-800
-                                "
-								>
+								<NavDropdown.Item className="text-uppercase text-gray-800">
 									{currentUser.firstName + " " + currentUser.lastName}
 								</NavDropdown.Item>
-								{/*bar */}
 								<NavDropdown.Divider />
 								<NavDropdown.Item onClick={handleProfileClick}>
 									Profil
