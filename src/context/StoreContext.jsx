@@ -357,14 +357,66 @@ const StoreContextProvider = (props) => {
 			setLoading(false);
 		}
 	};
+	//getCurrentUser and return users
+	const getCurrentUser = async () => {
+		setLoading(true);
+		try {
+			if (!token) {
+				throw new Error("Token is missing");
+			}
+
+			const response = await axios.get(`${url}/api/v1/auth/user`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+
+			if (response.data.success) {
+				console.log("User:", response.data.user);
+				setCurrentUser(response.data.user);
+			} else {
+				console.error("Failed to fetch user:", response.data.message);
+				toast.error(response.data.message);
+			}
+		} catch (error) {
+			if (error.response && error.response.status === 403) {
+				console.error("Authentication error:", error.response.data);
+				toast.error("Veuillez vous connecter pour voir vos commandes");
+			} else {
+				console.error("Error getting user:", error);
+				toast.error(
+					"Une erreur est survenue lors de la récupération de l'utilisateur"
+				);
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const getOrders = async () => {
-		// setLoading(true);
+		//getCurrentUser
+		const response = await getCurrentUser();
+		if (!response) {
+			console.log("response", response);
+			return;
+		}
+		//userId
+		if (!currentUser) {
+			toast.error("Veuillez vous connecter pour voir vos commandes");
+			return;
+		}
+		const userId = currentUser.userId;
+		console.log("userId", userId);
 		try {
-			const response = await axios.get(
-				`${url}/api/v1/orders`,
-				{},
-				{ headers: { token } }
+			const response = await axios.post(
+				`${url}/api/v1/orders/userorders`,
+				{
+					userId,
+				},
+				{
+					headers: {
+						token,
+						Authorization: `Bearer ${token}`,
+					},
+				}
 			);
 			if (response.data.success) {
 				console.log("Orders:", response.data.data);
@@ -373,16 +425,14 @@ const StoreContextProvider = (props) => {
 					setLoading(false);
 				}, 5000);
 			} else {
-				setTimeout(() => {
-					setLoading(false);
-				}, 5000);
+				setLoading(false);
+				console.log("Orders:", response.data.data);
 				toast.error(response.data.message);
 			}
 		} catch (error) {
 			console.error("Error getting orders:", error);
-			setTimeout(() => {
-				setLoading(false);
-			}, 5000);
+			toast.error("Veuiilez vous connecter pour voir vos commandes");
+			setLoading(false);
 		}
 	};
 

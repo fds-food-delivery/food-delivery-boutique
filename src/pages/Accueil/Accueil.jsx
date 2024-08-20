@@ -1,18 +1,21 @@
-import {useContext, useState} from "react";
+import { useContext, useState } from "react";
 import "./Accueil.css";
 import Header from "../../components/Header/Header";
 import ExploreMenu from "../../components/ExploreMenu/ExploreMenu";
 import FoodDisplay from "../../components/FoodDisplay/FoodDisplay";
-import {StoreContext} from "../../context/StoreContext.jsx";
+import { StoreContext } from "../../context/StoreContext.jsx";
 // ClipLoader
 import { ClipLoader } from "react-spinners";
 
 const Accueil = () => {
 	const [category, setCategory] = useState("All");
-	const {loading, setLoading} = useContext(StoreContext);
+	const { loading, setLoading } = useContext(StoreContext);
 	return (
 		<div className="container custom-container">
-			<div className="mt-5"></div>
+			<div
+				className="mt-5"
+				style={{ marinTop: "100px", marginBottom: "130px" }}
+			></div>
 			<Header />
 			{loading ? (
 				<div className="loader">
@@ -21,9 +24,9 @@ const Accueil = () => {
 			) : (
 				<>
 					<ExploreMenu category={category} setCategory={setCategory} />
-						<FoodDisplay category={category} />
-					</>
-				)}
+					<FoodDisplay category={category} />
+				</>
+			)}
 		</div>
 	);
 };

@@ -1,17 +1,20 @@
 import React, { useContext, useEffect } from "react";
 import { StoreContext } from "../../context/StoreContext";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Clipboard} from "flowbite-react";
-import {ClipLoader} from "react-spinners";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Clipboard } from "flowbite-react";
+import { ClipLoader } from "react-spinners";
 
 const Orderstate = () => {
 	const { Orders, getOrders, loading } = useContext(StoreContext);
 
-
 	useEffect(() => {
-		getOrders();
+		const fetchOrders = async () => {
+			await getOrders();
+		};
+		setTimeout(() => {
+			fetchOrders();
+		}, 10000);
 	}, [getOrders]);
-
 
 	// if (Orders.length === 0 ) {
 	// 	return (
@@ -23,10 +26,11 @@ const Orderstate = () => {
 	// 	);
 	// }
 
-
 	// Filtrer les commandes non livrées et livrées
-	const deliveredOrders = Orders.filter(order => order.status === "Delivered");
-	const pendingOrders = Orders.filter(order => order.status !== "Delivered");
+	const deliveredOrders = Orders.filter(
+		(order) => order.status === "Delivered"
+	);
+	const pendingOrders = Orders.filter((order) => order.status !== "Delivered");
 
 	const getProgressPercentage = (status) => {
 		switch (status) {
@@ -39,20 +43,18 @@ const Orderstate = () => {
 		}
 	};
 
-	return (
-		loading ? (
-				<div className="container mt-5 pt-2 custom-container">
-					<div className="row mt-5 pt-5 "></div>
-					<div className="row">
-						<div className="col-6 text-center justify-content-center align-items-center mx-auto">
-							<ClipLoader color="#f86c6b" size={150}/>
-						</div>
-					</div>
+	return loading ? (
+		<div className="container mt-5 pt-2 custom-container">
+			<div className="row mt-5 pt-5 "></div>
+			<div className="row">
+				<div className="col-6 text-center justify-content-center align-items-center mx-auto">
+					<ClipLoader color="#f86c6b" size={150} />
 				</div>
-
-			) :
-			<div className="container mt-5 pt-2 custom-container">
-				<div className="row mt-5 pt-5 "></div>
+			</div>
+		</div>
+	) : (
+		<div className="container mt-5 pt-2 custom-container">
+			<div className="row mt-5 pt-5 "></div>
 			{/* Tableau pour les commandes non livrées */}
 			<div className="card mb-4">
 				<div className="card-header">
@@ -61,47 +63,59 @@ const Orderstate = () => {
 				<div className="card-body table-responsive">
 					<table className="table table-hover">
 						<thead className="thead-dark">
-						<tr>
-							<th>Commande #</th>
-							<th>État</th>
-							<th>Progression</th>
-							<th>Montant</th>
-							<th>Action</th>
-						</tr>
+							<tr>
+								<th>Commande #</th>
+								<th>État</th>
+								<th>Progression</th>
+								<th>Montant</th>
+								<th>Action</th>
+							</tr>
 						</thead>
 						<tbody>
-						{pendingOrders.map((order, index) => (
-							<tr key={index}>
-								<td>{order._id}</td>
-								<td className={order.status === "Delivered" ? "text-success font-weight-bold" : order.status === "Out for delivery" ? "text-warning font-weight-bold" : "text-secondary font-weight-bold"}>
-									{order.status === "Delivered"
-										? "Livré"
-										: order.status === "Out for delivery"
+							{pendingOrders.map((order, index) => (
+								<tr key={index}>
+									<td>{order._id}</td>
+									<td
+										className={
+											order.status === "Delivered"
+												? "text-success font-weight-bold"
+												: order.status === "Out for delivery"
+												? "text-warning font-weight-bold"
+												: "text-secondary font-weight-bold"
+										}
+									>
+										{order.status === "Delivered"
+											? "Livré"
+											: order.status === "Out for delivery"
 											? "En cours de livraison"
 											: "En cours de préparation"}
-								</td>
-								<td>
-									<div className="progress">
-										<div
-											className={`progress-bar ${getProgressPercentage(order.status) === 100 ? "bg-success" : "bg-info"}`}
-											role="progressbar"
-											style={{ width: `${getProgressPercentage(order.status)}%` }}
-											aria-valuenow={getProgressPercentage(order.status)}
-											aria-valuemin="0"
-											aria-valuemax="100"
-										>
-											{getProgressPercentage(order.status)}%
+									</td>
+									<td>
+										<div className="progress">
+											<div
+												className={`progress-bar ${
+													getProgressPercentage(order.status) === 100
+														? "bg-success"
+														: "bg-info"
+												}`}
+												role="progressbar"
+												style={{
+													width: `${getProgressPercentage(order.status)}%`,
+												}}
+												aria-valuenow={getProgressPercentage(order.status)}
+												aria-valuemin="0"
+												aria-valuemax="100"
+											>
+												{getProgressPercentage(order.status)}%
+											</div>
 										</div>
-									</div>
-								</td>
-								<td>{order.amount} FCFA</td>
-								<td>
-									<button className="btn btn-primary">
-										Voir
-									</button>
-								</td>
-							</tr>
-						))}
+									</td>
+									<td>{order.amount} FCFA</td>
+									<td>
+										<button className="btn btn-primary">Voir</button>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
@@ -115,26 +129,24 @@ const Orderstate = () => {
 				<div className="card-body table-responsive">
 					<table className="table table-hover">
 						<thead className="thead-dark">
-						<tr>
-							<th>Commande #</th>
-							<th>État</th>
-							<th>Montant</th>
-							<th>Action</th>
-						</tr>
+							<tr>
+								<th>Commande #</th>
+								<th>État</th>
+								<th>Montant</th>
+								<th>Action</th>
+							</tr>
 						</thead>
 						<tbody>
-						{deliveredOrders.map((order, index) => (
-							<tr key={index}>
-								<td>{order._id}</td>
-								<td className="text-success font-weight-bold">Livré</td>
-								<td>{order.amount} FCFA</td>
-								<td>
-									<button className="btn btn-primary">
-										Voir
-									</button>
-								</td>
-							</tr>
-						))}
+							{deliveredOrders.map((order, index) => (
+								<tr key={index}>
+									<td>{order._id}</td>
+									<td className="text-success font-weight-bold">Livré</td>
+									<td>{order.amount} FCFA</td>
+									<td>
+										<button className="btn btn-primary">Voir</button>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
@@ -146,7 +158,6 @@ const Orderstate = () => {
 				<p>Vous pouvez également nous contacter pour plus d'informations.</p>
 			</div>
 		</div>
-
 	);
 };
 
