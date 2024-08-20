@@ -370,6 +370,7 @@ const StoreContextProvider = (props) => {
 			});
 
 			if (response.data.success) {
+				console.log("Get from getCurrentUser");
 				console.log("User:", response.data.user);
 				setCurrentUser(response.data.user);
 			} else {
@@ -463,6 +464,7 @@ const StoreContextProvider = (props) => {
 		order,
 		createOrder,
 		getOrders,
+		getCurrentUser,
 
 		isAuthenticated,
 		openModalHandle,

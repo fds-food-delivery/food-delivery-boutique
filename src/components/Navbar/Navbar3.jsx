@@ -81,7 +81,10 @@ function NavigationBar() {
 				</Navbar.Brand>
 				{/* <Navbar.Toggle aria-controls="custom-basic-navbar-nav basic-navbar-nav"  /> */}
 				<Navbar.Toggle aria-controls="basic-navbar-nav">
-					<FaBars size={24} className="text-primary" />
+					{/*
+                        f86c6b
+                     thurquoise */}
+					<FaBars size={24} style={{ color: "#f86c6b" }} />
 				</Navbar.Toggle>
 
 				<Navbar.Collapse id="basic-navbar-nav">

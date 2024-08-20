@@ -3,6 +3,7 @@ import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
+
 // toast
 
 const CommandeForm = () => {
@@ -32,25 +33,44 @@ const CommandeForm = () => {
 	return (
 		<div className="commande-form">
 			{/*confirmation de commande */}
-			<Modal show={openModalHandle} centered>
-				<div className="modal-content container bg-white p-4 rounded shadow">
-					<h2 className="text-center mb-4">Confirmation de commande</h2>
-					<p className="text-center mb-4">
-						Voulez-vous vraiment valider votre commande ?
-					</p>
+			<Modal show={openModalHandle} title="Confirmation de commande">
+				<div
+					className="modal-content container bg-white p-4 rounded shadow-lg"
+					style={{ width: "400px" }}
+				>
 					<div className="row">
-						<div className="col-6 d-flex justify-content-end">
+						<h2
+							className="text-center mb-4 text-primary"
+							style={{ fontSize: "1.5rem" }}
+						>
+							Confirmation de commande
+						</h2>
+					</div>
+					<div className="row">
+						<div className="col-6 d-flex">
 							<button
 								onClick={handleConfirmed}
-								className="btn btn-primary me-2"
+								style={{
+									width: "100px",
+									height: "40px",
+									fontSize: "1rem",
+									color: "white",
+									backgroundColor: "green",
+								}}
 							>
 								Valider
 							</button>
 						</div>
-						<div className="col-6 d-flex justify-content-start">
+						<div className="col-6 d-flex">
 							<button
 								onClick={() => setOpenModalHandle(false)}
-								className="btn btn-warning ms-2"
+								style={{
+									width: "100px",
+									height: "40px",
+									fontSize: "1rem",
+									color: "white",
+									backgroundColor: "#f86c6b",
+								}}
 							>
 								Annuler
 							</button>
@@ -58,6 +78,7 @@ const CommandeForm = () => {
 					</div>
 				</div>
 			</Modal>
+
 			<div
 				className="form-group-info
 			disabled:bg-gray-400
