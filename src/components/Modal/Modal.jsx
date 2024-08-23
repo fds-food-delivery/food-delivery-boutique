@@ -12,11 +12,7 @@ const CustomModal = ({ show, onClose, children, title }) => {
             <Modal.Body>
                 {children}
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                    Close
-                </Button>
-            </Modal.Footer>
+
         </Modal>
     );
 };

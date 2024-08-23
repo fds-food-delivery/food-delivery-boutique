@@ -3,6 +3,7 @@ import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
+import {FaCheckCircle} from "react-icons/fa";
 
 
 // toast
@@ -19,8 +20,14 @@ const CommandeForm = () => {
 	const handlePaymentChange = (event) => {
 		setSelectedPayment(event.target.value);
 	};
+	const [openModalValidatedHandle, setOpenModalValidatedHandle] = useState(false);
+
 	const handleConfirmed = () => {
-		const reponse = validerCommande();
+		//const reponse = validerCommande();
+		setOpenModalHandle(false);
+		//show to the user that the command is validated
+		setOpenModalValidatedHandle(true);
+
 	};
 	const handleValidation = () => {
 		const reponse = validerCommande();
@@ -30,10 +37,46 @@ const CommandeForm = () => {
 			toast.error("Erreur lors de la validation de la commande");
 		}
 	};
+	// setOpenModalValidatedHandle
+
 
 	return (
 		<div className="commande-form">
+			{/*succes modal*/}
+			<Modal
+				show={openModalValidatedHandle}
+				title="Commande validée"
+				onClose={() => setOpenModalValidatedHandle(false)}
+			>
+				<div className="container">
+					<div className="row">
+						<h4
+							className="text-center mb-4 text-primary"
+						>
+							<span
+								className="text-success mr-2"
+							>Votre commande a été validée
+								</span>
+							<FaCheckCircle style={{ color: "green", fontSize: "50px" }} />
+						</h4>
+					</div>
+					<div className="row">
+						<div className="col-6 mx-auto">
+							<button
+								className="btn btn-secondary"
+								onClick={() => setOpenModalValidatedHandle(false)}
+
+							>
+								OK
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
+
+
 			{/*confirmation de commande */}
+
 			<Modal
 				show={openModalHandle}
 				title="Confirmation de commande"
@@ -52,6 +95,7 @@ const CommandeForm = () => {
 							<button
 								className="btn btn-primary"
 								onClick={handleConfirmed}
+								style={{ color: "white",backgroundColor: "green" }}
 							>
 								Confirmer
 							</button>
@@ -59,6 +103,7 @@ const CommandeForm = () => {
 						<div className="col-6">
 							<button
 								className="btn btn-warning"
+								style={{ color: "white" , backgroundColor: "red"}}
 								onClick={() => setOpenModalHandle(false)}
 							>
 								Annuler
