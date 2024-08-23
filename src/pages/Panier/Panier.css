@@ -51,7 +51,7 @@
 .panier-item-details {
     /* flex-grow: 1; */
     flex: 1;
-margin-left: 10px;
+    margin-left: 10px;
 
 }
 .panier-item-quantite {
@@ -145,9 +145,5 @@ panier-commander {
     cursor: pointer;
     border-radius: 5px;
     margin-top: 20px;
-    padding: "10px 20px",
-
 }
-
-
 
