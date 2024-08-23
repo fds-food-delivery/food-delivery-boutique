@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import  { useState, useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
+
 
 // toast
 
@@ -33,44 +34,32 @@ const CommandeForm = () => {
 	return (
 		<div className="commande-form">
 			{/*confirmation de commande */}
-			<Modal show={openModalHandle} title="Confirmation de commande">
-				<div
-					className="modal-content container bg-white p-4 rounded shadow-lg"
-					style={{ width: "400px" }}
+			<Modal
+				show={openModalHandle}
+				title="Confirmation de commande"
+				onClose={() => setOpenModalHandle(false)}
 				>
+				<div className="container">
 					<div className="row">
-						<h2
+						<h4
 							className="text-center mb-4 text-primary"
-							style={{ fontSize: "1.5rem" }}
 						>
-							Confirmation de commande
-						</h2>
+							Voulez-vous vraiment valider votre commande ?
+						</h4>
 					</div>
 					<div className="row">
-						<div className="col-6 d-flex">
+						<div className="col-6">
 							<button
+								className="btn btn-primary"
 								onClick={handleConfirmed}
-								style={{
-									width: "100px",
-									height: "40px",
-									fontSize: "1rem",
-									color: "white",
-									backgroundColor: "green",
-								}}
 							>
-								Valider
+								Confirmer
 							</button>
 						</div>
-						<div className="col-6 d-flex">
+						<div className="col-6">
 							<button
+								className="btn btn-warning"
 								onClick={() => setOpenModalHandle(false)}
-								style={{
-									width: "100px",
-									height: "40px",
-									fontSize: "1rem",
-									color: "white",
-									backgroundColor: "#f86c6b",
-								}}
 							>
 								Annuler
 							</button>

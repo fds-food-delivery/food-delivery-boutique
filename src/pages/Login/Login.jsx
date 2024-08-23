@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { StoreContext } from "./../../context/StoreContext";
 
 const LoginPage = () => {
@@ -11,25 +10,30 @@ const LoginPage = () => {
 	const [loading, setLoading] = useState(false);
 
 	const navigate = useNavigate();
-	const {
-		cartItems, addToCart, removeFromCart,
-		loginUser, isAuthenticated, currentUser, logout
-	} = useContext(StoreContext);
+	const { loginUser, isAuthenticated } = useContext(StoreContext);
 
 	const loginHandler = async (e) => {
 		e.preventDefault();
+		setLoading(true);
 		try {
-			const response = await loginUser(username, password);
-			toast.success("Connexion réussie");
-			// navigate("/");
+			const reponse = await loginUser(username, password);
+			if (reponse.status === 200) {
+				toast.success("Connexion réussie");
+				navigate("/");
+			}else{
+				throw new Error("Erreur lors de la connexion");
+			}
 		} catch (error) {
 			toast.error("Erreur lors de la connexion");
-			console.error("Erreur lors de la connexion", error);
+		} finally {
+			setLoading(false);
 		}
 	};
+
 	if (isAuthenticated) {
 		navigate("/");
 	}
+
 	return (
 		<div className="login-page">
 			<div className="login-container">
@@ -46,6 +50,7 @@ const LoginPage = () => {
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
 							required
+							disabled={loading}
 						/>
 					</div>
 					<div className="form-group">
@@ -57,13 +62,17 @@ const LoginPage = () => {
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
+							disabled={loading}
 						/>
 					</div>
-					<button type="submit" className="login-button">
-						Se connecter
+					<button type="submit" className="login-button" disabled={loading}>
+						{loading ? (
+							<div className="button-loader"></div>
+						) : (
+							"Se connecter"
+						)}
 					</button>
 				</form>
-
 			</div>
 		</div>
 	);

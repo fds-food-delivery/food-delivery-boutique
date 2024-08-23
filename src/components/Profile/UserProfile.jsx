@@ -21,10 +21,11 @@ const UserProfile = () => {
 				const user = await getCurrentUser();
 				if (user) {
 					setUserInfo({
-						name: user.name || "",
+						firstName: user.firstName || "",
+						lastName: user.lastName || "",
 						email: user.email || "",
 						phone: user.phone || "",
-						address: user.address || "",
+						address: user.address.street || "",
 					});
 				}
 			} catch (error) {
@@ -35,7 +36,7 @@ const UserProfile = () => {
 		};
 
 		fetchUserData();
-	}, [getCurrentUser, setLoading]);
+	}, []);
 
 	const handleEditClick = () => {
 		setIsEditing(!isEditing);
@@ -50,89 +51,94 @@ const UserProfile = () => {
 	};
 
 	return (
-		<div className="container mt-5 pt-5">
-			<div className="row mt-5 mb-4">
-				<div className="col-6 col-md-3">
-					<button
-						className="btn btn-primary"
-						onClick={handleEditClick}
-						disabled
-					>
-						Profil Utilisateur
-					</button>
-				</div>
-				<div className="col-6">
-					<button className="btn btn-primary" onClick={handleEditClick}>
-						{isEditing ? "Save" : "Edit"}
-					</button>
-				</div>
+		<div className="profile-container">
+			<h2 className="profile-title">Profil Utilisateur</h2>
+			<div className="profile-actions">
+				<button
+					className="btn profile-btn profile-btn-primary"
+					onClick={handleEditClick}
+				>
+					{isEditing ? "Enregistrer" : "Modifier"}
+				</button>
 			</div>
 
-			<table className="table table-bordered table-striped">
+			<table className="table profile-table">
 				<tbody>
-					<tr>
-						<th>Name</th>
-						<td>
-							<input
-								type="text"
-								name="name"
-								value={userInfo.name}
-								onChange={handleChange}
-								className="form-control"
-								disabled={!isEditing}
-							/>
-						</td>
-					</tr>
-					<tr>
-						<th>Email</th>
-						<td>
-							<input
-								type="email"
-								name="email"
-								value={userInfo.email}
-								onChange={handleChange}
-								className="form-control"
-								disabled={!isEditing}
-							/>
-						</td>
-					</tr>
-					<tr>
-						<th>Phone</th>
-						<td>
-							<input
-								type="text"
-								name="phone"
-								value={userInfo.phone}
-								onChange={handleChange}
-								className="form-control"
-								disabled={!isEditing}
-							/>
-						</td>
-					</tr>
-					<tr>
-						<th>Address</th>
-						<td>
-							<input
-								type="text"
-								name="address"
-								value={userInfo.address}
-								onChange={handleChange}
-								className="form-control"
-								disabled={!isEditing}
-							/>
-						</td>
-					</tr>
+				<tr>
+					<th>Prenom</th>
+					<td>
+						<input
+							type="text"
+							name="name"
+							value={userInfo.firstName}
+							onChange={handleChange}
+							className="form-control"
+							disabled={!isEditing}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<th>Nom</th>
+					<td>
+						<input
+							type="text"
+							name="name"
+							value={userInfo.lastName}
+							onChange={handleChange}
+							className="form-control"
+							disabled={!isEditing}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<th>Email</th>
+					<td>
+						<input
+							type="email"
+							name="email"
+							value={userInfo.email}
+							onChange={handleChange}
+							className="form-control"
+							disabled={!isEditing}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<th>Téléphone</th>
+					<td>
+						<input
+							type="text"
+							name="phone"
+							value={userInfo.phone}
+							onChange={handleChange}
+							className="form-control"
+							disabled={!isEditing}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<th>Adresse</th>
+					<td>
+						<input
+							type="text"
+							name="address"
+							value={userInfo.address}
+							onChange={handleChange}
+							className="form-control"
+							disabled={!isEditing}
+						/>
+					</td>
+				</tr>
 				</tbody>
 			</table>
-			<div className="row mb-5">
-				<div className="col-3 mx-auto">
-					{isEditing && (
-						<button className="btn btn-primary" onClick={handleEditClick}>
-							Save
-						</button>
-					)}
+
+			{isEditing && (
+				<div className="profile-save">
+					<button className="btn profile-btn profile-btn-save" onClick={handleEditClick}>
+						Enregistrer
+					</button>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

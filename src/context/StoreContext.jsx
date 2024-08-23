@@ -16,11 +16,12 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 	const [token, setToken] = useState("");
-	const url = "https://backend-food-ordering.onrender.com";
-	// const url = "http://localhost:4000";
+	 const url = "https://backend-food-ordering.onrender.com";
+	//const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [currentUser, setCurrentUser] = useState(null);
+
 	const [Orders, setOrders] = useState([]);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,30 +147,87 @@ const StoreContextProvider = (props) => {
 		setCartItems(newCartItems);
 	};
 
+	// const loginUser = async (username, password) => {
+	// 	try {
+	// 		const response = await axios.post(`${url}/api/v1/auth/login`, {
+	// 			username: username,
+	// 			password: password,
+	// 		});
+	// 		if (response.status === 200) {
+	// 			console.log("response.data", response.data);
+	// 			setCurrentUser({
+	// 				userId: response.data.userId,
+	// 				username: response.data.username,
+	// 				firstName: response.data.firstName,
+	// 				lastName: response.data.lastName,
+	// 				phone: response.data.phone,
+	// 				email: response.data.email,
+	// 				address: {
+	// 					street: response.data.address.street,
+	// 					city: response.data.address.city,
+	// 					state: response.data.address.state,
+	// 					zipCode: response.data.address.zipCode,
+	// 					country: response.data.address.country
+	// 				},
+	// 				profileImage: response.data.profileImage
+	// 			});
+	// 			setToken(response.data.token);
+	// 			localStorage.setItem("token", response.data.token);
+	// 			setIsAuthenticated(true);
+	// 			console.log("Current user:", currentUser);
+	// 			// link to accueil
+	// 			navigate("/");
+	// 			toast.success("Vous êtes connecté");
+	// 		} else {
+	// 			throw new Error("Erreur lors de la connexion");
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error logging in:", error);
+	// 	} finally {
+	// 		setLoading(false);
+	// 	}
+	// };
+
+
 	const loginUser = async (username, password) => {
-		try {
-			const response = await axios.post(`${url}/api/v1/auth/login`, {
-				username: username,
-				password: password,
-			});
-			if (response.data.success) {
-				console.log("response.data", response.data);
-				setCurrentUser(response.data.user);
-				setToken(response.data.token);
-				localStorage.setItem("token", response.data.token);
-				setIsAuthenticated(true);
-				// link to accueil
-				navigate("/");
-				toast.success("Vous êtes connecté");
-			} else {
-				toast.error(response.data.message);
-			}
-		} catch (error) {
-			console.error("Error logging in:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+  setLoading(true);
+  try {
+    const response = await axios.post(`${url}/api/v1/auth/login`, {
+      username: username,
+      password: password,
+    });
+    if (response.status === 200) {
+      const userData = response.data;
+      setCurrentUser({
+        userId: userData.userId,
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phone: userData.phone,
+        email: userData.email,
+        address: {
+          street: userData.address.street,
+          city: userData.address.city,
+          state: userData.address.state,
+          zipCode: userData.address.zipCode,
+          country: userData.address.country
+        },
+        profileImage: userData.profileImage
+      });
+      setToken(userData.token);
+      localStorage.setItem("token", userData.token);
+      setIsAuthenticated(true);
+      navigate("/");
+      toast.success("Vous êtes connecté");
+    } else {
+      throw new Error("Erreur lors de la connexion");
+    }
+  } catch (error) {
+    toast.error("Erreur lors de la connexion");
+  } finally {
+    setLoading(false);
+  }
+};
 
 	const register = async (email, password) => {
 		try {
@@ -358,59 +416,46 @@ const StoreContextProvider = (props) => {
 		}
 	};
 	//getCurrentUser and return users
-	const getCurrentUser = () => {
-		setLoading(true);
+	const getCurrentUser = async () => {
+		try {
+			setLoading(true);
+			const token = localStorage.getItem("token");
 
-		if (!token) {
-			setLoading(false);
-			toast.error("Token is missing");
-			return Promise.reject(new Error("Token is missing"));
-		}
+			if (!token) {
+				toast.error("Token is missing");
+				throw new Error("Token is missing");
+			}
 
-		return fetch(`${url}/api/v1/auth/user`, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${token}`,
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) => {
-				if (!response.ok) {
-					if (response.status === 403) {
-						throw new Error("Authentication error");
-					} else {
-						throw new Error("Failed to fetch user");
-					}
-				}
-				return response.json();
-			})
-			.then((data) => {
-				if (data.success) {
-					console.log("Get from getCurrentUser");
-					console.log("User:", data.user);
-					setCurrentUser(data.user);
-					return data.user;
-				} else {
-					console.error("Failed to fetch user:", data.message);
-					toast.error(data.message);
-					return;
-				}
-			})
-			.catch((error) => {
-				if (error.message === "Authentication error") {
-					console.error("Authentication error");
-					toast.error("Veuillez vous connecter pour voir vos commandes");
-				} else {
-					console.error("Error getting user:", error);
-					toast.error(
-						"Une erreur est survenue lors de la récupération de l'utilisateur"
-					);
-				}
-			})
-			.finally(() => {
-				setLoading(false);
+			setToken(token);
+
+			const response = await fetch(`${url}/api/v1/auth/user`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+					"Content-Type": "application/json",
+				},
 			});
+			if (response.status === 200) {
+				const data = await response.json();
+				console.log("User data:", data.user);
+				console.log("Current user:", currentUser);
+				return data.user;
+			}else {
+				throw new Error("Error getting user");
+			}
+
+
+		} catch (error) {
+			console.error("Error getting user:", error.message);
+			toast.error(
+				"Une erreur est survenue lors de la récupération de l'utilisateur"
+			);
+			return null;
+		} finally {
+			setLoading(false);
+		}
 	};
+
 
 	const getOrders = async () => {
 		//getCurrentUser
@@ -535,8 +580,11 @@ const StoreContextProvider = (props) => {
 			console.log("call loadData ");
 			await fetchFoodList();
 			if (localStorage.getItem("token")) {
+				console.log("token exist"+localStorage.getItem("token"));
 				setToken(localStorage.getItem("token"));
 				// await loadCartData(localStorage.getItem("token"));
+			}else {
+				console.log("no token");
 			}
 		}
 		// verify user auth

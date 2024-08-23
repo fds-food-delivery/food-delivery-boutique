@@ -1,34 +1,45 @@
+/* Police d'écriture principale */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eef2f7;
+}
+
 .login-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #f0f2f5; /* Couleur d'arrière-plan neutre */
+    background-color: #eef2f7; /* Couleur d'arrière-plan plus claire et moderne */
     padding: 20px;
 }
 
 .login-banner {
     text-align: center;
-    background-color: #40E0D0; /* Turquoise pour le banner */
+    background-color: #007bff; /* Bleu moderne */
     padding: 20px;
     border-radius: 10px;
     color: white;
     width: 100%;
     margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .login-banner p {
     margin: 5px 0 0;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 .login-container {
     background: white;
-    padding: 15px;
+    padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
 }
@@ -38,61 +49,70 @@
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
+    font-size: 1rem;
 }
 
 .login-button {
     width: 100%;
-    padding: 10px;
-    background-color: #40E0D0; /* Bouton en turquoise */
+    padding: 12px;
+    background-color: #007bff; /* Bouton bleu moderne */
     border: none;
     color: white;
     font-weight: bold;
-
+    font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.login-button:hover {
-    background-color: #30C0C0; /* Survol du bouton en turquoise plus foncé */
-}
-
-.google-login-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #555;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    position: relative;
 }
 
-.google-login-button img {
+.login-button:hover {
+    background-color: #0056b3; /* Survol du bouton bleu foncé */
+}
+
+.button-loader {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #fff;
+    border-radius: 50%;
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    animation: spin 1s linear infinite;
 }
 
-.google-login-button:hover {
-    background-color: #f0f0f0;
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ajustements pour un meilleur affichage sur les petits écrans */
+@media (max-width: 480px) {
+    .login-banner {
+        font-size: 1.2rem;
+    }
+
+    .login-container {
+        padding: 20px;
+    }
 }
