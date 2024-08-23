@@ -128,7 +128,7 @@ const StoreContextProvider = (props) => {
 			toast.success("Votre plat a été ajouté au panier");
 			setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
 		} else {
-			toast.success("Votre plat a été ajouté au panier");
+			// toast.success("Votre plat a été ajouté au panier");
 			setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
 		}
 	};

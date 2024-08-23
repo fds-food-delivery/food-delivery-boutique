@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { Navbar, Container, Nav, NavDropdown, Badge } from "react-bootstrap";
+import {Navbar, Container, Nav, NavDropdown, Badge, Button} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCartPlus, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { StoreContext } from "../../context/StoreContext";
@@ -71,6 +71,25 @@ function NavigationBar() {
 						width="70"
 					/>
 				</Navbar.Brand>
+
+				{ !expanded && (
+					<Nav.Link
+						as={Link}
+						to="#menu-item"
+						className="custom-nav-link-cart custom-nav-link"
+						onClick={togglePanier}
+						style={{ marginLeft: "auto" }}
+					>
+						<div className="custom-nav-link-cart">
+							<FaCartPlus size={30} className="text-dark" />
+							<Badge pill bg="success" className="ml-2">
+								{totalItems > 0 && totalItems}
+							</Badge>
+						</div>
+					</Nav.Link>
+				)}
+
+
 				<Navbar.Toggle aria-controls="basic-navbar-nav custom-navbar-nav"style={{backgroundColor: "white"}}>
 					{expanded ? (
 						<FaTimes size={24} style={{ color: "#f86c6b" }} />

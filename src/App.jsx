@@ -42,7 +42,7 @@ const App = () => {
                         <Route path="/profil" element={<UserProfile />} />
                     </Routes>
                     <Footer />
-                    <ScrollToTop fill="#f86c6b" color="#f86c6b" />
+                    <ScrollToTop smooth style={{  textAlign: "center", borderRadius: "50%", color: "white", fontSize: "20px", right: "20px", textDecoration: "none"}}/>
                 </div>
 
     );
