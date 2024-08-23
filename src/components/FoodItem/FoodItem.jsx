@@ -3,10 +3,9 @@ import "./FoodItem.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 
-const FoodItem = ({ key, id, name, price, description, image }) => {
+const FoodItem = ({ id, name, price, description, image }) => {
 	const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
-	// const url = "https://backend-food-ordering.onrender.com";
-	//const url = "http://localhost:4000";
+
 	const ensureImageExtension = (imageName) => {
 		if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
 			return imageName;
@@ -14,15 +13,44 @@ const FoodItem = ({ key, id, name, price, description, image }) => {
 			return `${imageName}.png`;
 		}
 	};
+
+	const handleImageError = (e) => {
+		e.target.src = "https://placehold.co/300";
+	};
+
 	const correctedImageName = ensureImageExtension(image);
+
+	const renderCartActions = () => {
+		return cartItems[id] ? (
+			<div className="food-item-counter">
+				<img
+					onClick={() => removeFromCart(id)}
+					src={assets.remove_icon_red}
+					alt="Remove from cart"
+					aria-label="Remove one item"
+				/>
+				<span>{cartItems[id]}</span>
+				<img
+					onClick={() => addToCart(id)}
+					src={assets.add_icon_green}
+					alt="Add to cart"
+					aria-label="Add one more item"
+				/>
+			</div>
+		) : (
+			<img
+				className="add"
+				onClick={() => addToCart(id)}
+				src={assets.add_icon_white}
+				alt="Add to cart"
+				aria-label="Add to cart"
+			/>
+		);
+	};
+
 	return (
 		<div className="food-item">
 			<div className="food-item-img-container">
-				{/* <img className="food-item-image" src={image} alt="" /> */}
-				{
-					// si image se terminer par .png ou .jpg sinon on ajouter .png a la fin
-				}
-				<span className="food-item-name">{image}</span>
 				<img
 					src={
 						image
@@ -31,38 +59,12 @@ const FoodItem = ({ key, id, name, price, description, image }) => {
 					}
 					alt={name}
 					className="food-item-image"
-					onError={(e) => {
-						e.target.src = "https://placehold.co/300";
-					}} // Fallback si l'image échoue à se charger
+					onError={handleImageError}
 				/>
-				{!cartItems[id] ? (
-					<img
-						className="add"
-						onClick={() => addToCart(id)}
-						src={assets.add_icon_white}
-						alt=""
-					/>
-				) : (
-					<div className="food-item-counter">
-						<img
-							onClick={() => removeFromCart(id)}
-							src={assets.remove_icon_red}
-							alt=""
-						/>
-						<p>{cartItems[id]}</p>
-						<img
-							onClick={() => addToCart(id)}
-							src={assets.add_icon_green}
-							alt=""
-						/>
-					</div>
-				)}
+				{renderCartActions()}
 			</div>
 			<div className="food-item-info">
-				{/* <div className="food-item-name-rating">
-					<p>{name}</p>
-					<img src={assets.rating_starts} alt="" />
-				</div> */}
+				<h3 className="food-item-name">{name}</h3>
 				<p className="food-item-desc">{description}</p>
 				<p className="food-item-price">{price} FCFA</p>
 			</div>

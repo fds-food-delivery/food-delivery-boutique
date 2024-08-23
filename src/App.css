@@ -119,8 +119,10 @@ button:hover {
 }
 
 .custom-nav-link:hover, .navbar-light .navbar-nav .nav-link.active {
-  color: #FF6347 !important; /* Couleur dorée au survol */
+  /*color: #FF6347 !important; !* Couleur dorée au survol *!*/
+  color: #cccccc !important; /* Couleur dorée au survol */
 }
+.
 
 .navbar-sticky {
   background-color: #ffffff !important;
@@ -128,14 +130,18 @@ button:hover {
 }
 
 .custom-navbar .badge {
-  background-color: #FF6347; /* Tomate */
+  /*background-color: #FF6347; !* Tomate *!*/
   color: #fff;
   font-size: 0.8rem;
   vertical-align: text-top;
 }
 
 .custom-navbar .navbar-toggler {
+  color: #ffffff !important; /* Couleur dorée au survol */
   border-color: #fff; /* Bordure blanche pour le toggle */
+}
+.custom-navbar-nav{
+  color: #ffffff !important; /* Couleur dorée au survol */
 }
 
 .custom-navbar .navbar-toggler-icon {

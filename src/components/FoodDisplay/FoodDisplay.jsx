@@ -17,73 +17,54 @@ const FoodDisplay = ({ category }) => {
         removeFromCart,
     } = useContext(StoreContext);
 
-    if (category === "Salade" && foodList.length > 0) {
-        return (
-            <div className="food-display row" id="food-display">
-                <h2>Composez votre salade</h2>
-                <SaladOptions
-                    saladTypes={salade_types_liste}
-                    sauces={salade_sauce}
-                    condiments={salade_supplementaire}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            </div>
-        );
-    }
-    // if (category === "Salade") {
-    // 	return (
-    // 		<div className="food-display" id="food-display">
-    // 			<h2>Composez votre salade</h2>
-    // 			<SaladOptions
-    // 				saladTypes={salade_types_liste}
-    // 				sauces={salade_sauce}
-    // 				condiments={salade_supplementaire}
-    // 				cartItems={cartItems}
-    // 				addToCart={addToCart}
-    // 				removeFromCart={removeFromCart}
-    // 			/>
-    // 		</div>
-    // 	);
-    // }
+    const renderSaladOptions = () => (
+        <div className="food-display row" id="food-display">
+            <h2 className="food-display-title">Composez votre salade</h2>
+            <SaladOptions
+                saladTypes={salade_types_liste}
+                sauces={salade_sauce}
+                condiments={salade_supplementaire}
+                cartItems={cartItems}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+            />
+        </div>
+    );
 
-    return (
-        // affiche clip loader au cas ou
-        loading ? (
-            <div className="loader">
-                <ClipLoader color="#f86c6b" size={150} />
-            </div>
-        ) : (
-            <div className="food-display" id="food-display">
-                <h2>Meilleurs plats</h2>
-                <div className="food-display-list">
-                    {foodList.map((item) => {
-                        if (category === "All" || category === item.category) {
-                            // if (!item.image) {
-                            //     item.image =
-                            //         "https://res.cloudinary.com/dkzv1m5v0/image/upload/v1633089826/food_25_bq1z7v.png";
-                            // }
+    const renderFoodItems = () => (
+        <div className="food-display-list">
+            {foodList.map((item) => {
+                if (category === "All" || category === item.category) {
+                    return (
+                        <FoodItem
+                            key={item._id}
+                            id={item._id}
+                            name={item.name}
+                            description={item.description}
+                            price={item.price}
+                            image={item.image}
+                            cartItems={cartItems}
+                            addToCart={addToCart}
+                            removeFromCart={removeFromCart}
+                        />
+                    );
+                }
+                return null;
+            })}
+        </div>
+    );
 
-                            return (
-                                <FoodItem
-                                    key={item._id}
-                                    id={item._id}
-                                    name={item.name}
-                                    description={item.description}
-                                    price={item.price}
-                                    image={item.image}
-                                    cartItems={cartItems}
-                                    addToCart={addToCart}
-                                    removeFromCart={removeFromCart}
-                                />
-                            );
-                        }
-                        return null;
-                    })}
-                </div>
-            </div>
-        )
+    return loading ? (
+        <div className="loader">
+            <ClipLoader color="#f86c6b" size={150} />
+        </div>
+    ) : (
+        <div className="food-display" id="food-display">
+            <h2 className="food-display-title">
+                {category === "Salade" ? "Composez votre salade" : "Meilleurs plats"}
+            </h2>
+            {category === "Salade" ? renderSaladOptions() : renderFoodItems()}
+        </div>
     );
 };
 

@@ -38,10 +38,19 @@ function NavigationBar() {
 		}
 	};
 
+	const handleScroll = () => {
+		setExpanded(false);
+	};
+
 	useEffect(() => {
 		document.addEventListener("mousedown", handleClickOutside);
+
+		window.addEventListener("scroll", handleScroll);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
+
+			window.removeEventListener("scroll", handleScroll);
+
 		};
 	}, []);
 
@@ -62,11 +71,11 @@ function NavigationBar() {
 						width="70"
 					/>
 				</Navbar.Brand>
-				<Navbar.Toggle aria-controls="basic-navbar-nav">
+				<Navbar.Toggle aria-controls="basic-navbar-nav custom-navbar-nav"style={{backgroundColor: "white"}}>
 					{expanded ? (
 						<FaTimes size={24} style={{ color: "#f86c6b" }} />
 					) : (
-						<FaBars size={24} style={{ color: "#f86c6b" }} />
+						<FaBars size={24} style={{ color: "#f86c6b"}} />
 					)}
 				</Navbar.Toggle>
 
