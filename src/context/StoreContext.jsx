@@ -4,6 +4,7 @@ import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+// navigate
 
 import {
 	salade_sauce,
@@ -276,7 +277,7 @@ const StoreContextProvider = (props) => {
 	const verify = async () => {
 		if (!localStorage.getItem("token")) {
 			setCurrentUser(null);
-			setIsAuthenticated(false);
+
 			setLoading(false);
 			return;
 		}
@@ -296,21 +297,21 @@ const StoreContextProvider = (props) => {
 			if (response.status == 200) {
 			setToken(localStorage.getItem("token"));
 			setCurrentUser(response.data.user);
-			
 			setToken(localStorage.getItem("token"));
 			console.log("response de verify ", response.data);
 			setLoading(false);
 			}else {
 				throw new Error("Erreur lors de la verification");
+
 			}
 
 		} catch (error) {
 			console.error("Error verifying:", error);
 			setCurrentUser(null);
-			setIsAuthenticated(false);
 			setToken("");
 			setLoading(false);
 			toast.error("Erreur lors de la vérification");
+			navigate("/login");
 		}
 	};
 
