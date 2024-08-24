@@ -68,7 +68,7 @@ const Orderstate = () => {
 					<thead className="thead-dark">
 					<tr>
 						{/*heure de commande*/}
-						<th>Date de commande</th>
+						<th>Date</th>
 						<th>État</th>
 						{/*{showProgress && <th>Progression</th>}*/}
 						<th>Montant</th>
@@ -78,13 +78,24 @@ const Orderstate = () => {
 					<tbody>
 					{orders.map((order, index) => (
 						<tr key={index}>
-							<td>{new Date(order.date).toLocaleString()}</td>
+							<td style={
+								{
+									color: "black",
+									fontSize: "1.2em",
+									fontWeight: "bold",
+									textAlign: "left",
+									whiteSpace: "pre-wrap",
+									wordWrap: "break-word",
+								}
+
+							}
+							>{new Date(order.date).toLocaleString()}</td>
 							<td className={`font-weight-bold ${order.status === "Delivered" ? "text-success" : "text-secondary"}`}>
 								{order.status === "Delivered"
 									? "Livré"
 									: order.status === "Out for delivery"
-										? "En cours de livraison"
-										: "En cours de préparation"}
+									? "livraison"
+									: "préparation"}
 							</td>
 							{/*{showProgress && (*/}
 							{/*	<td>*/}
