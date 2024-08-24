@@ -19,7 +19,7 @@ const MyLoader = () => (
         #00FFD1
         */}
         <HashLoader size={100}
-                    color={"#00FFD1"}
+                    color={"#0059ff"}
                     loading={true} />
     </div>
 );

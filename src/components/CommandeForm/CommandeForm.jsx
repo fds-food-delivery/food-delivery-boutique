@@ -91,16 +91,16 @@ const CommandeForm = () => {
 							<span>Adresse : </span>
 							{currentUser?.address.street}, {currentUser?.address.city}
 						</p>
-						<p>
-							<span>Quantite : </span>
-							{Object.keys(cartItems).reduce((acc, id) => acc + cartItems[id], 0)}
-						</p>
+						{/*<p>*/}
+						{/*	<span>Quantite : </span>*/}
+						{/*	{Object.keys(cartItems).reduce((acc, id) => acc + cartItems[id], 0)}*/}
+						{/*</p>*/}
 						<p>
 							<span>Prix total : </span>
 							{totalPrice()} FCFA
 						</p>
 						<p>
-							<span>Paiement : </span>
+							<span>Mode Paiement : </span>
 							{selectedPayment === "wave" ? "Wave" : "A la livraison"}
 						</p>
 					</div>
