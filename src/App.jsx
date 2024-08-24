@@ -1,6 +1,6 @@
 
 import { Route, Routes } from "react-router-dom";
-import Accueil from "./pages/Accueil/Accueil";
+import Home from "./pages/Accueil/Home.jsx";
 import Panier from "./pages/Panier/Panier";
 import Commande from "./pages/Commande/Commande";
 import Footer from "./components/Footer/Footer";
@@ -43,7 +43,8 @@ const App = () => {
             <Navbar3/>
             <ToastContainer closeButton={false} position="bottom-left" autoClose={1000}/>
             <Routes>
-                <Route path="/" element={<Accueil/>}/>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/accueil" element={<Home/>}/>
                 <Route path="/panier" element={<Panier/>}/>
                 <Route path="/commande" element={<Commande/>}/>
                 <Route path="/login" element={<LoginPage/>}/>

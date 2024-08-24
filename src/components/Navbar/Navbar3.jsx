@@ -8,7 +8,10 @@ import "./NavigationBar.css"; // Assurez-vous de créer ce fichier CSS
 
 function NavigationBar() {
 	const [isPanierOpen, setIsPanierOpen] = useState(false);
-	const { cartItems, currentUser, logout, isAuthenticated } =
+	const {
+		cartItems, currentUser, logout,
+		loginUser,
+	} =
 		useContext(StoreContext);
 
 	const navigate = useNavigate();
@@ -52,7 +55,7 @@ function NavigationBar() {
 			window.removeEventListener("scroll", handleScroll);
 
 		};
-	}, []);
+	}, [currentUser]);
 
 	return (
 		<Navbar

@@ -11,14 +11,15 @@ import {
 	salade_supplementaire,
 	salade_types_liste,
 } from "../assets/assets";
+import login from "../pages/Login/Login.jsx";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 
-	const url = "https://backend-food-ordering.onrender.com";
-	//const url = "http://localhost:4000";
+	//const url = "https://backend-food-ordering.onrender.com";
+	const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);

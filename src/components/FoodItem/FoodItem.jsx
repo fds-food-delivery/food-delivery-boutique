@@ -3,7 +3,7 @@ import "./FoodItem.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 
-const FoodItem = ({ id, name, price, description, image }) => {
+const FoodItem = ({ id, name, price, description,category, sousCategory,  image }) => {
 	const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
 
 	const ensureImageExtension = (imageName) => {
@@ -64,7 +64,12 @@ const FoodItem = ({ id, name, price, description, image }) => {
 				{renderCartActions()}
 			</div>
 			<div className="food-item-info">
-				<h3 className="food-item-name">{name}</h3>
+				<h3 className="food-item-name1">{name}</h3>
+				{category && (
+				<h6>
+					Categorie : {category}, {sousCategory? sousCategory : ""}
+				</h6>
+				)}
 				<p className="food-item-desc">{description}</p>
 				<p className="food-item-price">{price} FCFA</p>
 			</div>

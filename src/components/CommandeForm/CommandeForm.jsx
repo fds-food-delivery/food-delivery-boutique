@@ -3,7 +3,7 @@ import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
-import {FaCheckCircle} from "react-icons/fa";
+import {FaCheckCircle, FaTimes} from "react-icons/fa";
 
 
 // toast
@@ -67,6 +67,38 @@ const CommandeForm = () => {
 					</div>
 				</div>
 			</Modal>
+			{/*Refect modal*/}
+			<Modal
+				show={openModalValidatedHandle}
+				title="Commande non validée"
+				onClose={() => setOpenModalValidatedHandle(false)}
+			>
+				<div className="container">
+					<div className="row">
+						<h4
+							className="text-center mb-4 text-primary"
+						>
+							<span
+								className="text-danger mr-2"
+							>Votre commande n'a pas été validée
+								</span>
+							<FaTimes style={{ color: "red", fontSize: "50px" }} />
+						</h4>
+					</div>
+					<div className="row">
+						<div className="col-6 mx-auto">
+							<button
+								className="btn btn-secondary"
+								onClick={() => setOpenModalValidatedHandle(false)}
+							>
+								OK
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
+
+
 
 
 			{/*confirmation de commande */}

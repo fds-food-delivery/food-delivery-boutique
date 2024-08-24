@@ -40,6 +40,8 @@ const FoodDisplay = ({ category }) => {
                             id={item._id}
                             name={item.name}
                             description={item.description}
+                            category={item.category}
+                            sousCategory={item.sousCategory ? item.sousCategory : ""}
                             price={item.price}
                             image={item.image}
                             cartItems={cartItems}

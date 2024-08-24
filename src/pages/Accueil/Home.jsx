@@ -7,9 +7,12 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 // ClipLoader
 import { ClipLoader } from "react-spinners";
 
-const Accueil = () => {
+const Home = () => {
 	const [category, setCategory] = useState("All");
 	const { loading, setLoading } = useContext(StoreContext);
+	useState(() => {
+		setLoading(true);
+	}, []);
 	return (
 		<div className="container custom-container">
 			<div
@@ -31,4 +34,4 @@ const Accueil = () => {
 	);
 };
 
-export default Accueil;
+export default Home;
