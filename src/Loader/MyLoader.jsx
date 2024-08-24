@@ -14,8 +14,13 @@ const MyLoader = () => (
         backgroundColor: 'white',
         zIndex: 9999
     }}>
-
-        <HashLoader size={100} color={"#f86c6b"} loading={true} />
+        {/*#f86c6b*/}
+        {/*thurquoise :
+        #00FFD1
+        */}
+        <HashLoader size={100}
+                    color={"#00FFD1"}
+                    loading={true} />
     </div>
 );
 

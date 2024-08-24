@@ -17,12 +17,11 @@ const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 
 	 const url = "https://backend-food-ordering.onrender.com";
-	// const url = "http://localhost:4000";
+	//const url = "http://localhost:4000";
 	const [foodList, setFoodList] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
-	const [Orders, setOrders] = useState([]);
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [orders, setOrders] = useState([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
 	const [token, setToken] = useState(null);
@@ -152,7 +151,7 @@ const StoreContextProvider = (props) => {
 	// 			username: username,
 	// 			password: password,
 	// 		});
-	// 		if (response.status === 200) {
+	// 		if (response.status === 200 || response.status === 201) {
 	// 			console.log("response.data", response.data);
 	// 			setCurrentUser({
 	// 				userId: response.data.userId,
@@ -172,7 +171,7 @@ const StoreContextProvider = (props) => {
 	// 			});
 	// 			setToken(response.data.token);
 	// 			localStorage.setItem("token", response.data.token);
-	// 			setIsAuthenticated(true);
+	// 			
 	// 			console.log("Current user:", currentUser);
 	// 			// link to accueil
 	// 			navigate("/");
@@ -197,7 +196,7 @@ const StoreContextProvider = (props) => {
 				username: username,
 				password: password,
 			});
-			if (response.status === 200) {
+			if (response.status === 200  || response.status === 201) {
 				console.log("response.data", response.data);
 			  	const userData = response.data;
 			  	setCurrentUser({
@@ -219,7 +218,7 @@ const StoreContextProvider = (props) => {
 
 				setToken(userData.token);
 				localStorage.setItem("token", userData.token);
-				setIsAuthenticated(true);
+				
 				navigate("/");
 			} else {
 				throw new Error("Erreur lors de la connexion");
@@ -260,7 +259,7 @@ const StoreContextProvider = (props) => {
 			if (response.data.success) {
 				localStorage.removeItem("token");
 				setToken("");
-				setIsAuthenticated(false);
+				
 				setCurrentUser(null);
 				toast.success("Vous êtes déconnecté");
 				navigate("/");
@@ -281,7 +280,7 @@ const StoreContextProvider = (props) => {
 			setLoading(false);
 			return;
 		}
-		setToken(localStorage.getItem("token"));
+
 		try {
 			const response = await axios.post(
 				`${url}/api/v1/auth/verify`,
@@ -289,18 +288,22 @@ const StoreContextProvider = (props) => {
 				{
 					headers: {
 						token : localStorage.getItem("token"),
-						// Authorization: `Bearer ${localStorage.getItem("token")}`,
+						 Authorization: `Bearer ${localStorage.getItem("token")}`,
 						"Content-Type": "application/json",
 					},
 				}
 			);
-			if (response.status !== 200) {
-				throw new Error("Erreur lors de la verification");
-			}
+			if (response.status == 200) {
+			setToken(localStorage.getItem("token"));
 			setCurrentUser(response.data.user);
-			setIsAuthenticated(true);
+			
+			setToken(localStorage.getItem("token"));
 			console.log("response de verify ", response.data);
 			setLoading(false);
+			}else {
+				throw new Error("Erreur lors de la verification");
+			}
+
 		} catch (error) {
 			console.error("Error verifying:", error);
 			setCurrentUser(null);
@@ -463,7 +466,7 @@ const StoreContextProvider = (props) => {
 
 			);
 			console.log("response", response);
-			if (response.status === 200) {
+			if (response.status === 200 || response.status === 201) {
 				setCartItems({});
 				toast.success("Commande passée avec succès");
 			}else {
@@ -480,14 +483,11 @@ const StoreContextProvider = (props) => {
 		try {
 			setLoading(true);
 			const token = localStorage.getItem("token");
-
 			if (!token) {
 				toast.error("Token is missing");
 				throw new Error("Token is missing");
 			}
-
 			setToken(token);
-
 			const response = await fetch(`${url}/api/v1/auth/user`, {
 				method: "GET",
 				headers: {
@@ -495,9 +495,11 @@ const StoreContextProvider = (props) => {
 					"Content-Type": "application/json",
 				},
 			});
-			if (response.status === 200) {
+			if (response.status === 200 || response.status === 201) {
 				const data = await response.json();
 				console.log("User data:", data.user);
+				const user = 	data.user;
+				setCurrentUser(user);
 				console.log("Current user:", currentUser);
 				return data.user;
 			}else {
@@ -506,7 +508,6 @@ const StoreContextProvider = (props) => {
 
 
 		} catch (error) {
-			console.error("Error getting user:", error.message);
 			toast.error(
 				"Une erreur est survenue lors de la récupération de l'utilisateur"
 			);
@@ -516,46 +517,41 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-
-	const getOrders = async () => {
-		//getCurrentUser
-		const response = await getCurrentUser();
-		if (!response) {
-			console.log("response", response);
-			return;
-		}
-		//userId
-		if (!currentUser) {
-			toast.error("Veuillez vous connecter pour voir vos commandes");
-			return;
-		}
-		const userId = currentUser.userId;
-		console.log("userId", userId);
-		try {
-			const response = await axios.post(
-				`${url}/api/v1/orders/userorders`,
-				{
-					"userId " : userId,
+	const getOrders = () => {
+		setLoading(true);
+		return axios.post(
+			`${url}/api/v1/orders/userorders`,
+			{ userId: "60d0fe4f5311236168a109ca" },
+			{
+				headers: {
+					token,
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				{
-					headers: {
-						token,
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			if (response.status === 200) {
-				console.log("Orders:", response.data.orders);
-				setOrders(response.data.orders);
-			}else {
-				throw new Error("Error getting orders");
 			}
-		} catch (error) {
-			console.error("Error getting orders:", error);
-			toast.error("Veuiilez vous connecter pour voir vos commandes");
-			setLoading(false);
-		}
+		)
+			.then(response => {
+				if (response.status === 200 || response.status === 201) {
+					console.log("Orders:", response.data);
+					const orders1 = response.data ;
+					setOrders(orders1);
+					setLoading(false);
+					return orders1 ;
+				} else {
+					throw new Error("Error getting orders");
+				}
+			})
+			.catch(error => {
+				console.error("Error getting orders:", error);
+				setLoading(false);
+				throw error; // Propager l'erreur pour qu'elle soit capturée par le bloc catch
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	};
+
+
+
 
 	const contextValue = {
 		foodList,
@@ -576,7 +572,7 @@ const StoreContextProvider = (props) => {
 		validerCommande,
 		loginUser,
 		register,
-		Orders,
+		orders,
 		setOrders,
 		fetchOrders,
 		logout,
@@ -587,7 +583,7 @@ const StoreContextProvider = (props) => {
 		getOrders,
 		getCurrentUser,
 
-		isAuthenticated,
+
 		openModalHandle,
 		isModalOpen,
 		modalChildren,
@@ -597,14 +593,15 @@ const StoreContextProvider = (props) => {
 		setLoading(true);
 		try {
 			const response = await axios.get(`${url}/api/v1/foods`);
-			if (response.data.success) {
+			if (response.status === 200 || response.status === 201) {
 				console.log("food_list", response.data.data); // Use the fetched data directly
 				setFoodList(response.data.data);
 			} else {
-				toast.error(response.data.message);
+				throw new Error("Verifiez votre connexion internet");
 			}
 		} catch (error) {
 			console.error("Error fetching food list:", error);
+			setLoading(false);
 		} finally {
 			setLoading(false);
 		}
@@ -616,14 +613,16 @@ const StoreContextProvider = (props) => {
 			const response = await axios.get(`${url}/api/v1/cart`, {
 				headers: { token },
 			});
-			if (response.data.success) {
+			if (response.status === 200 || response.status === 201) {
 				console.log("cartItems", response.data.data);
 				setCartItems(response.data.data);
+				setLoading(false);
 			} else {
-				toast.error(response.data.message);
+				throw new Error("Error loading cart data");
 			}
 		} catch (error) {
 			console.error("Error loading cart data:", error);
+			setLoading(false);
 		} finally {
 			setLoading(false);
 		}

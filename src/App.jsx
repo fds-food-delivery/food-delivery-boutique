@@ -29,9 +29,11 @@ const App = () => {
     const [loadingApp, setLoadingApp] = useState(true);
 
     useEffect(() => {
-        // Simuler un délai de chargement
-        setTimeout(() => setLoadingApp(false), 5000);
-    }, []);
+            if (loading === false) {
+                // Simuler un délai de chargement
+                setTimeout(() => setLoadingApp(false), 5000);
+            }
+        }, []);
 
     return (
         <div className="app1e">

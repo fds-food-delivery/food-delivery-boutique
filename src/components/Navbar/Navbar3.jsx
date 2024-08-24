@@ -148,9 +148,10 @@ function NavigationBar() {
 							<Nav.Link
 								as={Link}
 								to="/login"
-								className="custom-nav-link custom-nav-link-btn"
+								// className="custom-nav-link custom-nav-link-btn"
 							>
-								Login
+								{/*Login*/}
+								<FaUser size={28} />
 							</Nav.Link>
 						)}
 					</Nav>
