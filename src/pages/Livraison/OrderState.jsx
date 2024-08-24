@@ -2,7 +2,8 @@ import {useContext, useEffect, useState} from "react";
 import { StoreContext } from "../../context/StoreContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClipLoader } from "react-spinners";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import {FaEye} from "react-icons/fa"; // Import Font Awesome
 
 const Orderstate = () => {
 	const { orders, getOrders,setLoading, loading, getCurrentUser } = useContext(StoreContext);
@@ -63,13 +64,13 @@ const Orderstate = () => {
 				<h2 className="mb-0">{title}</h2>
 			</div>
 			<div className="card-body table-responsive">
-				<table className="table table-hover scroll fa-database">
+				<table className="table table-hover ">
 					<thead className="thead-dark">
 					<tr>
 						{/*heure de commande*/}
 						<th>Date de commande</th>
 						<th>État</th>
-						{showProgress && <th>Progression</th>}
+						{/*{showProgress && <th>Progression</th>}*/}
 						<th>Montant</th>
 						<th>Action</th>
 					</tr>
@@ -85,27 +86,29 @@ const Orderstate = () => {
 										? "En cours de livraison"
 										: "En cours de préparation"}
 							</td>
-							{showProgress && (
-								<td>
-									<div className="progress">
-										<div
-											className={`progress-bar ${
-												getProgressPercentage(order.status) === 100 ? "bg-success" : "bg-info"
-											}`}
-											role="progressbar"
-											style={{ width: `${getProgressPercentage(order.status)}%` }}
-											aria-valuenow={getProgressPercentage(order.status)}
-											aria-valuemin="0"
-											aria-valuemax="100"
-										>
-											{getProgressPercentage(order.status)}%
-										</div>
-									</div>
-								</td>
-							)}
+							{/*{showProgress && (*/}
+							{/*	<td>*/}
+							{/*		<div className="progress">*/}
+							{/*			<div*/}
+							{/*				className={`progress-bar ${*/}
+							{/*					getProgressPercentage(order.status) === 100 ? "bg-success" : "bg-info"*/}
+							{/*				}`}*/}
+							{/*				role="progressbar"*/}
+							{/*				style={{ width: `${getProgressPercentage(order.status)}%` }}*/}
+							{/*				aria-valuenow={getProgressPercentage(order.status)}*/}
+							{/*				aria-valuemin="0"*/}
+							{/*				aria-valuemax="100"*/}
+							{/*			>*/}
+							{/*				{getProgressPercentage(order.status)}%*/}
+							{/*			</div>*/}
+							{/*		</div>*/}
+							{/*	</td>*/}
+							{/*)}*/}
 							<td>{order.amount} FCFA</td>
 							<td>
-								<button className="btn btn-primary">Voir</button>
+								<button className="btn btn-primary">
+									<FaEye />
+								</button>
 							</td>
 						</tr>
 					))}
