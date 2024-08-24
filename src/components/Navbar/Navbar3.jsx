@@ -65,29 +65,30 @@ function NavigationBar() {
 			<Container>
 				<Navbar.Brand as={Link} to="/">
 					<img
-						src="/images/logo.png"
-						alt="Thurquoise Logo"
-						className="d-inline-block align-top"
-						width="70"
-					/>
+ src="/images/logo.png"
+ alt="Thurquoise Logo"
+ className="d-inline-block align-top logo"
+ />
 				</Navbar.Brand>
 
-				{ !expanded && (
-					<Nav.Link
-						as={Link}
-						to="#menu-item"
-						className="custom-nav-link-cart custom-nav-link"
-						onClick={togglePanier}
-						style={{ marginLeft: "auto" }}
-					>
-						<div className="custom-nav-link-cart">
-							<FaCartPlus size={30} className="text-dark" />
-							<Badge pill bg="success" className="ml-2">
-								{totalItems > 0 && totalItems}
-							</Badge>
-						</div>
-					</Nav.Link>
-				)}
+				{ !expanded ? (
+ <Nav.Link
+  as={Link}
+  to="#menu-item"
+  className="custom-nav-link-cart-2 custom-nav-link"
+  onClick={togglePanier}
+  style={{ marginLeft: "auto" }}
+ >
+  <div className="custom-nav-link-cart">
+   <FaCartPlus size={30} className="text-dark" />
+   <Badge pill bg="success" className="ml-2">
+    {totalItems > 0 && totalItems}
+   </Badge>
+  </div>
+ </Nav.Link>
+) : (
+ <div></div>
+)}
 
 
 				<Navbar.Toggle aria-controls="basic-navbar-nav custom-navbar-nav"style={{backgroundColor: "white"}}>

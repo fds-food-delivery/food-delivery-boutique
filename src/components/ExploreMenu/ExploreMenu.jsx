@@ -9,6 +9,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 			{/* <p className="explore-menu-text">
 				Choisissez parmi un menu varié comprenant une gamme détectable de plats
 			</p> */}
+			{/*horizontale scroll siil ya pas espace*/}
 			<div className="explore-menu-list">
 				{menu_list.map((item, index) => {
 					return (

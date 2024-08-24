@@ -17,11 +17,11 @@ const LoginPage = () => {
 		setLoading(true);
 		try {
 			const reponse = await loginUser(username, password);
-			if (reponse.status === 200) {
+			if (reponse) {
 				toast.success("Connexion réussie");
 				navigate("/");
-			}else{
-				throw new Error("Erreur lors de la connexion");
+			} else {
+				toast.error("Erreur lors de la connexion");
 			}
 		} catch (error) {
 			toast.error("Erreur lors de la connexion");
@@ -35,10 +35,10 @@ const LoginPage = () => {
 	}
 
 	return (
-		<div className="login-page">
+		<div className="login-page" style={{ backgroundImage: `url("https://www.shutterstock.com/shutterstock/photos/2278053615/display_1500/stock-photo-french-fries-burgers-and-other-fast-food-as-background-top-view-2278053615.jpg")` }}>
 			<div className="login-container">
 				<div className="login-banner">
-					<p>Connectez-vous pour accéder à notre application</p>
+					<p>Connectez-vous </p>
 				</div>
 				<form onSubmit={loginHandler} className="login-form">
 					<div className="form-group">

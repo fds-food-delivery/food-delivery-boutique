@@ -14,7 +14,7 @@ const Orderstate = () => {
 		setTimeout(() => {
 			fetchOrders();
 		}, 10000);
-	}, [getOrders]);
+	}, []);
 
 	// if (Orders.length === 0 ) {
 	// 	return (

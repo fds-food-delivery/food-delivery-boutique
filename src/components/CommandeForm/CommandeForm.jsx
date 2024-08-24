@@ -23,17 +23,12 @@ const CommandeForm = () => {
 	const [openModalValidatedHandle, setOpenModalValidatedHandle] = useState(false);
 
 	const handleConfirmed = () => {
-		//const reponse = validerCommande();
-		setOpenModalHandle(false);
-		//show to the user that the command is validated
-		setOpenModalValidatedHandle(true);
-
-	};
-	const handleValidation = () => {
 		const reponse = validerCommande();
 		if (reponse) {
-			openModalHandle("vous avez validé votre commande");
-		} else {
+			setOpenModalHandle(false);
+			//show to the user that the command is validated
+			setOpenModalValidatedHandle(true);
+		}else{
 			toast.error("Erreur lors de la validation de la commande");
 		}
 	};
@@ -65,7 +60,6 @@ const CommandeForm = () => {
 							<button
 								className="btn btn-secondary"
 								onClick={() => setOpenModalValidatedHandle(false)}
-
 							>
 								OK
 							</button>
@@ -84,11 +78,31 @@ const CommandeForm = () => {
 				>
 				<div className="container">
 					<div className="row">
-						<h4
-							className="text-center mb-4 text-primary"
-						>
-							Voulez-vous vraiment valider votre commande ?
-						</h4>
+						<p>
+							<span>Nom complet : </span>
+							{currentUser?.name}
+						</p>
+
+						<p>
+							<span>Numero de telephone : </span>
+							{currentUser?.phone}
+						</p>
+						<p>
+							<span>Adresse : </span>
+							{currentUser?.address.street}, {currentUser?.address.city}
+						</p>
+						<p>
+							<span>Quantite : </span>
+							{Object.keys(cartItems).reduce((acc, id) => acc + cartItems[id], 0)}
+						</p>
+						<p>
+							<span>Prix total : </span>
+							{totalPrice()} FCFA
+						</p>
+						<p>
+							<span>Paiement : </span>
+							{selectedPayment === "wave" ? "Wave" : "A la livraison"}
+						</p>
 					</div>
 					<div className="row">
 						<div className="col-6">
@@ -147,7 +161,8 @@ const CommandeForm = () => {
 						name="payment"
 						value="wave"
 						checked={selectedPayment === "wave"}
-						disalbed={true}
+						disabled={true}
+						style={{ cursor: "not-allowed" }}
 						onChange={handlePaymentChange}
 					/>
 				</label>
