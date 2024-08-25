@@ -6,13 +6,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 // navigate
 
-import {
-	salade_sauce,
-	salade_supplementaire,
-	salade_types_liste,
-} from "../assets/assets";
-import login from "../pages/Login/Login.jsx";
-
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
