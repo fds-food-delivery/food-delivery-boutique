@@ -13,7 +13,7 @@ const StoreContextProvider = (props) => {
 
 	//const url = "https://backend-food-ordering.onrender.com";
 	//const url = "http://localhost:4000";
-	const url = "http://foodorderingenv.eba-9m4r7hzy.us-east-1.elasticbeanstalk.com";
+	const url = "https://d1q0mmgn7s0luj.cloudfront.net";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
