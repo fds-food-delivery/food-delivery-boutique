@@ -30,30 +30,58 @@ const FoodDisplay = ({ category }) => {
             />
         </div>
     );
-    const renderSaladOptions = () => (
+    const renderSaladOptions = () => {
+    // Recuperer la liste des saladetype
+    const salade_types_liste = foodList.filter((item) => item.category === "Salade" );
+    // Recuperer la liste de sauce
+    const salade_sauce = foodList.filter((item) => item.category === "Salade" && item.sousCategory === "Sauce");
+    // Recuperer la liste de condiment
+    const salade_supplementaire = foodList.filter((item) => item.category === "Salade" && item.sousCategory === "condiment");
+
+    return (
         <div className="food-display-list">
-            {foodList.map((item) => {
-                if (category === "All" || category === item.category) {
-                    return (
-                        <FoodItem
-                            key={item._id}
-                            id={item._id}
-                            name={item.name}
-                            description={item.description}
-                            category={item.category}
-                            sousCategory={item.sousCategory ? item.sousCategory : ""}
-                            price={item.price}
-                            image={item.image}
-                            cartItems={cartItems}
-                            addToCart={addToCart}
-                            removeFromCart={removeFromCart}
-                        />
-                    );
-                }
-                return null;
-            })}
+            {salade_types_liste && salade_types_liste.map((item) => (
+                <FoodItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    description={item.description}
+                    price={item.price}
+                    image={item.image}
+                    cartItems={cartItems}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
+            {salade_sauce && salade_sauce.map((item) => (
+                <FoodItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    description={item.description}
+                    price={item.price}
+                    image={item.image}
+                    cartItems={cartItems}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
+            {salade_supplementaire && salade_supplementaire.map((item) => (
+                <FoodItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    description={item.description}
+                    price={item.price}
+                    image={item.image}
+                    cartItems={cartItems}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
         </div>
     );
+};
 
     const renderFoodItems = () => (
         <div className="food-display-list">

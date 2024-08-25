@@ -31,7 +31,9 @@ const App = () => {
     useEffect(() => {
             if (loading === false) {
                 // Simuler un délai de chargement
-                setTimeout(() => setLoadingApp(false), 5000);
+                setTimeout(() => {
+                    setLoadingApp(false);
+                }, 900);
             }
         }, []);
 

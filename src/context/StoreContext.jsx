@@ -19,7 +19,8 @@ const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 
 	//const url = "https://backend-food-ordering.onrender.com";
-	const url = "http://localhost:4000";
+	//const url = "http://localhost:4000";
+	const url = "http://foodorderingenv.eba-9m4r7hzy.us-east-1.elasticbeanstalk.com";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
