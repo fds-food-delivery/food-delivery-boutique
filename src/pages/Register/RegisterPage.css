@@ -9,8 +9,8 @@ body {
     background-color: #eef2f7;
 }
 
-/* Structure de la page de connexion */
-.login-page {
+/* Structure de la page d'inscription */
+.register-page {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,7 +21,7 @@ body {
 }
 
 /* Bannière de connexion/inscription */
-.login-banner {
+.register-banner {
     text-align: center;
     padding: 5px 0;
     border-radius: 10px;
@@ -30,8 +30,8 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.login-banner .login-tab,
-.login-banner .register-tab {
+.register-banner .login-tab,
+.register-banner .register-tab {
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -41,31 +41,56 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
+
 }
 
-/* Conteneur de la page de connexion */
-.login-container {
+
+/* Conteneur de la page d'inscription */
+.register-container {
     background: white;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
 }
 
-/* Formulaire de connexion */
-.login-form {
+/* Formulaire d'inscription */
+.register-form {
     margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
 }
 
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
 
+.form-group input {
+    width: 100%;
+    padding: 15px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+}
 
+.form-group input::placeholder {
+    font-weight: 600;
+    color: #666;
+}
 
-/* Bouton de connexion */
-.login-button {
+.form-group label {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #999;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+/* Bouton d'inscription */
+.register-button {
     width: 100%;
     padding: 12px;
     background-color: #ff6347;
@@ -79,10 +104,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     font-family: 'Open Sans', sans-serif;
 }
 
-.login-button:hover {
+.register-button:hover {
     background-color: #ff5242;
 }
 
@@ -107,18 +133,18 @@ body {
 
 /* Adaptation pour petits écrans */
 @media (max-width: 480px) {
-    .login-form {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-
-
-    .login-banner p {
+    .register-banner p {
         font-size: 1.2rem;
     }
 
-    .login-container {
+    .register-container {
         padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-group.col-6 {
+        width: 100%;
+        margin-bottom: 20px;
     }
 }

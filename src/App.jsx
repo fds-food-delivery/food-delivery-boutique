@@ -21,6 +21,7 @@ import ScrollToTop from 'react-scroll-to-top';
 import {useContext, useState} from "react";
 import { StoreContext } from "./context/StoreContext.jsx";
 import UserProfile from "./components/Profile/UserProfile.jsx";
+import RegisterPage from "./pages/Register/RegisterPage.jsx";
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
                 <Route path="/panier" element={<Panier/>}/>
                 <Route path="/commande" element={<Commande/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/register" element={<RegisterPage/>}/>
                 <Route path="/livraison" element={<OrderState/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 {/*    profile*/}

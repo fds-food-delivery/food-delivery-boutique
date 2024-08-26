@@ -370,3 +370,22 @@ button:hover {
     color: #FF6347;
 
 }
+
+
+
+
+.login-tab p{
+  background-color: tomato;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 5px 20px 5px 20px ;
+  margin: 5px;
+}
+.register-tab p{
+    /*background-color: #c800ff;*/
+  color: black;
+  opacity: 0.5;
+  margin: 5px;
+  border-radius: 5px 15px 5px 15px ;
+}
