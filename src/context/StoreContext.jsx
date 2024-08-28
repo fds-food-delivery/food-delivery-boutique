@@ -55,8 +55,8 @@ const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 
 	//const url = "https://backend-food-ordering.onrender.com";
-	const url = "http://localhost:5000";
-	//const url = "https://d1q0mmgn7s0luj.cloudfront.net";
+	//const url = "http://localhost:5000";
+	const url = "https://d1q0mmgn7s0luj.cloudfront.net";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
