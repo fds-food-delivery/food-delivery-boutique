@@ -111,10 +111,10 @@ function NavigationBar() {
 							Menu
 						</Nav.Link>
 						<Nav.Link as={Link} to="/livraison" className="custom-nav-link">
-							Livraison
+							Commandes
 						</Nav.Link>
 						<Nav.Link as={Link} to="/contact" className="custom-nav-link">
-							Contact
+							A propos
 						</Nav.Link>
 						<Nav.Link
 							as={Link}

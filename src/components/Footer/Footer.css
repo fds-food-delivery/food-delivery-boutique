@@ -1,4 +1,4 @@
-.footer{
+.footere{
 
     color: #40e0d0;
     background-color:#f0efef ;
@@ -11,6 +11,15 @@
     padding-top: 80px ;
 }
 
+
+.footer {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
 .footer-content{
     width: 100%;
     display: grid;

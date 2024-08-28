@@ -109,23 +109,23 @@ export const menu_list = [
 		menu_name: "Glace",
 		menu_image: menu_3,
 	},
-	/*,
+	,
     {
-        menu_name: "Cake",
+        menu_name: "PIZZAS",
         menu_image: menu_5
     },
     {
-        menu_name: "Pure Veg",
+        menu_name: "BURGERS",
         menu_image: menu_6
     },
     {
-        menu_name: "Pasta",
+        menu_name: "Plat",
         menu_image: menu_7
     },
     {
-        menu_name: "Noodles",
+        menu_name: "APERITIFS",
         menu_image: menu_8
-    }*/
+    }
 ];
 
 export const food_list = [

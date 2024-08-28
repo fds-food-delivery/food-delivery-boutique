@@ -65,6 +65,7 @@ const FoodItem = ({ id, name, price, description,category, sousCategory,  image 
 			</div>
 			<div className="food-item-info">
 				<h3 className="food-item-name1">{name}</h3>
+				<span className="small food-item-category">{category}</span>
 				{category && (
 				<h6>
 					Categorie : {category}, {sousCategory? sousCategory : ""}

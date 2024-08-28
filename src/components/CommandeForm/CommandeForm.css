@@ -23,10 +23,12 @@
 }
 
 
+
+
 .form-group-info{
   display: flex;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin: 10px auto;
 }
 
@@ -38,7 +40,7 @@
   font-weight: bold;
 }
 .form-group-info input {
-  width: 50%;
+  width: 80%;
   padding: 6px;
   font-size: 0.9rem;
   border: 1px solid turquoise ;

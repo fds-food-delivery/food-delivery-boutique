@@ -13,7 +13,6 @@ const Panier = ({ onClose }) => {
         addToCart,
         removeFromCart,
         deleteFromCart,
-        setIsShowAlertPanier,
         currentUser,
         url
 
@@ -78,7 +77,7 @@ const Panier = ({ onClose }) => {
                             width={20}
                             onClick={() => {
                                 addToCart(id);
-                                setIsShowAlertPanier(true);
+
                             }} // Ensure you have defined addToCart function in your context or props
                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmHJoeQvmM7xSqWy8PgOPqO6pP7wpQKByPkg&s" // Replace with the actual image path
                             alt="Add"

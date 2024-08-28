@@ -3,17 +3,60 @@ import { food_list } from "../assets/assets";
 import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 // navigate
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
+
+	const [openModalValidatedHandle, setOpenModalValidatedHandle] = useState(false);
+	const [openModalErrorHandle, setOpenModalErrorHandle] = useState(false);
+	const [openModalValiderHandle, setOpenModalValiderHandle] = useState(false);
+
+
+	const handleConfirmedOrder = () => {
+		const reponse = validerCommande();
+		if (reponse) {
+			setOpenModalValiderHandle(false);
+			//show to the user that the command is validated
+			setOpenModalValidatedHandle(true);
+			toast.success(<p>
+				<Link  to="/orders">
+					Voir mes commandes
+					<FaCheckCircle />
+				</Link>
+			</p>,
+				{
+					autoClose: 10000,
+					color: "green",
+					position: "top-center",
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					transition: "Zoom",
+
+				}
+
+				);
+
+		}else{
+			setOpenModalValiderHandle(false);
+			setOpenModalErrorHandle(true);
+		}
+	};
+
+
+
+
+
 	const [cartItems, setCartItems] = useState({});
 
 	//const url = "https://backend-food-ordering.onrender.com";
-	//const url = "http://localhost:4000";
-	const url = "https://d1q0mmgn7s0luj.cloudfront.net";
+	const url = "http://localhost:5000";
+	//const url = "https://d1q0mmgn7s0luj.cloudfront.net";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
@@ -427,13 +470,13 @@ const StoreContextProvider = (props) => {
 			setLoading(false);
 		}
 	};
+
 	const validerCommande = async () => {
 		setLoading(true);
 		try {
 			// Example usage
 			if (!currentUser) {
 				toast.error("Veuillez vous connecter pour passer une commande");
-				return;
 			}
 			console.log("cartItems", cartItems);
 			console.log("currentUser", currentUser);
@@ -453,24 +496,20 @@ const StoreContextProvider = (props) => {
 			console.log("order", order);
 			const response = await axios.post(
 				`${url}/api/v1/orders`,
-				{ order },
-				{
-					headers: {
-						Autorization: `Bearer ${localStorage.getItem("token")}`,
-					}
-				}
+				order
 
 			);
 			console.log("response", response);
 			if (response.status === 200 || response.status === 201) {
 				setCartItems({});
 				toast.success("Commande passée avec succès");
+				setLoading(false);
 			}else {
 				throw new Error("Error ordering");
+
 			}
 		} catch (error) {
 			console.error("Error ordering:", error);
-		} finally {
 			setLoading(false);
 		}
 	};
@@ -513,38 +552,36 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-	const getOrders = () => {
-		setLoading(true);
-		return axios.post(
-			`${url}/api/v1/orders/userorders`,
-			{ userId: "60d0fe4f5311236168a109ca" },
-			{
-				headers: {
-					token,
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		)
-			.then(response => {
-				if (response.status === 200 || response.status === 201) {
-					console.log("Orders:", response.data);
-					const orders1 = response.data ;
-					setOrders(orders1);
-					setLoading(false);
-					return orders1 ;
-				} else {
-					throw new Error("Error getting orders");
-				}
-			})
-			.catch(error => {
-				console.error("Error getting orders:", error);
-				setLoading(false);
-				throw error; // Propager l'erreur pour qu'elle soit capturée par le bloc catch
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	};
+	const getOrdersByCurrentUser = async () => {
+    setLoading(true);
+    const userId = currentUser.userId;
+    try {
+        const response = await axios.post(
+            `${url}/api/v1/orders/userorders`,
+            { userId },
+            {
+                headers: {
+                    token,
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            }
+        );
+
+        if (response.status === 200 || response.status === 201) {
+            console.log("Orders:", response.data);
+            const orders1 = response.data;
+            setOrders(orders1);
+            return orders1;
+        } else {
+            throw new Error("Error getting orders");
+        }
+    } catch (error) {
+        console.error("Error getting orders:", error);
+        throw error;
+    } finally {
+        setLoading(false);
+    }
+};
 
 
 
@@ -576,8 +613,18 @@ const StoreContextProvider = (props) => {
 		createOrder,
 		setLoading,
 
-		getOrders,
+		getOrders: getOrdersByCurrentUser,
 		getCurrentUser,
+
+		openModalValidatedHandle,
+		setOpenModalValidatedHandle,
+		openModalErrorHandle,
+		setOpenModalErrorHandle,
+		handleConfirmedOrder,
+		openModalValiderHandle,
+		setOpenModalValiderHandle,
+
+
 
 
 		openModalHandle,
@@ -593,6 +640,7 @@ const StoreContextProvider = (props) => {
 				console.log("food_list", response.data.data); // Use the fetched data directly
 				setFoodList(response.data.data);
 			} else {
+				setLoading(false);
 				throw new Error("Verifiez votre connexion internet");
 			}
 		} catch (error) {
@@ -626,6 +674,7 @@ const StoreContextProvider = (props) => {
 
 	useEffect(() => {
 		async function loadData() {
+			setLoading(true);
 			console.log("call loadData ");
 			await fetchFoodList();
 			if (localStorage.getItem("token")) {
@@ -643,6 +692,7 @@ const StoreContextProvider = (props) => {
 
 		verifyUser();
 		loadData();
+
 	}, []);
 	return (
 		<StoreContext.Provider value={contextValue}>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./FoodDisplay.css";
 import { StoreContext } from "../../context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
@@ -17,61 +17,29 @@ const FoodDisplay = ({ category }) => {
         removeFromCart,
     } = useContext(StoreContext);
 
-    const renderSaladOptions2 = () => (
-        <div className="food-display row" id="food-display">
-            <h2 className="food-display-title">Composez votre salade</h2>
-            <SaladOptions
-                saladTypes={salade_types_liste}
-                sauces={salade_sauce}
-                condiments={salade_supplementaire}
-                cartItems={cartItems}
-                addToCart={addToCart}
-                removeFromCart={removeFromCart}
-            />
-        </div>
-    );
-    const renderSaladOptions = () => {
-    // Recuperer la liste des saladetype
-    const salade_types_liste = foodList.filter((item) => item.category === "Salade" );
-    // Recuperer la liste de sauce
-    const salade_sauce = foodList.filter((item) => item.category === "Salade" && item.sousCategory === "Sauce");
-    // Recuperer la liste de condiment
-    const salade_supplementaire = foodList.filter((item) => item.category === "Salade" && item.sousCategory === "condiment");
+    const [saladeTypesListe, setSaladeTypesListe] = useState([]);
+    const [saladeSauce, setSaladeSauce] = useState([]);
+    const [saladeSupplementaire, setSaladeSupplementaire] = useState([]);
 
-    return (
+    useEffect(() => {
+        setSaladeTypesListe(foodList.filter((item) => item.category === "Salade" && item.sousCategory === "Salade"));
+        setSaladeSauce(foodList.filter((item) => item.sousCategory === "Sauce"));
+        setSaladeSupplementaire(foodList.filter((item) => item.sousCategory === "Supplement"));
+        console.log("foodList", foodList);
+        console.log("saladeTypesListe", saladeTypesListe);
+        console.log("saladeSauce", saladeSauce);
+        console.log("saladeSupplementaire", saladeSupplementaire);
+    }, [foodList]);
+
+    const renderSaladOptions = () => (
         <div className="food-display-list">
-            {salade_types_liste && salade_types_liste.map((item) => (
+            {saladeTypesListe.map((item) => (
                 <FoodItem
                     key={item._id}
                     id={item._id}
                     name={item.name}
                     description={item.description}
-                    price={item.price}
-                    image={item.image}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            ))}
-            {salade_sauce && salade_sauce.map((item) => (
-                <FoodItem
-                    key={item._id}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    price={item.price}
-                    image={item.image}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            ))}
-            {salade_supplementaire && salade_supplementaire.map((item) => (
-                <FoodItem
-                    key={item._id}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
+                    sousCategory={item.sousCategory}
                     price={item.price}
                     image={item.image}
                     cartItems={cartItems}
@@ -81,7 +49,44 @@ const FoodDisplay = ({ category }) => {
             ))}
         </div>
     );
-};
+
+    const renderSaladSaucesOptions = () => (
+        <div className="food-display-list">
+            {saladeSauce.map((item) => (
+                <FoodItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    description={item.description}
+                    sousCategory={item.sousCategory}
+                    price={item.price}
+                    image={item.image}
+                    cartItems={cartItems}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
+        </div>
+    );
+
+    const renderSaladCondimentsOptions = () => (
+        <div className="food-display-list">
+            {saladeSupplementaire.map((item) => (
+                <FoodItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    description={item.description}
+                    sousCategory={item.sousCategory}
+                    price={item.price}
+                    image={item.image}
+                    cartItems={cartItems}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
+        </div>
+    );
 
     const renderFoodItems = () => (
         <div className="food-display-list">
@@ -115,7 +120,25 @@ const FoodDisplay = ({ category }) => {
             <h2 className="food-display-title">
                 {category === "Salade" ? "Composez votre salade" : "Meilleurs plats"}
             </h2>
-            {category === "Salade" ? renderSaladOptions() : renderFoodItems()}
+
+            {category === "Salade" && (
+                <>
+                    {renderSaladOptions()}
+                    {saladeSauce.length > 0 && (
+                        <>
+                            <h2 className="food-display-title">Composez votre sauce</h2>
+                            {renderSaladSaucesOptions()}
+                        </>
+                    )}
+                    {saladeSupplementaire.length > 0 && (
+                        <>
+                            <h2 className="food-display-title">Composez votre condiment</h2>
+                            {renderSaladCondimentsOptions()}
+                        </>
+                    )}
+                </>
+            )}
+            {category !== "Salade" && renderFoodItems()}
         </div>
     );
 };
