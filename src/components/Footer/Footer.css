@@ -3,22 +3,19 @@
     color: #40e0d0;
     background-color:#f0efef ;
     display: flex;
-
     justify-content: center ;
     align-items: center;
     gap: 20px;
-    padding: 20px 8vw;
-    padding-top: 80px ;
+    position: absolute;
+    bottom: 0;
 }
 
 
 .footer {
     background-color: #f1f1f1;
     text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
+    position: absolute;
+
 }
 .footer-content{
     width: 100%;

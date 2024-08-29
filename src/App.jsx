@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Home from "./pages/Accueil/Home.jsx";
 import Panier from "./pages/Panier/Panier";
 import Commande from "./pages/Commande/Commande";
@@ -27,6 +27,7 @@ import {FaCheckCircle, FaTimes} from "react-icons/fa";
 
 const App = () => {
     const { loading } = useContext(StoreContext);
+    const { navigate } = useNavigate ();
     const {
         isModalOpen,
         closeModal,
@@ -61,6 +62,7 @@ const App = () => {
             </div>
             <Navbar3/>
             <ToastContainer closeButton={false} position="bottom-left" autoClose={1000}/>
+            <div  className="main-content">
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/accueil" element={<Home/>}/>
@@ -73,6 +75,7 @@ const App = () => {
                 {/*    profile*/}
                 <Route path="/profil" element={<UserProfile/>}/>
             </Routes>
+            </div>
 
             <Modal
                 show={openModalValidatedHandle}
@@ -81,26 +84,26 @@ const App = () => {
             >
                 <div className="container">
                     <div className="row">
-                        <h4
-                            className="text-center mb-4 text-primary"
-                        >
-       <span
+                        <h4 className="text-center mb-4 text-primary">
+                            <span
                                 className="text-success mr-2"
                             >Votre commande a été validée
-        </span>
+                            </span>
                             <FaCheckCircle style={{ color: "green", fontSize: "50px" }} />
                         </h4>
                     </div>
                     <div className="row">
-                        <div className="col-6 mx-auto">
-                            <button
-                                className="btn btn-secondary"
-                                onClick={() => setOpenModalValidatedHandle(false)}
-                            >
-                                OK
-                            </button>
-                        </div>
-                    </div>
+    <button
+        className="btn btn-secondary col-12"
+        onClick={() => {
+            setOpenModalValidatedHandle(false);
+            navigate("/livraison");
+        }
+        }
+    >
+        Voir mes commandes
+    </button>
+</div>
                 </div>
             </Modal>
             {/*Refect modal*/}

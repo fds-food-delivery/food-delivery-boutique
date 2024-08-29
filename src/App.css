@@ -157,6 +157,30 @@ button:hover {
 
 
 
+.main-content {
+  margin-top: 100px;
+  padding: 20px;
+  min-height: calc(100vh - 200px); /* Adjust height dynamically */
+  padding-bottom: 100px;
+  box-sizing: border-box; /* Ensure padding is included in the height calculation */
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .main-content {
+    margin-top: 50px;
+    padding: 10px;
+    padding-bottom: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    margin-top: 30px;
+    padding: 5px;
+    padding-bottom: 30px;
+  }
+}
 
 
 

@@ -24,12 +24,7 @@ const Orderstate = () => {
 
     useEffect(() => {
         fetchOrders(); // Fetch orders immediately on mount
-        const intervalId = setInterval(() => {
-            fetchOrders();
-        }, 100000);
-
-        return () => clearInterval(intervalId); // Clear interval on unmount
-    }, [setLoading]);
+    }, [getOrders]);
 
     console.log("loading", loading);
 
@@ -116,8 +111,8 @@ const Orderstate = () => {
     );
 
     return (
-        <div className="container mt-5 pt-2 custom-container">
-            <div className="row mt-5 pt-5"></div>
+        <div className="container mt-3 custom-container">
+            <div className="row "></div>
 
             {/* Commandes Non Livrées */}
             <OrderTable orders={pendingOrders} title="Commandes en cours" showProgress={true} />

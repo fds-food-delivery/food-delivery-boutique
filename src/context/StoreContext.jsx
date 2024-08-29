@@ -4,6 +4,7 @@ import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 import {Link, useNavigate} from "react-router-dom";
+import {FaCheckCircle} from "react-icons/fa";
 // navigate
 
 export const StoreContext = createContext(null);
@@ -21,26 +22,6 @@ const StoreContextProvider = (props) => {
 			setOpenModalValiderHandle(false);
 			//show to the user that the command is validated
 			setOpenModalValidatedHandle(true);
-			toast.success(<p>
-				<Link  to="/orders">
-					Voir mes commandes
-					<FaCheckCircle />
-				</Link>
-			</p>,
-				{
-					autoClose: 10000,
-					color: "green",
-					position: "top-center",
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					transition: "Zoom",
-
-				}
-
-				);
 
 		}else{
 			setOpenModalValiderHandle(false);
@@ -460,8 +441,10 @@ const StoreContextProvider = (props) => {
 				headers: { token },
 			});
 			if (response.data.success) {
+				setLoading(false);
 				console.log("Orders:", response.data.orders);
 			} else {
+				setLoading(false);
 				toast.error(response.data.message);
 			}
 		} catch (error) {
@@ -472,7 +455,6 @@ const StoreContextProvider = (props) => {
 	};
 
 	const validerCommande = async () => {
-		setLoading(true);
 		try {
 			// Example usage
 			if (!currentUser) {
@@ -502,7 +484,7 @@ const StoreContextProvider = (props) => {
 			console.log("response", response);
 			if (response.status === 200 || response.status === 201) {
 				setCartItems({});
-				toast.success("Commande passée avec succès");
+				// toast.success("Commande passée avec succès");
 				setLoading(false);
 			}else {
 				throw new Error("Error ordering");
@@ -692,6 +674,7 @@ const StoreContextProvider = (props) => {
 
 		verifyUser();
 		loadData();
+
 
 	}, []);
 	return (
