@@ -1,21 +1,26 @@
-import  { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
 import { Link } from "react-router-dom";
-import {FaCheckCircle, FaTimes} from "react-icons/fa";
+import { FaCheckCircle, FaTimes } from "react-icons/fa";
 
 // toast
 
 const CommandeForm = () => {
 	const [selectedPayment, setSelectedPayment] = useState(null);
 	const {
-		totalPrice, cartItems, validerCommande,
-		openModalValidatedHandle, setOpenModalValidatedHandle,
-		openModalErrorHandle, setOpenModalErrorHandle,
-		openModalValiderHandle, setOpenModalValiderHandle,
-		handleConfirmedOrder
+		totalPrice,
+		cartItems,
+		validerCommande,
+		openModalValidatedHandle,
+		setOpenModalValidatedHandle,
+		openModalErrorHandle,
+		setOpenModalErrorHandle,
+		openModalValiderHandle,
+		setOpenModalValiderHandle,
+		handleConfirmedOrder,
 	} = useContext(StoreContext);
 	const [nomComplet, setNomComplet] = useState("");
 	const [contact, setContact] = useState("");
@@ -28,9 +33,8 @@ const CommandeForm = () => {
 	};
 	return (
 		<div className="commande-form">
-			<div className="form-group-payment">
-			</div>
-			<div className="form-group-payment">
+			<div className="form-group-payment"></div>
+			<div className="form-group-payment mb-3">
 				<label className="paiement-method">
 					Quantite :
 					{Object.keys(cartItems).reduce((acc, id) => acc + cartItems[id], 0)}

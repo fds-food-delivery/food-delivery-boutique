@@ -1,16 +1,21 @@
 .commande-form {
  text-align: center;
 }
+.total-amount {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
 
 .form-group-payment {
   display: flex;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 }
 .form-group-payment label {
-  font-size: 0.7em;
-  width: 50%;
+  font-size: 1em;
+  width: 60%;
 
   font-weight: bold;
 }
@@ -59,7 +64,6 @@
   align-items: center;
   gap: 5px;
   margin: 15px auto;
-
 }
 
 

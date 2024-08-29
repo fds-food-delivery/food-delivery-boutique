@@ -1,5 +1,12 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import {Navbar, Container, Nav, NavDropdown, Badge, Button} from "react-bootstrap";
+import {
+	Navbar,
+	Container,
+	Nav,
+	NavDropdown,
+	Badge,
+	Button,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCartPlus, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { StoreContext } from "../../context/StoreContext";
@@ -8,10 +15,7 @@ import "./NavigationBar.css"; // Assurez-vous de créer ce fichier CSS
 
 function NavigationBar() {
 	const [isPanierOpen, setIsPanierOpen] = useState(false);
-	const {
-		cartItems, currentUser, logout,
-		loginUser,
-	} =
+	const { cartItems, currentUser, logout, loginUser } =
 		useContext(StoreContext);
 
 	const navigate = useNavigate();
@@ -53,7 +57,6 @@ function NavigationBar() {
 			document.removeEventListener("mousedown", handleClickOutside);
 
 			window.removeEventListener("scroll", handleScroll);
-
 		};
 	}, [currentUser]);
 
@@ -68,37 +71,39 @@ function NavigationBar() {
 			<Container>
 				<Navbar.Brand as={Link} to="/">
 					<img
- src="/images/logo.png"
- alt="Thurquoise Logo"
- className="d-inline-block align-top logo"
- />
+						src="/images/logo.png"
+						alt="Thurquoise Logo"
+						className="d-inline-block align-top logo"
+					/>
 				</Navbar.Brand>
 
-				{ !expanded ? (
- <Nav.Link
-  as={Link}
-  to="#menu-item"
-  className="custom-nav-link-cart-2 custom-nav-link"
-  onClick={togglePanier}
-  style={{ marginLeft: "auto" }}
- >
-  <div className="custom-nav-link-cart">
-   <FaCartPlus size={30} className="text-dark" />
-   <Badge pill bg="success" className="ml-2">
-    {totalItems > 0 && totalItems}
-   </Badge>
-  </div>
- </Nav.Link>
-) : (
- <div></div>
-)}
+				{!expanded ? (
+					<Nav.Link
+						as={Link}
+						to="#menu-item"
+						className="custom-nav-link-cart-2 custom-nav-link"
+						onClick={togglePanier}
+						style={{ marginLeft: "auto" }}
+					>
+						<div className="custom-nav-link-cart">
+							<FaCartPlus size={30} className="text-dark" />
+							<Badge pill bg="success" className="ml-2">
+								{totalItems > 0 && totalItems}
+							</Badge>
+						</div>
+					</Nav.Link>
+				) : (
+					<div></div>
+				)}
 
-
-				<Navbar.Toggle aria-controls="basic-navbar-nav custom-navbar-nav"style={{backgroundColor: "white"}}>
+				<Navbar.Toggle
+					aria-controls="basic-navbar-nav custom-navbar-nav"
+					style={{ backgroundColor: "white" }}
+				>
 					{expanded ? (
 						<FaTimes size={24} style={{ color: "#f86c6b" }} />
 					) : (
-						<FaBars size={24} style={{ color: "#f86c6b"}} />
+						<FaBars size={24} style={{ color: "#f86c6b" }} />
 					)}
 				</Navbar.Toggle>
 
@@ -129,34 +134,6 @@ function NavigationBar() {
 								</Badge>
 							</div>
 						</Nav.Link>
-
-						{currentUser ? (
-							<NavDropdown
-								title={<FaUser size={28} />}
-								id="basic-nav-dropdown"
-								className="custom-nav-link"
-							>
-								<NavDropdown.Item className="text-uppercase text-gray-800">
-									{currentUser.firstName + " " + currentUser.lastName}
-								</NavDropdown.Item>
-								<NavDropdown.Divider />
-								<NavDropdown.Item onClick={handleProfileClick}>
-									Profil
-								</NavDropdown.Item>
-								<NavDropdown.Item onClick={handleLogout}>
-									Déconnexion
-								</NavDropdown.Item>
-							</NavDropdown>
-						) : (
-							<Nav.Link
-								as={Link}
-								to="/login"
-								// className="custom-nav-link custom-nav-link-btn"
-							>
-								{/*Login*/}
-								<FaUser size={28} />
-							</Nav.Link>
-						)}
 					</Nav>
 				</Navbar.Collapse>
 			</Container>
