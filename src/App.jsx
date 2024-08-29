@@ -14,6 +14,7 @@ import MyLoader from "./Loader/MyLoader";
 import { useEffect } from "react";
 
 import Navbar3 from "./components/Navbar/Navbar3";
+import OrderConfirmationModal    from "./components/ModalValiderCommande/OrderConfirmationModal.jsx";
 
 import "./App.css";
 import { ClipLoader } from "react-spinners";
@@ -35,17 +36,24 @@ const App = () => {
         modalChildren,
         handleConfirmedOrder,
         selectedPayment,
+        setSelectedPayment,
         totalPrice,
         cartItems,
         openModalErrorHandle,
         setOpenModalHandle,
-        currentUser,
+
         setOpenModalValiderHandle,
         openModalValiderHandle, // Add comma here
-        openModalValidatedHandle, setOpenModalValidatedHandle, setOpenModalErrorHandle
+        openModalValidatedHandle, setOpenModalValidatedHandle, setOpenModalErrorHandle,
+        setOpenModalServiceNonDisponibe,openModalServiceNonDisponibe
     } = useContext(StoreContext);
-    const [loadingApp, setLoadingApp] = useState(true);
 
+    const [loadingApp, setLoadingApp] = useState(true);
+    const [currentUser, setCurrentUser] = useState({
+        name: "John Doe",
+        phone: "123456789",
+        address: { street: "Rue de l'exemple", city: "Dakar" },
+    });
     useEffect(() => {
         if (loading === false) {
             // Simuler un délai de chargement
@@ -68,12 +76,14 @@ const App = () => {
                 <Route path="/accueil" element={<Home/>}/>
                 <Route path="/panier" element={<Panier/>}/>
                 <Route path="/commande" element={<Commande/>}/>
-                <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/register" element={<RegisterPage/>}/>
+                {/*<Route path="/login" element={<LoginPage/>}/>*/}
+                {/*<Route path="/register" element={<RegisterPage/>}/>*/}
                 <Route path="/livraison" element={<OrderState/>}/>
                 <Route path="/contact" element={<Apropos/>}/>
                 {/*    profile*/}
                 <Route path="/profil" element={<UserProfile/>}/>
+            {/*    other to home*/}
+                <Route path="*" element={<Home/>}/>
             </Routes>
             </div>
 
@@ -136,62 +146,17 @@ const App = () => {
                     </div>
                 </div>
             </Modal>
-            {/*confirmation de commande */}
-
-            <Modal
-                show={openModalValiderHandle}
-                title="Confirmation de commande"
-                onClick={() => setOpenModalValiderHandle(false)}
-
-            >
-                <div className="container">
-                    <div className="row">
-                        <p>
-                            <span>Nom complet : </span>
-                            {currentUser?.name}
-                        </p>
-
-                        <p>
-                            <span>Numero de telephone : </span>
-                            {currentUser?.phone}
-                        </p>
-                        <p>
-                            <span>Adresse : </span>
-                            {currentUser?.address?.street}, {currentUser?.address?.city}
-                        </p>
-                        <p>
-                            <span>Prix total : </span>
-                            {totalPrice()} FCFA
-                        </p>
-                        <p>
-                            <span>Mode Paiement : </span>
-                            {selectedPayment === "wave" ? "Wave" : "A la livraison"}
-                        </p>
-                    </div>
-
-<div className="row">
-    <div className="col-6">
-        <button
-            className="button-confirm"
-            onClick={handleConfirmedOrder}
-        >
-            <FaCheckCircle className="button-icon" />
-            Confirmer
-        </button>
-    </div>
-    <div className="col-6">
-        <button
-            className="button-cancel"
-            onClick={() => setOpenModalValiderHandle(false)}
-        >
-            <FaTimes className="button-icon" />
-            Annuler
-        </button>
-    </div>
-</div>
-                </div>
-            </Modal>
-
+            {/* Modal de Confirmation */}
+            <OrderConfirmationModal
+                openModalValiderHandle={openModalValiderHandle}
+                setOpenModalValiderHandle={setOpenModalValiderHandle}
+                currentUser={currentUser}
+                totalPrice={totalPrice}
+                handleConfirmedOrder={handleConfirmedOrder}
+                selectedPayment={selectedPayment}
+                setSelectedPayment={setSelectedPayment}
+            />
+            {/*Modal service non disponible*/}
             <Footer/>
             <ScrollToTop smooth />
         </div>

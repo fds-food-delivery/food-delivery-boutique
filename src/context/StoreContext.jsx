@@ -14,6 +14,8 @@ const StoreContextProvider = (props) => {
 	const [openModalValidatedHandle, setOpenModalValidatedHandle] = useState(false);
 	const [openModalErrorHandle, setOpenModalErrorHandle] = useState(false);
 	const [openModalValiderHandle, setOpenModalValiderHandle] = useState(false);
+	// selectedPayment
+	const [selectedPayment, setSelectedPayment] = useState(null);
 
 
 	const handleConfirmedOrder = () => {
@@ -36,14 +38,16 @@ const StoreContextProvider = (props) => {
 	const [cartItems, setCartItems] = useState({});
 
 	// const url = "https://backend-food-ordering.onrender.com";
-	//const url = "http://localhost:5000";
-	const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	const url = "http://localhost:5000";
+	// const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
 	const [orders, setOrders] = useState([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
+	// setOpenModalServiceNonDisponibe
+	const [openModalServiceNonDisponibe, setOpenModalServiceNonDisponibe] = useState(false);
 	const [token, setToken] = useState(null);
 	// navigate
 	const navigate = useNavigate();
@@ -298,7 +302,7 @@ const StoreContextProvider = (props) => {
 			setCurrentUser(null);
 
 			setLoading(false);
-			return;
+			return null ;
 		}
 
 		try {
@@ -319,18 +323,16 @@ const StoreContextProvider = (props) => {
 			setToken(localStorage.getItem("token"));
 			console.log("response de verify ", response.data);
 			setLoading(false);
+			return response;
 			}else {
 				throw new Error("Erreur lors de la verification");
-
 			}
 
 		} catch (error) {
-			console.error("Error verifying:", error);
 			setCurrentUser(null);
 			setToken("");
 			setLoading(false);
-			toast.error("Erreur lors de la vérification");
-			navigate("/login");
+			return null;
 		}
 	};
 
@@ -437,9 +439,7 @@ const StoreContextProvider = (props) => {
 	const fetchOrders = async () => {
 		setLoading(true);
 		try {
-			const response = await axios.get(`${url}/api/v1/orders`, {
-				headers: { token },
-			});
+			const response = await axios.get(`${url}/api/v1/orders`, );
 			if (response.data.success) {
 				setLoading(false);
 				console.log("Orders:", response.data.orders);
@@ -456,16 +456,8 @@ const StoreContextProvider = (props) => {
 
 	const validerCommande = async () => {
 		try {
-			// Example usage
-			if (!currentUser) {
-				toast.error("Veuillez vous connecter pour passer une commande");
-			}
+
 			console.log("cartItems", cartItems);
-			console.log("currentUser", currentUser);
-			const userId = currentUser.userId;
-			const address = currentUser.address;
-			const status = "Pending";
-			const payment = true;
 
 			const order = createOrder(
 				{
@@ -609,6 +601,8 @@ const StoreContextProvider = (props) => {
 
 
 
+		selectedPayment,
+		setSelectedPayment,
 		openModalHandle,
 		isModalOpen,
 		modalChildren,
@@ -670,9 +664,15 @@ const StoreContextProvider = (props) => {
 		// verify user auth
 		async function verifyUser() {
 			const response = await verify();
+			if (response != null){
+				console.log("response verify", response);
+				const user = response.data.user;
+				setCurrentUser(user);
+			}else{
+				console.log("no user");
+				setCurrentUser(null);
+			}
 		}
-
-		verifyUser();
 		loadData();
 
 
