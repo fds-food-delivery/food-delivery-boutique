@@ -3,20 +3,19 @@ import { food_list } from "../assets/assets";
 import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
-import {Link, useNavigate} from "react-router-dom";
-import {FaCheckCircle} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 // navigate
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-
-	const [openModalValidatedHandle, setOpenModalValidatedHandle] = useState(false);
+	const [openModalValidatedHandle, setOpenModalValidatedHandle] =
+		useState(false);
 	const [openModalErrorHandle, setOpenModalErrorHandle] = useState(false);
 	const [openModalValiderHandle, setOpenModalValiderHandle] = useState(false);
 	// selectedPayment
 	const [selectedPayment, setSelectedPayment] = useState(null);
-
 
 	const handleConfirmedOrder = () => {
 		const reponse = validerCommande();
@@ -24,22 +23,17 @@ const StoreContextProvider = (props) => {
 			setOpenModalValiderHandle(false);
 			//show to the user that the command is validated
 			setOpenModalValidatedHandle(true);
-
-		}else{
+		} else {
 			setOpenModalValiderHandle(false);
 			setOpenModalErrorHandle(true);
 		}
 	};
 
-
-
-
-
 	const [cartItems, setCartItems] = useState({});
 
 	// const url = "https://backend-food-ordering.onrender.com";
-	const url = "http://localhost:5000";
-	// const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	//const url = "http://localhost:5000";
+	const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
@@ -47,7 +41,8 @@ const StoreContextProvider = (props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
 	// setOpenModalServiceNonDisponibe
-	const [openModalServiceNonDisponibe, setOpenModalServiceNonDisponibe] = useState(false);
+	const [openModalServiceNonDisponibe, setOpenModalServiceNonDisponibe] =
+		useState(false);
 	const [token, setToken] = useState(null);
 	// navigate
 	const navigate = useNavigate();
@@ -195,7 +190,7 @@ const StoreContextProvider = (props) => {
 	// 			});
 	// 			setToken(response.data.token);
 	// 			localStorage.setItem("token", response.data.token);
-	// 			
+	//
 	// 			console.log("Current user:", currentUser);
 	// 			// link to accueil
 	// 			navigate("/");
@@ -210,7 +205,6 @@ const StoreContextProvider = (props) => {
 	// 	}
 	// };
 
-
 	const loginUser = async (username, password) => {
 		setLoading(true);
 		console.log("username", username);
@@ -220,10 +214,10 @@ const StoreContextProvider = (props) => {
 				username: username,
 				password: password,
 			});
-			if (response.status === 200  || response.status === 201) {
+			if (response.status === 200 || response.status === 201) {
 				console.log("response.data", response.data);
-			  	const userData = response.data;
-			  	setCurrentUser({
+				const userData = response.data;
+				setCurrentUser({
 					userId: userData.userId,
 					username: userData.username,
 					firstName: userData.firstName,
@@ -237,12 +231,12 @@ const StoreContextProvider = (props) => {
 					// 	zipCode: userData.address.zipCode,
 					// 	country: userData.address.country
 					// },
-					profileImage: userData.profileImage
+					profileImage: userData.profileImage,
 				});
 
 				setToken(userData.token);
 				localStorage.setItem("token", userData.token);
-				
+
 				navigate("/");
 			} else {
 				throw new Error("Erreur lors de la connexion");
@@ -283,7 +277,7 @@ const StoreContextProvider = (props) => {
 			if (response.data.success) {
 				localStorage.removeItem("token");
 				setToken("");
-				
+
 				setCurrentUser(null);
 				toast.success("Vous êtes déconnecté");
 				navigate("/");
@@ -302,7 +296,7 @@ const StoreContextProvider = (props) => {
 			setCurrentUser(null);
 
 			setLoading(false);
-			return null ;
+			return null;
 		}
 
 		try {
@@ -311,23 +305,22 @@ const StoreContextProvider = (props) => {
 				{},
 				{
 					headers: {
-						token : localStorage.getItem("token"),
-						 Authorization: `Bearer ${localStorage.getItem("token")}`,
+						token: localStorage.getItem("token"),
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
 						"Content-Type": "application/json",
 					},
 				}
 			);
 			if (response.status == 200) {
-			setToken(localStorage.getItem("token"));
-			setCurrentUser(response.data.user);
-			setToken(localStorage.getItem("token"));
-			console.log("response de verify ", response.data);
-			setLoading(false);
-			return response;
-			}else {
+				setToken(localStorage.getItem("token"));
+				setCurrentUser(response.data.user);
+				setToken(localStorage.getItem("token"));
+				console.log("response de verify ", response.data);
+				setLoading(false);
+				return response;
+			} else {
 				throw new Error("Erreur lors de la verification");
 			}
-
 		} catch (error) {
 			setCurrentUser(null);
 			setToken("");
@@ -336,59 +329,68 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-		const createOrder = ({ userId, cartItems, address = {}, status = "Pending", payment = false }) => {
-  try {
-    // Validation des entrées
-    if (!userId) {
-      throw new Error("L'ID de l'utilisateur est manquant.");
-    }
-    if (!cartItems || Object.keys(cartItems).length === 0) {
-      throw new Error("Le panier est vide ou manquant.");
-    }
+	const createOrder = ({
+		userId,
+		cartItems,
+		address = {},
+		status = "Pending",
+		payment = false,
+	}) => {
+		try {
+			// Validation des entrées
+			if (!userId) {
+				throw new Error("L'ID de l'utilisateur est manquant.");
+			}
+			if (!cartItems || Object.keys(cartItems).length === 0) {
+				throw new Error("Le panier est vide ou manquant.");
+			}
 
-    // Trouver les détails des articles dans la liste de nourriture en utilisant les IDs du panier
-    const items = Object.keys(cartItems).map((itemId) => {
-      const item = foodList.find((food) => food._id === itemId);
+			// Trouver les détails des articles dans la liste de nourriture en utilisant les IDs du panier
+			const items = Object.keys(cartItems).map((itemId) => {
+				const item = foodList.find((food) => food._id === itemId);
 
-      // Vérification si l'item existe dans la foodList
-      if (!item) {
-        throw new Error(`Item avec l'ID ${itemId} n'a pas été trouvé.`);
-      }
+				// Vérification si l'item existe dans la foodList
+				if (!item) {
+					throw new Error(`Item avec l'ID ${itemId} n'a pas été trouvé.`);
+				}
 
-      return {
-        itemId: item._id,
-        name: item.name,
-        quantity: cartItems[itemId],
-        price: item.price,
-      };
-    });
+				return {
+					itemId: item._id,
+					name: item.name,
+					quantity: cartItems[itemId],
+					price: item.price,
+				};
+			});
 
-    // Calculer le montant total de la commande
-    const amount = items.reduce((total, item) => total + item.price * item.quantity, 0);
+			// Calculer le montant total de la commande
+			const amount = items.reduce(
+				(total, item) => total + item.price * item.quantity,
+				0
+			);
 
-    // Créer un nouvel objet de commande basé sur le modèle de commande
-    const newOrder = {
-      userId,
-      items,
-      amount,
-      address: {
-        street: address.street || "Unknown Street",
-        city: address.city || "Unknown City",
-        postalCode: address.postalCode || "00000",
-      },
-      status,
-      payment,
-    };
+			// Créer un nouvel objet de commande basé sur le modèle de commande
+			const newOrder = {
+				userId,
+				items,
+				amount,
+				address: {
+					street: address.street || "Unknown Street",
+					city: address.city || "Unknown City",
+					postalCode: address.postalCode || "00000",
+				},
+				status,
+				payment,
+			};
 
-    // Logging de la commande (pour le débogage)
-    console.log("Nouvelle commande créée : ", newOrder);
+			// Logging de la commande (pour le débogage)
+			console.log("Nouvelle commande créée : ", newOrder);
 
-    return newOrder;
-  } catch (error) {
-    console.error("Error creating order:", error);
-    return null;
-  }
-};
+			return newOrder;
+		} catch (error) {
+			console.error("Error creating order:", error);
+			return null;
+		}
+	};
 	const update = async (email, password) => {
 		setLoading(true);
 		try {
@@ -439,7 +441,7 @@ const StoreContextProvider = (props) => {
 	const fetchOrders = async () => {
 		setLoading(true);
 		try {
-			const response = await axios.get(`${url}/api/v1/orders`, );
+			const response = await axios.get(`${url}/api/v1/orders`);
 			if (response.data.success) {
 				setLoading(false);
 				console.log("Orders:", response.data.orders);
@@ -456,31 +458,24 @@ const StoreContextProvider = (props) => {
 
 	const validerCommande = async () => {
 		try {
-
 			console.log("cartItems", cartItems);
 
-			const order = createOrder(
-				{
-					userId : userId,
-					cartItems: cartItems,
-					address: address,
-					status: status,
-					payment: payment
-				});
+			const order = createOrder({
+				userId: userId,
+				cartItems: cartItems,
+				address: address,
+				status: status,
+				payment: payment,
+			});
 			console.log("order", order);
-			const response = await axios.post(
-				`${url}/api/v1/orders`,
-				order
-
-			);
+			const response = await axios.post(`${url}/api/v1/orders`, order);
 			console.log("response", response);
 			if (response.status === 200 || response.status === 201) {
 				setCartItems({});
 				// toast.success("Commande passée avec succès");
 				setLoading(false);
-			}else {
+			} else {
 				throw new Error("Error ordering");
-
 			}
 		} catch (error) {
 			console.error("Error ordering:", error);
@@ -507,15 +502,13 @@ const StoreContextProvider = (props) => {
 			if (response.status === 200 || response.status === 201) {
 				const data = await response.json();
 				console.log("User data:", data.user);
-				const user = 	data.user;
+				const user = data.user;
 				setCurrentUser(user);
 				console.log("Current user:", currentUser);
 				return data.user;
-			}else {
+			} else {
 				throw new Error("Error getting user");
 			}
-
-
 		} catch (error) {
 			toast.error(
 				"Une erreur est survenue lors de la récupération de l'utilisateur"
@@ -527,38 +520,35 @@ const StoreContextProvider = (props) => {
 	};
 
 	const getOrdersByCurrentUser = async () => {
-    setLoading(true);
-    const userId = currentUser.userId;
-    try {
-        const response = await axios.post(
-            `${url}/api/v1/orders/userorders`,
-            { userId },
-            {
-                headers: {
-                    token,
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
+		setLoading(true);
+		const userId = currentUser.userId;
+		try {
+			const response = await axios.post(
+				`${url}/api/v1/orders/userorders`,
+				{ userId },
+				{
+					headers: {
+						token,
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+				}
+			);
 
-        if (response.status === 200 || response.status === 201) {
-            console.log("Orders:", response.data);
-            const orders1 = response.data;
-            setOrders(orders1);
-            return orders1;
-        } else {
-            throw new Error("Error getting orders");
-        }
-    } catch (error) {
-        console.error("Error getting orders:", error);
-        throw error;
-    } finally {
-        setLoading(false);
-    }
-};
-
-
-
+			if (response.status === 200 || response.status === 201) {
+				console.log("Orders:", response.data);
+				const orders1 = response.data;
+				setOrders(orders1);
+				return orders1;
+			} else {
+				throw new Error("Error getting orders");
+			}
+		} catch (error) {
+			console.error("Error getting orders:", error);
+			throw error;
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const contextValue = {
 		foodList,
@@ -597,9 +587,6 @@ const StoreContextProvider = (props) => {
 		handleConfirmedOrder,
 		openModalValiderHandle,
 		setOpenModalValiderHandle,
-
-
-
 
 		selectedPayment,
 		setSelectedPayment,
@@ -654,28 +641,26 @@ const StoreContextProvider = (props) => {
 			console.log("call loadData ");
 			await fetchFoodList();
 			if (localStorage.getItem("token")) {
-				console.log("token exist"+localStorage.getItem("token"));
+				console.log("token exist" + localStorage.getItem("token"));
 				setToken(localStorage.getItem("token"));
 				// await loadCartData(localStorage.getItem("token"));
-			}else {
+			} else {
 				console.log("no token");
 			}
 		}
 		// verify user auth
 		async function verifyUser() {
 			const response = await verify();
-			if (response != null){
+			if (response != null) {
 				console.log("response verify", response);
 				const user = response.data.user;
 				setCurrentUser(user);
-			}else{
+			} else {
 				console.log("no user");
 				setCurrentUser(null);
 			}
 		}
 		loadData();
-
-
 	}, []);
 	return (
 		<StoreContext.Provider value={contextValue}>
