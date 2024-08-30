@@ -15,10 +15,7 @@ const Home = () => {
 	}, []);
 	return (
 		<div className="container custom-container">
-			<div
-				className="mt-5"
-				style={{ marinTop: "100px", marginBottom: "130px" }}
-			></div>
+			<div className="" style={{ marinTop: "60px" }}></div>
 			<Header />
 			{loading ? (
 				<div className="loader">

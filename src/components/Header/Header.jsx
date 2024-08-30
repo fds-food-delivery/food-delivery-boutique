@@ -3,7 +3,7 @@ import "./Header.css";
 
 const Header = () => {
 	return (
-		<div className="header mt-5 pb-5">
+		<div className="header ">
 			<div className=" custom-header header1 mt-5">
 				<div className="header-contents">
 					<h2>Commandez ici votre plat préféré</h2>
