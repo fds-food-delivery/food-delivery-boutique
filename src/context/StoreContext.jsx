@@ -17,8 +17,10 @@ const StoreContextProvider = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
 	const [orders, setOrders] = useState([]);
+	const [userID, setUserID] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
+	
 	const navigate = useNavigate();
 	// const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
 	const url = "http://localhost:5000";
@@ -183,7 +185,6 @@ const StoreContextProvider = (props) => {
 			const response = await axios.post(
 				`${url}/api/user/update`,
 				{ email, password },
-				{ headers: { token } }
 			);
 			if (response.data.success) {
 				toast.success("Compte mis à jour avec succès");
@@ -217,20 +218,34 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-	const creerCompte = async (name, phone, address, city) => {
+	const formatUserData = (fullName, phone, address) => {
+    return {
+        username: phone,
+        fullName: fullName,
+        address: address,
+        phone: phone
+    };
+};
+
+	const creerCompte = async (fullName, phone, address) => {
 		try {
-			const user = {
-				name: name,
-				phone: phone,
-				fullName: name,
-				address: address,
-				city: city,
-			};
-			const response = await axios.post(`${url}/api/v1/auth/users`, user);
-			if (response.status === 200 || response.status === 201) {
-				return response.data.userId;
+			const newUser = formatUserData(fullName, phone, address);
+			console.log("user", newUser);
+
+			// Utilisation des vraies variables
+			const response = await axios.post(`${url}/api/v1/auth/users`, {
+				username: newUser.phone, // Utilisation du numéro de téléphone comme nom d'utilisateur
+				fullName: newUser.fullName,
+				address: newUser.address,
+				phone: newUser.phone
+			});
+
+			if ([200, 201, 400, 409].includes(response.status)) {
+				console.log("User created:", response.data);
+				localStorage.setItem("userID", response.data.user.id);
+				return response.data;
 			} else {
-				throw new Error("Error creating account");
+				console.log("User not created:", response.data);
 			}
 		} catch (error) {
 			console.error("Error creating account:", error);
@@ -238,23 +253,53 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-	const validerCommande = async (name, phone, address, city) => {
+	const validerCommande = async (fullName, phone, address) => {
 		try {
-			const userId = await creerCompte(name, phone, address, city);
-			console.log("cartItems", cartItems);
+			console.log("validerCommande");
+			console.log("fullName", fullName);
+			console.log("phone", phone);
+			console.log("address", address);
+			console.log("*************************");
+			// Création de l'utilisateur
+			// Création de l'utilisateur
+			// const newNom = "Souleymane" ;
+			const newNom = fullName;
+			console.log("newNom", newNom);
+			 // const newUserPhone = "775958693";
+			 const newUserPhone = phone;
+			console.log("newUserPhone", newUserPhone);
+			// const newUserAddress = "Dakar";
+			const newUserAddress = address;
+			console.log("newUserAddress", newUserAddress);
+
+			const newUserId = await creerCompte(newNom, newUserPhone, newUserAddress);
+			const userID = newUserId.user.id ;
+			localStorage.setItem("userID", userID);
+			setUserID(userID);
+			console.log("User created with ID:", userID);
+			if (!userID) {
+				throw new Error("Unable to create user.");
+			}
+
+			// Création de la commande
 			const order = createOrder({
-				userId: userId,
+				userId: userID,
 				cartItems: cartItems,
 				address: address,
 				status: "Pending",
 				payment: selectedPayment,
 			});
+
 			console.log("order", order);
+
+			// Envoi de la commande à l'API
 			const response = await axios.post(`${url}/api/v1/orders`, order);
+
 			console.log("response", response);
 			console.log("response.data", response.data);
+
 			if (response.status === 200 || response.status === 201) {
-				setCartItems({});
+				setCartItems([]);  // Réinitialiser le panier après la commande
 				setLoading(false);
 				return true;
 			} else {
@@ -269,15 +314,14 @@ const StoreContextProvider = (props) => {
 
 	const getOrdersByCurrentUser = async () => {
 		setLoading(true);
-		const userId = currentUser.userId;
+		if (localStorage.getItem("userID")) {
+			setUserID(localStorage.getItem("userID"));
+		}
 		try {
 			const response = await axios.post(
 				`${url}/api/v1/orders/userorders`,
-				{ userId },
 				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+					userId : userID
 				}
 			);
 
@@ -316,41 +360,18 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
-	const loadCartData = async (token) => {
-		setLoading(true);
-		try {
-			const response = await axios.get(`${url}/api/v1/cart`, {
-				headers: { token },
-			});
-			if (response.status === 200 || response.status === 201) {
-				console.log("cartItems", response.data.data);
-				setCartItems(response.data.data);
-				setLoading(false);
-			} else {
-				throw new Error("Error loading cart data");
-			}
-		} catch (error) {
-			console.error("Error loading cart data:", error);
-			setLoading(false);
-		} finally {
-			setLoading(false);
-		}
-	};
+
 
 	useEffect(() => {
 		async function loadData() {
 			setLoading(true);
 			console.log("call loadData ");
 			await fetchFoodList();
-			if (localStorage.getItem("token")) {
-				console.log("token exist" + localStorage.getItem("token"));
-				setToken(localStorage.getItem("token"));
-				// await loadCartData(localStorage.getItem("token"));
-			} else {
-				console.log("no token");
-			}
 		}
 		loadData();
+
+		// // Exemple d'appel
+		// creerCompte("Soule Kodjo", "775958693", "Dakar");
 	}, []);
 
 	const contextValue = {
@@ -363,6 +384,7 @@ const StoreContextProvider = (props) => {
 		removeFromCart,
 		deleteFromCart,
 		url,
+		
 		loading,
 		totalPrice,
 		currentUser,

@@ -37,6 +37,7 @@ const App = () => {
 		setSelectedPayment,
 		totalPrice,
 		cartItems,
+		setLoading,
 		setOpenModalHandle,
 		setOpenModalValiderHandle,
 		openModalValiderHandle, // Add comma here
@@ -50,18 +51,20 @@ const App = () => {
 
 	const [loadingApp, setLoadingApp] = useState(true);
 	const [currentUser, setCurrentUser] = useState({
-		username : "775958693",
-		fullName: "John Doe",
-		phone: "123456789",
-		address: "Fass"
+		username : "",
+		fullName: "",
+		phone: "",
+		address: ""
 	});
 	useEffect(() => {
 		if (loading === false) {
 			// Simuler un délai de chargement
 			setTimeout(() => {
 				setLoadingApp(false);
+				setLoading(false);
 			}, 900);
 		}
+
 	}, []);
 
 	return (

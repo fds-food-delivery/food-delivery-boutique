@@ -26,11 +26,13 @@ const OrderConfirmationModal = ({
 		// { id: 3, name: "Orange Money" },
 	];
 
-	const { setOpenModalErrorHandle } = useContext(StoreContext);
+	const { setOpenModalErrorHandle,
+		setOpenModalValidatedHandle,
+
+	} = useContext(StoreContext);
 
 	const [formData, setFormData] = useState({
-		name: currentUser?.fullName || "",
-		username : currentUser?.phone || "",
+		fullName: currentUser?.fullName || "",
 		phone: currentUser?.phone || "",
 		address: currentUser?.address || "",
 	});
@@ -48,7 +50,7 @@ const OrderConfirmationModal = ({
 
 	const validateForm = () => {
 		const newErrors = {};
-		if (!formData.name) newErrors.name = "Nom complet est requis";
+		if (!formData.fullName) newErrors.fullName = "Nom complet est requis";
 		if (!formData.phone) {
 			newErrors.phone = "Numéro de téléphone est requis";
 		} else if (!/^\d{9}$/.test(formData.phone)) {
@@ -64,23 +66,29 @@ const OrderConfirmationModal = ({
 	};
 	const validerFormCommande = async () => {
 		const isSubmit = await validerCommande(
-			formData.name,
+			formData.fullName,
 			formData.phone,
 			formData.address,
 		);
 		if (isSubmit) {
 			setOpenModalValiderHandle(false);
-			handleConfirmedOrder();
+			setOpenModalErrorHandle(false);
+			setOpenModalValidatedHandle(true);
+			console.log("Commande validée");
 		} else {
+			console.log("Erreur lors de la validation de la commande");
 			setOpenModalErrorHandle(true);
 		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.log("Form submitted", formData);
 		if (validateForm()) {
 			console.log("Form submitted", formData);
 			await validerFormCommande();
+		}else{
+			console.log("Form not submitted", formData);
 		}
 	};
 	return (
@@ -108,14 +116,14 @@ const OrderConfirmationModal = ({
 						<input
 							type="text"
 							className="form-control custom-input"
-							name="name"
-							value={formData.name}
+							name="fullName"
+							value={formData.fullName}
 							onChange={handleChange}
 							placeholder="Votre nom complet"
 						/>
 					</div>
-					{errors.name && (
-						<small className="text-danger d-block ">{errors.name}</small>
+					{errors.fullName && (
+						<small className="text-danger d-block ">{errors.fullName}</small>
 					)}
 					<p className="mb-3"></p>
 					<div className="input-group ">
