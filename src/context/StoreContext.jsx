@@ -20,12 +20,12 @@ const StoreContextProvider = (props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
 	const navigate = useNavigate();
-	const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
-
+	// const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	const url = "http://localhost:5000";
 	const handleConfirmedOrder = async () => {
 		const reponse = await validerCommande();
 		if (reponse) {
-			setOpenModalOrderConfirmedHandle(true);
+			setOpenModalValiderHandle(false);
 			setOpenModalValidatedHandle(true);
 		} else {
 			setOpenModalValiderHandle(false);
@@ -222,10 +222,11 @@ const StoreContextProvider = (props) => {
 			const user = {
 				name: name,
 				phone: phone,
+				fullName: name,
 				address: address,
 				city: city,
 			};
-			const response = await axios.post(`${url}/api/v1/users`, user);
+			const response = await axios.post(`${url}/api/v1/auth/users`, user);
 			if (response.status === 200 || response.status === 201) {
 				return response.data.userId;
 			} else {
@@ -251,6 +252,7 @@ const StoreContextProvider = (props) => {
 			console.log("order", order);
 			const response = await axios.post(`${url}/api/v1/orders`, order);
 			console.log("response", response);
+			console.log("response.data", response.data);
 			if (response.status === 200 || response.status === 201) {
 				setCartItems({});
 				setLoading(false);

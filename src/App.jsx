@@ -50,9 +50,10 @@ const App = () => {
 
 	const [loadingApp, setLoadingApp] = useState(true);
 	const [currentUser, setCurrentUser] = useState({
-		name: "John Doe",
+		username : "775958693",
+		fullName: "John Doe",
 		phone: "123456789",
-		address: { street: "Rue de l'exemple", city: "Dakar" },
+		address: "Fass"
 	});
 	useEffect(() => {
 		if (loading === false) {
@@ -128,16 +129,15 @@ const App = () => {
 							<span className="text-danger mr-2">
 								Votre commande n'a pas été validée
 							</span>
-							<FaTimes style={{ color: "red", fontSize: "50px" }} />
 						</h4>
 					</div>
 					<div className="row">
 						<div className="col-6 mx-auto">
 							<button
-								className="btn btn-secondary"
+								className="btn btn-secondary col-12"
 								onClick={() => setOpenModalErrorHandle(false)}
 							>
-								OK
+								Réessayer
 							</button>
 						</div>
 					</div>

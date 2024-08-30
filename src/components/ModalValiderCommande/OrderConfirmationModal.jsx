@@ -22,17 +22,17 @@ const OrderConfirmationModal = ({
 	const [errors, setErrors] = useState({});
 	const TypePaiement = [
 		{ id: 1, name: "A la livraison" },
-		{ id: 2, name: "Wave" },
-		{ id: 3, name: "Orange Money" },
+		// { id: 2, name: "Wave" },
+		// { id: 3, name: "Orange Money" },
 	];
 
 	const { setOpenModalErrorHandle } = useContext(StoreContext);
 
 	const [formData, setFormData] = useState({
-		name: currentUser?.name || "",
+		name: currentUser?.fullName || "",
+		username : currentUser?.phone || "",
 		phone: currentUser?.phone || "",
-		address: currentUser?.address?.street || "",
-		city: currentUser?.address?.city || "",
+		address: currentUser?.address || "",
 	});
 
 	const { validerCommande } = useContext(StoreContext);
@@ -67,7 +67,6 @@ const OrderConfirmationModal = ({
 			formData.name,
 			formData.phone,
 			formData.address,
-			formData.city
 		);
 		if (isSubmit) {
 			setOpenModalValiderHandle(false);
