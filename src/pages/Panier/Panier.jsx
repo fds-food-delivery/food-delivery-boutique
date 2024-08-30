@@ -3,7 +3,7 @@ import "./Panier.css";
 import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import {faClose, faTrash} from "@fortawesome/free-solid-svg-icons";
 import CommandeForm from "../../components/CommandeForm/CommandeForm";
 
 const Panier = ({ onClose }) => {
@@ -100,8 +100,18 @@ const Panier = ({ onClose }) => {
     return (
         <div className="panier">
             <div className="panier-header">
-                <h2>Ma Commande</h2>
-                <button onClick={onClose}>Fermer</button>
+                <h4>Ma Commande</h4>
+                <button onClick={onClose} style={
+                    {
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: 'red',
+                        fontSize: '20px',
+                    }
+                }>
+                    <FontAwesomeIcon icon={faClose}/>
+                </button>
             </div>
             <div className="panier-content">
                 {cartContent.length > 0 ? cartContent : <p>Votre panier est vide</p>}

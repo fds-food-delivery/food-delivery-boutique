@@ -22,8 +22,8 @@ const StoreContextProvider = (props) => {
 	const [modalChildren, setModalChildren] = useState(null);
 	
 	const navigate = useNavigate();
-	// const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
-	const url = "http://localhost:5000";
+	 const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	// const url = "http://localhost:5000";
 	const handleConfirmedOrder = async () => {
 		const reponse = await validerCommande();
 		if (reponse) {
@@ -242,7 +242,7 @@ const StoreContextProvider = (props) => {
 
 			if ([200, 201, 400, 409].includes(response.status)) {
 				console.log("User created:", response.data);
-				localStorage.setItem("userID", response.data.user.id);
+				localStorage.setItem("userID", response.data.user._id);
 				return response.data;
 			} else {
 				console.log("User not created:", response.data);
@@ -253,33 +253,83 @@ const StoreContextProvider = (props) => {
 		}
 	};
 
+
 	const validerCommande = async (fullName, phone, address) => {
 		try {
-			console.log("validerCommande");
-			console.log("fullName", fullName);
-			console.log("phone", phone);
-			console.log("address", address);
-			console.log("*************************");
-			// Création de l'utilisateur
-			// Création de l'utilisateur
-			// const newNom = "Souleymane" ;
-			const newNom = fullName;
-			console.log("newNom", newNom);
-			 // const newUserPhone = "775958693";
-			 const newUserPhone = phone;
-			console.log("newUserPhone", newUserPhone);
-			// const newUserAddress = "Dakar";
-			const newUserAddress = address;
-			console.log("newUserAddress", newUserAddress);
+			console.log("Démarrage de la validation de la commande...");
 
-			const newUserId = await creerCompte(newNom, newUserPhone, newUserAddress);
-			const userID = newUserId.user.id ;
+			// Création de l'utilisateur
+			console.log("Création de l'utilisateur avec les informations :");
+			console.log("Nom :", fullName);
+			console.log("Téléphone :", phone);
+			console.log("Adresse :", address);
+
+			const newUserId = await creerCompte(fullName, phone, address);
+
+			if (!newUserId || !newUserId.user._id) {
+				throw new Error("Impossible de créer l'utilisateur.");
+			}
+			const userID = newUserId.user._id;
 			localStorage.setItem("userID", userID);
 			setUserID(userID);
-			console.log("User created with ID:", userID);
-			if (!userID) {
-				throw new Error("Unable to create user.");
+			console.log("Utilisateur créé avec ID:", userID);
+			if  (newUserId.user._id) {
+				// Création de la commande
+				const order = createOrder({
+					userId: userID,
+					cartItems: cartItems,
+					address: address,
+					status: "Pending",
+					payment: selectedPayment,
+				});
+
+				console.log("Création de la commande pour l'utilisateur:", userID);
+				console.log("Détails de la commande :", order);
+				// verifie la promesse de creerCompte est resolue
+
+				// Envoi de la commande à l'API
+
+				const response = await axios.post(`${url}/api/v1/orders`, order);
+
+				console.log("Réponse de la création de commande :", response);
+
+				if (response.status === 200 || response.status === 201) {
+					console.log("Commande créée avec succès !");
+					setCartItems([]);  // Réinitialiser le panier après la commande
+					setLoading(false);
+					return true;
+				} else {
+					throw new Error("Erreur lors de la création de la commande.");
+				}
+			}else{
+				throw new Error("Erreur lors de la création de l'utilisateur.");
 			}
+		} catch (error) {
+			console.error("Erreur lors de la validation de la commande :", error);
+			setLoading(false);
+			return false;
+		}
+	};
+	const validerCommande2 = async (fullName, phone, address) => {
+		try {
+			console.log("Démarrage de la validation de la commande...");
+
+			// Création de l'utilisateur
+			console.log("Création de l'utilisateur avec les informations :");
+			console.log("Nom :", fullName);
+			console.log("Téléphone :", phone);
+			console.log("Adresse :", address);
+
+			const newUserId = await creerCompte(fullName, phone, address);
+
+			if (!newUserId || !newUserId.user._id) {
+				throw new Error("Impossible de créer l'utilisateur.");
+			}
+
+			const userID = newUserId.user._id;
+			localStorage.setItem("userID", userID);
+			setUserID(userID);
+			console.log("Utilisateur créé avec ID:", userID);
 
 			// Création de la commande
 			const order = createOrder({
@@ -290,27 +340,29 @@ const StoreContextProvider = (props) => {
 				payment: selectedPayment,
 			});
 
-			console.log("order", order);
+			console.log("Création de la commande pour l'utilisateur:", userID);
+			console.log("Détails de la commande :", order);
 
 			// Envoi de la commande à l'API
 			const response = await axios.post(`${url}/api/v1/orders`, order);
 
-			console.log("response", response);
-			console.log("response.data", response.data);
+			console.log("Réponse de la création de commande :", response);
 
 			if (response.status === 200 || response.status === 201) {
+				console.log("Commande créée avec succès !");
 				setCartItems([]);  // Réinitialiser le panier après la commande
 				setLoading(false);
 				return true;
 			} else {
-				throw new Error("Error ordering");
+				throw new Error("Erreur lors de la création de la commande.");
 			}
 		} catch (error) {
-			console.error("Error ordering:", error);
+			console.error("Erreur lors de la validation de la commande :", error);
 			setLoading(false);
 			return false;
 		}
 	};
+
 
 	const getOrdersByCurrentUser = async () => {
 		setLoading(true);

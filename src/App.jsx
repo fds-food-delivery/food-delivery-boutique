@@ -4,7 +4,8 @@ import Home from "./pages/Accueil/Home.jsx";
 import Panier from "./pages/Panier/Panier";
 import Commande from "./pages/Commande/Commande";
 import Footer from "./components/Footer/Footer";
-import LoginPage from "./pages/Login/Login";
+
+
 import OrderState from "./pages/Livraison/OrderState";
 import Apropos from "./pages/Contact/Apropos.jsx";
 import { ToastContainer } from "react-toastify";
@@ -15,18 +16,19 @@ import { useEffect } from "react";
 
 import Navbar3 from "./components/Navbar/Navbar3";
 import OrderConfirmationModal from "./components/ModalValiderCommande/OrderConfirmationModal.jsx";
-
 import "./App.css";
-import { ClipLoader } from "react-spinners";
 import ScrollToTop from "react-scroll-to-top";
 import { useContext, useState } from "react";
 import { StoreContext } from "./context/StoreContext.jsx";
 import UserProfile from "./components/Profile/UserProfile.jsx";
-import { FaCheckCircle, FaTimes } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 
 const App = () => {
 	const { loading } = useContext(StoreContext);
-	const { navigate } = useNavigate();
+
+
+	// Inside your component
+	const navigate = useNavigate();
 	const {
 		isModalOpen,
 		closeModal,
@@ -56,6 +58,7 @@ const App = () => {
 		phone: "",
 		address: ""
 	});
+
 	useEffect(() => {
 		if (loading === false) {
 			// Simuler un délai de chargement
@@ -111,8 +114,8 @@ const App = () => {
 						<button
 							className="btn btn-secondary col-12"
 							onClick={() => {
-								setOpenModalValidatedHandle(false);
 								navigate("/livraison");
+								setOpenModalValidatedHandle(false);
 							}}
 						>
 							Voir mes commandes
