@@ -22,8 +22,9 @@ const StoreContextProvider = (props) => {
 	const [modalChildren, setModalChildren] = useState(null);
 	
 	const navigate = useNavigate();
-	 const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	 // const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
 	// const url = "http://localhost:5000";
+	const url ="https://backend-food-ordering.onrender.com";
 	const handleConfirmedOrder = async () => {
 		const reponse = await validerCommande();
 		if (reponse) {
