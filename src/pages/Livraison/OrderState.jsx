@@ -122,8 +122,8 @@ const Orderstate = () => {
     );
 
     return (
-        <div className="container mt-3 custom-container">
-            <div className="row "></div>
+        <div className="container mt-4 custom-container">
+            <div className="row mt-5 "></div>
 
             {/* Commandes Non Livrées */}
             <OrderTable orders={pendingOrders} title="Commandes en cours" showProgress={true} />
