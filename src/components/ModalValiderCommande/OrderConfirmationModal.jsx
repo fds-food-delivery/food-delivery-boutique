@@ -20,6 +20,7 @@ const OrderConfirmationModal = ({
 }) => {
 	const [selectedPayment, setSelectedPayment] = useState("");
 	const [errors, setErrors] = useState({});
+	const [loadingOrders, setLoadingOrders] = useState(false);
 	const TypePaiement = [
 		{ id: 1, name: "A la livraison" },
 		// { id: 2, name: "Wave" },
@@ -65,17 +66,20 @@ const OrderConfirmationModal = ({
 		return Object.keys(newErrors).length === 0;
 	};
 	const validerFormCommande = async () => {
+		setLoadingOrders(true);
 		const isSubmit = await validerCommande(
 			formData.fullName,
 			formData.phone,
 			formData.address,
 		);
 		if (isSubmit) {
+			setLoadingOrders(false);
 			setOpenModalValiderHandle(false);
 			setOpenModalErrorHandle(false);
 			setOpenModalValidatedHandle(true);
 			console.log("Commande validée");
 		} else {
+			setLoadingOrders(false);
 			console.log("Erreur lors de la validation de la commande");
 			setOpenModalErrorHandle(true);
 		}
@@ -186,7 +190,16 @@ const OrderConfirmationModal = ({
 					</div>
 					<div className="d-flex  mt-4">
 						<button type="submit" className="btn btn-primary me-2 submit">
-							<FaCheckCircle className="icon me-1" /> Confirmer
+							<FaCheckCircle className="icon me-1" />
+							{/*affiche loading spinner */}
+							{loadingOrders &&
+							<span
+	className="spinner-border spinner-border-sm spinner-border-md spinner-border-lg"
+	role="status"
+	aria-hidden="true"
+></span>
+							}
+							Confirmer
 						</button>
 						<button
 							type="button"

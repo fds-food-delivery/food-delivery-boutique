@@ -21,10 +21,21 @@ const Orderstate = () => {
             setLoadingOrders(false); // Set loading state to false after fetching
         }
     };
+    const fetchOrdersEveryTime = async () => {
+        setInterval(async () => {
+            const orders = await getOrders();
+            setLoadingOrders(true); // Set loading state to true before fetching
+            setLoading(false); // Set loading state to false after fetching
+            console.log("Orders fetched successfully");
+            console.log("Orders", orders); // Use the fetched orders here
+        } , 2000);
+    }
 
     useEffect(() => {
-        fetchOrders(); // Fetch orders immediately on mount
-    }, [getOrders]);
+        fetchOrders();
+        setLoading(false);
+        setLoadingOrders(false);
+    },[], [fetchOrdersEveryTime]);
 
     console.log("loading", loading);
 

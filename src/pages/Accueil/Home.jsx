@@ -11,7 +11,7 @@ const Home = () => {
 	const [category, setCategory] = useState("All");
 	const { loading, setLoading } = useContext(StoreContext);
 	useEffect(() => {
-		setLoading(true);
+		setLoading(false);
 	}, []);
 	return (
 		<div className="container custom-container">
