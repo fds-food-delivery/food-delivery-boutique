@@ -109,7 +109,7 @@ function NavigationBar() {
 
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ms-auto">
-						<Nav.Link as={Link} to="/" className="custom-nav-link">
+						<Nav.Link as={Link} to="/home" className="custom-nav-link">
 							Accueil
 						</Nav.Link>
 						<Nav.Link as={Link} to="#menu" className="custom-nav-link">

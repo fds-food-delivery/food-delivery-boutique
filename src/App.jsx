@@ -4,8 +4,6 @@ import Home from "./pages/Accueil/Home.jsx";
 import Panier from "./pages/Panier/Panier";
 import Commande from "./pages/Commande/Commande";
 import Footer from "./components/Footer/Footer";
-
-
 import OrderState from "./pages/Livraison/OrderState";
 import Apropos from "./pages/Contact/Apropos.jsx";
 import { ToastContainer } from "react-toastify";

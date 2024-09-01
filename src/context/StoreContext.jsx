@@ -3,6 +3,7 @@ import axios from "axios";
 import food_25 from "../assets/food_25.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+// import {menu_list} from "../assets/assets.js";
 
 export const StoreContext = createContext(null);
 
@@ -20,11 +21,12 @@ const StoreContextProvider = (props) => {
 	const [userID, setUserID] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalChildren, setModalChildren] = useState(null);
+	const [menu_list , setMenu_list] = useState([]);
 	
 	const navigate = useNavigate();
-	 // const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
-	// const url = "http://localhost:5000";
-	const url ="https://backend-food-ordering.onrender.com";
+	  const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	 // const url = "http://localhost:5000";
+	// const url ="https://backend-food-ordering.onrender.com";
 	const handleConfirmedOrder = async () => {
 		const reponse = await validerCommande();
 		if (reponse) {
@@ -35,6 +37,16 @@ const StoreContextProvider = (props) => {
 			setOpenModalErrorHandle(true);
 		}
 	};
+	const fetchCategoriesList =  async () =>{
+		setLoading(true);
+		const response = await axios.get(`${url}/api/v1/categories`);
+		if (response.status === 200 || response.status === 201) {
+			setMenu_list(response.data.data);
+		} else {
+			setLoading(false);
+		}
+	}
+
 
 	const openModalHandle = (children) => {
 		setIsModalOpen(true);
@@ -94,6 +106,8 @@ const StoreContextProvider = (props) => {
 			category: "Supplementaire",
 		},
 	]);
+
+
 
 	const totalPrice = () => {
 		return Object.keys(cartItems).reduce((acc, id) => {
@@ -401,6 +415,7 @@ const StoreContextProvider = (props) => {
 			if (response.status === 200 || response.status === 201) {
 				console.log("food_list", response.data.data);
 				setFoodList(response.data.data);
+				setLoading(false);
 			} else {
 				setLoading(false);
 				throw new Error("Verifiez votre connexion internet");
@@ -420,9 +435,9 @@ const StoreContextProvider = (props) => {
 			setLoading(true);
 			console.log("call loadData ");
 			await fetchFoodList();
+			await fetchCategoriesList();
 		}
 		loadData();
-
 		// // Exemple d'appel
 		// creerCompte("Soule Kodjo", "775958693", "Dakar");
 	}, []);
@@ -444,9 +459,11 @@ const StoreContextProvider = (props) => {
 		setCurrentUser,
 		validerCommande,
 		orders,
+		menu_list,
 		setOrders,
 		fetchOrders,
 		update,
+		fetchCategoriesList,
 		createOrder,
 		setLoading,
 		getOrders: getOrdersByCurrentUser,

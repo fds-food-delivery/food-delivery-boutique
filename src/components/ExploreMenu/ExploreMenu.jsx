@@ -1,8 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import "./ExploreMenu.css";
-import { menu_list } from "../../assets/assets";
+import {StoreContext} from "../../context/StoreContext.jsx";
+// import { menu_list } from "../../assets/assets";
 
 const ExploreMenu = ({ category, setCategory }) => {
+	const { menu_list, url } = useContext(StoreContext);
+
 	return (
 		<div className="explore-menu row" id="explore-menu">
 			{/* <h1>Decouvrir nos menus</h1> */}
@@ -10,7 +13,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 				Choisissez parmi un menu varié comprenant une gamme détectable de plats
 			</p> */}
 			{/*horizontale scroll siil ya pas espace*/}
-			<div className="explore-menu-list">
+			<div className="explore-menu-list" id="menu">
 				{menu_list.map((item, index) => {
 					return (
 						<div
@@ -24,7 +27,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 							className="explore-menu-list-item">
 							<img
 								className={category === item.menu_name ? "active" : ""}
-								src={item.menu_image}
+								src={url + "/api/v1/categories/image/" + item.menu_image}
 								alt=""
 							/>
 							<p>{item.menu_name}</p>{" "}
