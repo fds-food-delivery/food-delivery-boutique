@@ -142,7 +142,7 @@ const StoreContextProvider = (props) => {
 	const createOrder = ({
 		userId,
 		cartItems,
-		address = {},
+		address,
 		status = "Pending",
 		payment = false,
 	}) => {
@@ -176,11 +176,7 @@ const StoreContextProvider = (props) => {
 				userId,
 				items,
 				amount,
-				address: {
-					street: address.street || "Unknown Street",
-					city: address.city || "Unknown City",
-					postalCode: address.postalCode || "00000",
-				},
+				address,
 				status,
 				payment,
 			};

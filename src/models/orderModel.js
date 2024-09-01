@@ -9,11 +9,7 @@ const orderModel = {
         }
     ],
     amount: 0,
-    address: {
-        street: "",
-        city: "",
-        postalCode: ""
-    },
+    address: "",
     status: "",
     payment: false
 };
