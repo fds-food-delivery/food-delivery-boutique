@@ -26,9 +26,9 @@ const StoreContextProvider = (props) => {
 	const [menu_list , setMenu_list] = useState([]);
 	
 	const navigate = useNavigate();
-	  const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
+	  // const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
 	  // const url = "http://localhost:5000";
-	// const url ="https://backend-food-ordering.onrender.com";
+	 const url ="https://backend-food-ordering.onrender.com";
 
 
 	const fetchNotifications = async () => {
