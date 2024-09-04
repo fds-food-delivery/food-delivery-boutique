@@ -114,7 +114,7 @@ button:hover {
 .custom-nav-link {
   color: #000; /* Couleur noire */
   font-weight: bold;
-  margin-right: 20px;
+  margin-right: 10px;
   transition: color 0.3s ease-in-out;
 }
 
@@ -361,7 +361,7 @@ button:hover {
 .custom-nav-link-cart{
     color: #000; /* Couleur noire */
     font-weight: bold;
-    margin-right: 20px;
+    margin-right: 3px;
     display: flex;
     align-items: center;
     flex-direction: row;

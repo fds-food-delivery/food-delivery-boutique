@@ -8,7 +8,7 @@ import {
 	Button,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaCartPlus, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import {FaCartPlus, FaUser, FaBars, FaTimes, FaBell} from "react-icons/fa";
 import { StoreContext } from "../../context/StoreContext";
 import Panier from "../../pages/Panier/Panier";
 import "./NavigationBar.css"; // Assurez-vous de créer ce fichier CSS
@@ -23,12 +23,23 @@ function NavigationBar() {
 
 	const [expanded, setExpanded] = useState(false);
 
+	const [totalNotifications, setTotalNotifications] = useState(0); // Declare state for notifications
+
+
 	const totalItems = cartItems
 		? Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0)
 		: 0;
 
 	const togglePanier = () => {
 		setIsPanierOpen(!isPanierOpen);
+	};
+	const toggleNotifications = () => {
+		console.log("Notifications clicked");
+		setTotalNotifications(totalNotifications+1);
+		showNotifications();
+	}
+	const showNotifications = () => {
+		console.log("Showing notifications");
 	};
 
 	const handleProfileClick = () => {
@@ -78,6 +89,32 @@ function NavigationBar() {
 				</Navbar.Brand>
 
 				{!expanded ? (
+					<div className="
+					d-flex align-items-left
+					border-red-2
+					" style={{
+						marginLeft: "auto" ,
+					}}>
+						<Nav.Link
+							as={Link}
+							to="#notifications"
+							className="custom-nav-link-cart-2 custom-nav-link"
+							onClick={toggleNotifications}
+						>
+						<div className="custom-nav-link-notifications">
+							<FaBell size={30} className="text-dark" />
+							<Badge pill bg="danger" className="ml-2"
+								   style={{
+									   position: "relative",
+									   top: "-10px",
+									   left: "-10px",
+								   }}
+							>
+								{totalNotifications > 0 && totalNotifications}
+							</Badge>
+						</div>
+</Nav.Link>
+
 					<Nav.Link
 						as={Link}
 						to="#menu-item"
@@ -85,13 +122,20 @@ function NavigationBar() {
 						onClick={togglePanier}
 						style={{ marginLeft: "auto" }}
 					>
-						<div className="custom-nav-link-cart">
+						<div className="custom-nav-link-notifications">
 							<FaCartPlus size={30} className="text-dark" />
-							<Badge pill bg="success" className="ml-2">
+							<Badge
+								style={{
+									position: "relative",
+									top: "-10px",
+									left: "-10px",
+								}}
+								pill bg="success" className="ml-2">
 								{totalItems > 0 && totalItems}
 							</Badge>
 						</div>
 					</Nav.Link>
+						</div>
 				) : (
 					<div></div>
 				)}
@@ -121,6 +165,9 @@ function NavigationBar() {
 						{/*<Nav.Link as={Link} to="/contact" className="custom-nav-link">*/}
 						{/*	A propos*/}
 						{/*</Nav.Link>*/}
+
+
+
 						<Nav.Link
 							as={Link}
 							to="#menu-item"
