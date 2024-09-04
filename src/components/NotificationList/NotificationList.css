@@ -28,6 +28,15 @@
     border-bottom: 1px solid #ddd;
     animation: fadeIn 0.5s ease-in;
 }
+.notification-item span {
+    font-size: 0.8em;
+    color: #999;
+}
+.notification-item small {
+    font-size: 0.8em;
+    color: #999;
+    margin-left: 10px;
+}
 
 @keyframes fadeIn {
     from {
