@@ -20,6 +20,7 @@ import { useContext, useState } from "react";
 import { StoreContext } from "./context/StoreContext.jsx";
 import UserProfile from "./components/Profile/UserProfile.jsx";
 import { FaCheckCircle } from "react-icons/fa";
+import NotificationAllList from "./components/NotificationAllList/NotificationAllList.jsx";
 
 const App = () => {
 	const { loading } = useContext(StoreContext);
@@ -83,6 +84,7 @@ const App = () => {
 					<Route path="/accueil" element={<Home />} />
 					<Route path="/panier" element={<Panier />} />
 					<Route path="/commande" element={<Commande />} />
+					<Route path="/notifications" element={<NotificationAllList />} />
 					{/*<Route path="/login" element={<LoginPage/>}/>*/}
 					{/*<Route path="/register" element={<RegisterPage/>}/>*/}
 					<Route path="/livraison" element={<OrderState />} />

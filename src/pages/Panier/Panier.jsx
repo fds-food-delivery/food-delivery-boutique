@@ -5,6 +5,7 @@ import { assets } from "../../assets/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faClose, faTrash} from "@fortawesome/free-solid-svg-icons";
 import CommandeForm from "../../components/CommandeForm/CommandeForm";
+import {FaIcons} from "react-icons/fa";
 
 const Panier = ({ onClose }) => {
     const {
@@ -110,6 +111,7 @@ const Panier = ({ onClose }) => {
                         fontSize: '20px',
                     }
                 }>
+                {/*    x iconferme  react icon fa*/}
                     <FontAwesomeIcon icon={faClose}/>
                 </button>
             </div>

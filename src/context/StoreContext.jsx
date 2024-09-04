@@ -14,9 +14,11 @@ const StoreContextProvider = (props) => {
 	const [openModalValiderHandle, setOpenModalValiderHandle] = useState(false);
 	const [selectedPayment, setSelectedPayment] = useState(null);
 	const [cartItems, setCartItems] = useState({});
+	const [totalNotifications, setTotalNotifications] = useState(0);
 	const [foodList, setFoodList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
+	const [notifications, setNotifications] = useState([]);
 	const [orders, setOrders] = useState([]);
 	const [userID, setUserID] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,8 +27,29 @@ const StoreContextProvider = (props) => {
 	
 	const navigate = useNavigate();
 	  const url = "https://d3pbaiuhrdo7r5.cloudfront.net";
-	 // const url = "http://localhost:5000";
+	  // const url = "http://localhost:5000";
 	// const url ="https://backend-food-ordering.onrender.com";
+
+
+	const fetchNotifications = async () => {
+		setLoading(true);
+		try {
+			const response = await axios.get(`${url}/api/v1/notifications`);
+			if (response.status === 200 || response.status === 201) {
+				console.log("Notifications:", response.data);
+				setNotifications(response.data);
+			} else {
+				throw new Error("Error fetching notifications");
+			}
+		} catch (error) {
+			console.error("Error fetching notifications:", error);
+			setLoading(false);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+
 	const handleConfirmedOrder = async () => {
 		const reponse = await validerCommande();
 		if (reponse) {
@@ -426,17 +449,45 @@ const StoreContextProvider = (props) => {
 
 
 
+	// useEffect(() => {
+	// 	async function loadData() {
+	// 		setLoading(true);
+	// 		await getOrdersByCurrentUser();
+	// 		console.log("call loadData ");
+	// 		await fetchFoodList();
+	// 		await fetchCategoriesList();
+	// 		await fetchNotifications();
+	// 	}
+	// 	loadData();
+	// 	console.log("Current User: ", userID);
+	// 	if (userID) {
+	// 		setTotalNotifications(notifications.length);
+	// 	}else{
+	// 		setTotalNotifications(0);
+	// 	}
+	//
+	// 	// // Exemple d'appel
+	// 	// creerCompte("Soule Kodjo", "775958693", "Dakar");
+	// }, []);
+
 	useEffect(() => {
-		async function loadData() {
-			setLoading(true);
-			console.log("call loadData ");
-			await fetchFoodList();
-			await fetchCategoriesList();
-		}
-		loadData();
-		// // Exemple d'appel
-		// creerCompte("Soule Kodjo", "775958693", "Dakar");
-	}, []);
+	async function loadData() {
+		setLoading(true);
+		await getOrdersByCurrentUser();
+		console.log("call loadData ");
+		await fetchFoodList();
+		await fetchCategoriesList();
+		await fetchNotifications();
+		setLoading(false);
+	}
+
+	loadData();
+	console.log("Current User: ", userID);
+	setTotalNotifications(notifications.length);
+
+	// // Exemple d'appel
+	// creerCompte("Soule Kodjo", "775958693", "Dakar");
+}, [userID, notifications.length]);
 
 	const contextValue = {
 		foodList,
@@ -454,6 +505,7 @@ const StoreContextProvider = (props) => {
 		currentUser,
 		setCurrentUser,
 		validerCommande,
+		notifications,
 		orders,
 		menu_list,
 		setOrders,
@@ -470,6 +522,10 @@ const StoreContextProvider = (props) => {
 		handleConfirmedOrder,
 		openModalValiderHandle,
 		setOpenModalValiderHandle,
+		userID,
+		setUserID,
+		totalNotifications,
+		setTotalNotifications,
 		selectedPayment,
 		setSelectedPayment,
 		openModalHandle,
