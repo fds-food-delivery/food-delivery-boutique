@@ -26,11 +26,11 @@ const NotificationList = ({ notifications, onClose }) => {
                     <li className="notification-item">Aucune nouvelle notification</li>
                 )}
             </ul>
-            <div className="text-center mt-2">
-                <Link to="/notifications" onClick={onClose}>
-                    <Button variant="link">See All Notifications</Button>
-                </Link>
-            </div>
+            {/*<div className="text-center mt-2">*/}
+            {/*    <Link to="/notifications" onClick={onClose}>*/}
+            {/*        <Button variant="link">See All Notifications</Button>*/}
+            {/*    </Link>*/}
+            {/*</div>*/}
         </div>
     );
 };
