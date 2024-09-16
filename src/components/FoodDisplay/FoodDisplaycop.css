@@ -10,9 +10,18 @@
 }
 
 /* Grille adaptable avec des colonnes réactives */
-.food-display-list {
+.food-display-list1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Auto-ajustement des colonnes */
+    margin-top: 30px;
+    gap: 30px;
+    row-gap: 50px;
+}
+.food-display-list1 {
+    display: grid;
+
+    /* 3 colonne*/
+    grid-template-columns: repeat(3, 1fr);
     margin-top: 30px;
     gap: 30px;
     row-gap: 50px;

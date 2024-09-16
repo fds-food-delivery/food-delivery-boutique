@@ -1,24 +1,13 @@
 import React, { useContext } from "react";
 import "./FoodItem.css";
 import { assets } from "../../assets/assets";
+
 import { StoreContext } from "../../context/StoreContext";
+// urlS3
+
 
 const FoodItem = ({ id, name, price, description,category, sousCategory,  image }) => {
-	const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
-
-	const ensureImageExtension = (imageName) => {
-		if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
-			return imageName;
-		} else {
-			return `${imageName}.png`;
-		}
-	};
-
-	const handleImageError = (e) => {
-		e.target.src = "https://placehold.co/300";
-	};
-
-	const correctedImageName = ensureImageExtension(image);
+	const { cartItems, addToCart, removeFromCart, url, urlS3 } = useContext(StoreContext);
 
 	const renderCartActions = () => {
 		return cartItems[id] ? (
@@ -52,14 +41,13 @@ const FoodItem = ({ id, name, price, description,category, sousCategory,  image 
 		<div className="food-item">
 			<div className="food-item-img-container">
 				<img
-					src={
-						image
-							? `${url}/api/v1/foods/image/${correctedImageName}`
-							: "https://placehold.co/300"
-					}
+					src={`${urlS3}/${image}`}
 					alt={name}
 					className="food-item-image"
-					onError={handleImageError}
+					onError={(e) => {
+						e.target.src = "https://placehold.co/300";
+					}}
+
 				/>
 				{renderCartActions()}
 			</div>

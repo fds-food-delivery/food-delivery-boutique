@@ -5,8 +5,11 @@ import { ClipLoader } from "react-spinners";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { FaEye } from "react-icons/fa"; // Import Font Awesome
 
+
+
 const Orderstate = () => {
-    const { orders, getOrders, setLoading, loading, getCurrentUser } = useContext(StoreContext);
+    const { orders, getOrders, setLoading, loading, getCurrentUser, StateType } = useContext(StoreContext);
+
     const [loadingOrders, setLoadingOrders] = useState(true); // Initialize to true
 
     const fetchOrders = async () => {
@@ -21,6 +24,8 @@ const Orderstate = () => {
             setLoadingOrders(false); // Set loading state to false after fetching
         }
     };
+
+
     const fetchOrdersEveryTime = async () => {
         setInterval(async () => {
             const orders = await getOrders();
@@ -30,6 +35,10 @@ const Orderstate = () => {
             console.log("Orders", orders); // Use the fetched orders here
         } , 2000);
     }
+    const getStatusName = (status) => {
+        const state = StateType.find(state => state.value === status);
+        return state ? state.name : status;
+    };
 
     useEffect(() => {
         fetchOrders();
@@ -82,7 +91,7 @@ const Orderstate = () => {
                             <th>Date</th>
                             <th>État</th>
                             <th>Montant</th>
-                            <th>Action</th>
+                            {/*<th>Action</th>*/}
                         </tr>
                     </thead>
                     <tbody>
@@ -100,19 +109,22 @@ const Orderstate = () => {
                                 >
                                     {new Date(order.date).toLocaleString()}
                                 </td>
-                                <td className={`font-weight-bold ${order.status === "Delivered" ? "text-success" : "text-secondary"}`}>
-                                    {order.status === "Delivered"
-                                        ? "Livré"
-                                        : order.status === "Out for delivery"
-                                            ? "livraison"
-                                            : "préparation"}
+                                {/*//orderStateType: StateType[] = [
+// 				{ value: 'PENDING', name: 'En attente' },
+// 				{ value: 'IN_PROGRESS', name: 'En cours' },
+// 				{ value: 'DELIVERED', name: 'Livré' },
+// 				{ value: 'CANCELLED', name: 'Annulée' },
+// 			];
+*/}
+                               <td className={`font-weight-bold ${order.status === "DELIVERED" ? "text-success" : "text-secondary"}`}>
+                                    {getStatusName(order.status)}
                                 </td>
                                 <td>{order.amount} FCFA</td>
-                                <td>
-                                    <button className="btn btn-primary">
-                                        <FaEye />
-                                    </button>
-                                </td>
+                                {/*<td>*/}
+                                {/*    <button className="btn btn-primary">*/}
+                                {/*        <FaEye />*/}
+                                {/*    </button>*/}
+                                {/*</td>*/}
                             </tr>
                         ))}
                     </tbody>

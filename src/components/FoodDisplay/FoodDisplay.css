@@ -23,3 +23,36 @@
     align-items: center;
     height: 200px;
 }
+
+
+
+
+.food-display-list {
+    display: grid;
+    gap: 30px;
+    row-gap: 50px;
+    /* Définir une grille flexible avec un minimum de 240px pour chaque élément */
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    margin-top: 30px;
+}
+
+/* Afficher trois colonnes pour les grands écrans (≥ 1024px) */
+@media screen and (min-width: 1024px) {
+    .food-display-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Afficher deux colonnes pour les écrans de taille moyenne (≥ 768px et < 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .food-display-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Afficher une seule colonne pour les petits écrans (≤ 767px) */
+@media screen and (max-width: 767px) {
+    .food-display-list {
+        grid-template-columns: 1fr;
+    }
+}

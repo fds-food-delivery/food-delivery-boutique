@@ -1,4 +1,4 @@
-.food-item {
+.food-item1 {
     padding: 15px;
     transition: box-shadow 0.3s ease;
     display: flex;
@@ -11,6 +11,25 @@
     max-width: 300px;
     margin: 10px auto;
 }
+
+.food-item {
+    border: 1px solid red;
+
+    padding: 15px;
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Ajout pour espacer le contenu */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    margin: 10px auto;
+    position: relative; /* Nécessaire pour la position des éléments absolus */
+}
+
 
 .food-item:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
