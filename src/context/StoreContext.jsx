@@ -419,7 +419,7 @@ const StoreContextProvider = (props) => {
 				const response = await axios.post(
 					`${url}/api/v1/orders/userorders`,
 					{
-						userId : userID
+						userId : localStorage.getItem("userID")
 					}
 				);
 
@@ -460,6 +460,9 @@ const StoreContextProvider = (props) => {
 		};
 
 		useEffect(async () => {
+			if (localStorage.getItem("userID")) {
+				setUserID(localStorage.getItem("userID"));
+			}
 			async function loadData() {
 				setLoading(true);
 				await fetchFoodList();
