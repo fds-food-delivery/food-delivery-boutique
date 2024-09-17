@@ -462,7 +462,6 @@ const StoreContextProvider = (props) => {
 		useEffect(async () => {
 			async function loadData() {
 				setLoading(true);
-
 				await fetchFoodList();
 				await fetchCategoriesList();
 				setLoading(false);
@@ -470,7 +469,7 @@ const StoreContextProvider = (props) => {
 
 			loadData();
 			console.log("Current User: ", userID);
-			const getOrderByUser = async () => {
+			async function getOrderByUser ()  {
 				await getOrdersByCurrentUser();
 			}
 			getOrderByUser();
