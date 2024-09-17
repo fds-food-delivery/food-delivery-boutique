@@ -44,15 +44,16 @@ const StoreContextProvider = (props) => {
 			try {
 				if (localStorage.getItem("userID")) {
 					setUserID(localStorage.getItem("userID"));
+					console.log("userID:", userID);
+					const response = await axios.get(`${url}/api/v1/notifications?userId=${userID}`);
+					if (response.status === 200 || response.status === 201) {
+						console.log("Notifications:", response.data);
+						setNotifications(response.data);
+					} else {
+						throw new Error("Error fetching notifications");
+					}
 				}
-				console.log("userID:", userID);
-				const response = await axios.get(`${url}/api/v1/notifications?userId=${userID}`);
-				if (response.status === 200 || response.status === 201) {
-					console.log("Notifications:", response.data);
-					setNotifications(response.data);
-				} else {
-					throw new Error("Error fetching notifications");
-				}
+
 			} catch (error) {
 				console.error("Error fetching notifications:", error);
 				setLoading(false);
@@ -60,7 +61,6 @@ const StoreContextProvider = (props) => {
 				setLoading(false);
 			}
 		}
-
 
 		const handleConfirmedOrder = async () => {
 			const reponse = await validerCommande();
@@ -459,23 +459,22 @@ const StoreContextProvider = (props) => {
 			}
 		};
 
-		useEffect(() => {
+		useEffect(async () => {
 			async function loadData() {
 				setLoading(true);
-				await getOrdersByCurrentUser();
-				console.log("call loadData ");
+
 				await fetchFoodList();
 				await fetchCategoriesList();
-				// await fetchNotifications();
 				setLoading(false);
 			}
 
 			loadData();
 			console.log("Current User: ", userID);
+			const getOrderByUser = async () => {
+				await getOrdersByCurrentUser();
+			}
+			getOrderByUser();
 			setTotalNotifications(notifications.length);
-
-			// // Exemple d'appel
-			// creerCompte("Soule Kodjo", "775958693", "Dakar");
 		}, [userID, notifications.length]);
 
 		const contextValue = {
