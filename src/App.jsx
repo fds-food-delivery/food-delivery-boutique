@@ -29,23 +29,15 @@ const App = () => {
 	// Inside your component
 	const navigate = useNavigate();
 	const {
-		isModalOpen,
-		closeModal,
-		openModalHandle,
-		modalChildren,
-		handleConfirmedOrder,
+
 		selectedPayment,
 		setSelectedPayment,
 		totalPrice,
-		cartItems,
 		setLoading,
-		setOpenModalHandle,
 		setOpenModalValiderHandle,
 		openModalValiderHandle, // Add comma here
 		openModalValidatedHandle,
 		setOpenModalValidatedHandle,
-		setOpenModalServiceNonDisponibe,
-		openModalServiceNonDisponibe,
 		setOpenModalErrorHandle,
 		openModalErrorHandle,
 	} = useContext(StoreContext);

@@ -8,7 +8,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 
 	return (
 		<div className="explore-menu row" id="explore-menu">
-			{/* <h1>Decouvrir nos menus</h1> */}
+			 {/*<h1>Decouvrir nos menus</h1>*/}
 			{/* <p className="explore-menu-text">
 				Choisissez parmi un menu varié comprenant une gamme détectable de plats
 			</p> */}
@@ -26,10 +26,12 @@ const ExploreMenu = ({ category, setCategory }) => {
 							key={index}
 							className="explore-menu-list-item">
 							<img
-								className={category === item.menu_name ? "active" : ""}
-								src={url + "/api/v1/categories/image/" + item.menu_image}
-								alt=""
-							/>
+							style={{ width: "100px", height: "100px" }}
+							className={category === item.menu_name ? "active" : ""}
+							src={url + "/api/v1/categories/image/" + item.menu_image}
+							alt=""
+							onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300"; }}
+								/>
 							<p>{item.menu_name}</p>{" "}
 						</div>
 					);

@@ -35,11 +35,6 @@ const Orderstate = () => {
             console.log("Orders", orders); // Use the fetched orders here
         } , 2000);
     }
-    const getStatusName = (status) => {
-        const state = StateType.find(state => state.value === status);
-        return state ? state.name : status;
-    };
-
     useEffect(() => {
         fetchOrders();
         setLoading(false);
@@ -67,18 +62,6 @@ const Orderstate = () => {
 
     const deliveredOrders = orders.filter(order => order.status === "Delivered");
     const pendingOrders = orders.filter(order => order.status !== "Delivered");
-
-    const getProgressPercentage = status => {
-        switch (status) {
-            case "Delivered":
-                return 100;
-            case "Out for delivery":
-                return 50;
-            default:
-                return 25;
-        }
-    };
-
     const OrderTable = ({ orders, title, showProgress }) => (
         <div className="card mb-4">
             <div className="card-header">
@@ -109,22 +92,10 @@ const Orderstate = () => {
                                 >
                                     {new Date(order.date).toLocaleString()}
                                 </td>
-                                {/*//orderStateType: StateType[] = [
-// 				{ value: 'PENDING', name: 'En attente' },
-// 				{ value: 'IN_PROGRESS', name: 'En cours' },
-// 				{ value: 'DELIVERED', name: 'Livré' },
-// 				{ value: 'CANCELLED', name: 'Annulée' },
-// 			];
-*/}
                                <td className={`font-weight-bold ${order.status === "DELIVERED" ? "text-success" : "text-secondary"}`}>
-                                    {getStatusName(order.status)}
+                                    {order.status}
                                 </td>
                                 <td>{order.amount} FCFA</td>
-                                {/*<td>*/}
-                                {/*    <button className="btn btn-primary">*/}
-                                {/*        <FaEye />*/}
-                                {/*    </button>*/}
-                                {/*</td>*/}
                             </tr>
                         ))}
                     </tbody>
