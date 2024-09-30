@@ -40,8 +40,9 @@ const StoreContextProvider = (props) => {
     const navigate = useNavigate();
 
     // const url = "https://backend-food-ordering.onrender.com";
-	const url = "http://localhost:5000";
-    const urlS3 = "https://foods-24.s3.us-east-1.amazonaws.com/foods";
+    const url = "https://dhbq8hhxw5d7.cloudfront.net";
+	// const url = "http://localhost:5000";
+    const urlS3 = "https://foods-.s3.us-east-1.amazonaws.com/foods";
 
     const fetchNotifications = async () => {
         setLoading(true);
