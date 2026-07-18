@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	Navbar,
 	Container,
@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import {FaCartPlus, FaUser, FaBars, FaTimes, FaBell} from "react-icons/fa";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 import Panier from "../../pages/Panier/Panier";
 import "./NavigationBar.css";
 import NotificationList from "../NotificationList/NotificationList.jsx"; // Assurez-vous de créer ce fichier CSS
@@ -18,9 +18,9 @@ function NavigationBar() {
 
 		const [isPanierOpen, setIsPanierOpen] = useState(false);
 		const [showNotifications, setShowNotifications] = useState(false); // État pour afficher les notifications
-		const { cartItems, userID, logout,
-			notifications, setNotifications
-			, totalNotifications, setTotalNotifications } = useContext(StoreContext);
+		const { cartItems, userID,
+			notifications,
+			totalNotifications, setTotalNotifications } = useStore();
 
 
 		const [notifications1, setNotifications1] = useState([

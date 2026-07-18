@@ -1,10 +1,10 @@
-import React, {useContext} from "react";
+import React from "react";
 import "./ExploreMenu.css";
-import {StoreContext} from "../../context/StoreContext.jsx";
-// import { menu_list } from "../../assets/assets";
+import { useStore } from "../../store/useStore";
+import { resolveImageUrl } from "../../utils/resolveImageUrl";
 
 const ExploreMenu = ({ category, setCategory }) => {
-	const { menu_list, url } = useContext(StoreContext);
+	const { menu_list, url } = useStore();
 
 	return (
 		<div className="explore-menu row" id="explore-menu">
@@ -28,7 +28,7 @@ const ExploreMenu = ({ category, setCategory }) => {
 							<img
 							style={{ width: "100px", height: "100px" }}
 							className={category === item.menu_name ? "active" : ""}
-							src={url + "/api/v1/categories/image/" + item.menu_image}
+							src={resolveImageUrl(item.menu_image, `${url}/api/v1/categories/image`)}
 							alt=""
 							onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300"; }}
 								/>

@@ -1,9 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./AlertPanier.css";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 
 const AlertPanier = ({ message }) => {
-	const { isShowAlertPanier, closeAlert } = useContext(StoreContext);
+	// NOTE: isShowAlertPanier / closeAlert n'existaient pas dans l'ancien
+	// StoreContext (composant non monté dans App.jsx) — pré-existant.
+	const { isShowAlertPanier, closeAlert } = useStore();
 
 	useEffect(() => {
 		if (isShowAlertPanier) {

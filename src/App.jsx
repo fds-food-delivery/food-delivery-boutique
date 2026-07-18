@@ -16,31 +16,29 @@ import Navbar3 from "./components/Navbar/Navbar3";
 import OrderConfirmationModal from "./components/ModalValiderCommande/OrderConfirmationModal.jsx";
 import "./App.css";
 import ScrollToTop from "react-scroll-to-top";
-import { useContext, useState } from "react";
-import { StoreContext } from "./context/StoreContext.jsx";
+import { useState } from "react";
+import { useStore, initStore } from "./store/useStore";
 import UserProfile from "./components/Profile/UserProfile.jsx";
 import { FaCheckCircle } from "react-icons/fa";
 import NotificationAllList from "./components/NotificationAllList/NotificationAllList.jsx";
 
 const App = () => {
-	const { loading } = useContext(StoreContext);
-
-
-	// Inside your component
-	const navigate = useNavigate();
 	const {
-
+		loading,
 		selectedPayment,
 		setSelectedPayment,
 		totalPrice,
 		setLoading,
 		setOpenModalValiderHandle,
-		openModalValiderHandle, // Add comma here
+		openModalValiderHandle,
 		openModalValidatedHandle,
 		setOpenModalValidatedHandle,
 		setOpenModalErrorHandle,
 		openModalErrorHandle,
-	} = useContext(StoreContext);
+	} = useStore();
+
+	// Inside your component
+	const navigate = useNavigate();
 
 	const [loadingApp, setLoadingApp] = useState(true);
 	const [currentUser, setCurrentUser] = useState({
@@ -49,6 +47,10 @@ const App = () => {
 		phone: "",
 		address: ""
 	});
+
+	useEffect(() => {
+		initStore();
+	}, []);
 
 	useEffect(() => {
 		if (loading === false) {

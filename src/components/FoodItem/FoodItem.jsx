@@ -1,13 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./FoodItem.css";
 import { assets } from "../../assets/assets";
 
-import { StoreContext } from "../../context/StoreContext";
-// urlS3
-
+import { useStore } from "../../store/useStore";
+import { resolveImageUrl } from "../../utils/resolveImageUrl";
 
 const FoodItem = ({ id, name, price, description,category, sousCategory,  image }) => {
-	const { cartItems, addToCart, removeFromCart, url, urlS3 } = useContext(StoreContext);
+	const { cartItems, addToCart, removeFromCart, url, urlS3 } = useStore();
 
 	const renderCartActions = () => {
 		return cartItems[id] ? (
@@ -41,7 +40,7 @@ const FoodItem = ({ id, name, price, description,category, sousCategory,  image 
 		<div className="food-item">
 			<div className="food-item-img-container">
 				<img
-					src={`${urlS3}/${image}`}
+					src={resolveImageUrl(image, urlS3) || "https://placehold.co/300"}
 					alt={name}
 					className="food-item-image"
 					onError={(e) => {

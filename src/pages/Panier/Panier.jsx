@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./Panier.css";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 import { assets } from "../../assets/assets";
+import { resolveImageUrl } from "../../utils/resolveImageUrl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faClose, faTrash} from "@fortawesome/free-solid-svg-icons";
 import CommandeForm from "../../components/CommandeForm/CommandeForm";
@@ -17,7 +18,7 @@ const Panier = ({ onClose }) => {
         currentUser,
         url
 
-    } = useContext(StoreContext);
+    } = useStore();
 
     const cartContent = Object.keys(cartItems).map((id) => {
         const ensureImageExtension = (imageName) => {
@@ -30,16 +31,15 @@ const Panier = ({ onClose }) => {
 
 
         const item = foodList.find((food) => food._id === id);
-        const correctedImageName = ensureImageExtension(item.image);
+        const correctedImageName = item.image ? ensureImageExtension(item.image) : "";
 
         return (
             <div key={id} className="panier-item">
                 {/*<img src={item.image} alt={item.name} className="panier-item-image" />*/}
                 <img
                     src={
-                        item.image
-                            ? `${url}/api/v1/foods/image/${correctedImageName}`
-                            : "https://placehold.co/300"
+                        resolveImageUrl(correctedImageName, `${url}/api/v1/foods/image`) ||
+                        "https://placehold.co/300"
                     }
                     alt={item.name}
                     className="panier-item-image"

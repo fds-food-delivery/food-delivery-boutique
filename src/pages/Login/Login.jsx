@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { StoreContext } from "./../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 // boostrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
@@ -11,7 +11,9 @@ const LoginPage = () => {
 	const [loading, setLoading] = useState(false);
 
 	const navigate = useNavigate();
-	const { loginUser, isAuthenticated } = useContext(StoreContext);
+	// NOTE: loginUser / isAuthenticated n'existaient pas dans l'ancien StoreContext
+	// (page déjà non routée dans App.jsx) — non repris ici, pré-existant.
+	const { loginUser, isAuthenticated } = useStore();
 
 	useEffect(() => {
 		if (isAuthenticated) {

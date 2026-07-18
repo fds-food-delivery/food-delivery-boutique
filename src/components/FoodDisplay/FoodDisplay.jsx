@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./FoodDisplay.css";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 import FoodItem from "../FoodItem/FoodItem";
 import SaladOptions from "../SaladOptions/SaladOptions";
 import { ClipLoader } from "react-spinners";
@@ -8,14 +8,11 @@ import { ClipLoader } from "react-spinners";
 const FoodDisplay = ({ category }) => {
     const {
         foodList,
-        salade_types_liste,
-        salade_sauce,
-        salade_supplementaire,
         cartItems,
         addToCart,
         loading,
         removeFromCart,
-    } = useContext(StoreContext);
+    } = useStore();
 
     const [saladeTypesListe, setSaladeTypesListe] = useState([]);
     const [saladeSauce, setSaladeSauce] = useState([]);

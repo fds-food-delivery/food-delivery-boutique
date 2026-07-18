@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import "./Accueil.css";
 import Header from "../../components/Header/Header";
 import ExploreMenu from "../../components/ExploreMenu/ExploreMenu";
 import FoodDisplay from "../../components/FoodDisplay/FoodDisplay";
-import { StoreContext } from "../../context/StoreContext.jsx";
+import { useStore } from "../../store/useStore";
 import { ClipLoader } from "react-spinners";
 
 const Home = () => {
  const [category, setCategory] = useState("All");
- const { loading, setLoading } = useContext(StoreContext);
+ const { loading, setLoading } = useStore();
  return (
   <div className="container custom-container">
    <div className="" style={{ marginTop: "60px" }}></div>

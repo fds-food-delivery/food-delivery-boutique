@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserProfile.css";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 
 const UserProfile = () => {
 	const [isEditing, setIsEditing] = useState(false);
-	const { getCurrentUser, loading, setLoading, currentUser } =
-		useContext(StoreContext);
+	// NOTE: getCurrentUser n'existait pas dans l'ancien StoreContext — cette
+	// page plantait déjà à l'usage (pré-existant, hors périmètre).
+	const { getCurrentUser, loading, setLoading, currentUser } = useStore();
 	const [userInfo, setUserInfo] = useState({
 		name: "",
 		email: "",

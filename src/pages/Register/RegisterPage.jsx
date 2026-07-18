@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { StoreContext } from "../../context/StoreContext";
+import { useStore } from "../../store/useStore";
 import "./RegisterPage.css";
 
 const RegisterPage = () => {
@@ -14,7 +14,9 @@ const RegisterPage = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const { registerUser } = useContext(StoreContext);
+    // NOTE: registerUser n'existait pas dans l'ancien StoreContext (page déjà
+    // non routée dans App.jsx) — non repris ici, pré-existant.
+    const { registerUser } = useStore();
 
     const handleChange = (e) => {
         const { name, value } = e.target;

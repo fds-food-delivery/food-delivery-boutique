@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import { useState } from "react";
+import { useStore } from "../../store/useStore";
 import "./CommandeForm.css";
 import { toast } from "react-toastify";
 import Modal from "../Modal/Modal.jsx";
@@ -21,12 +21,11 @@ const CommandeForm = () => {
 		openModalValiderHandle,
 		setOpenModalValiderHandle,
 		handleConfirmedOrder,
-	} = useContext(StoreContext);
+		currentUser,
+	} = useStore();
 	const [nomComplet, setNomComplet] = useState("");
 	const [contact, setContact] = useState("");
 	const [openModalHandle, setOpenModalHandle] = useState(false);
-
-	const { currentUser } = useContext(StoreContext);
 
 	const handlePaymentChange = (event) => {
 		setSelectedPayment(event.target.value);

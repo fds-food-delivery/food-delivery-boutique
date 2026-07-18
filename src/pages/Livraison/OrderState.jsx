@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import { useEffect, useState } from "react";
+import { useStore } from "../../store/useStore";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClipLoader } from "react-spinners";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -8,7 +8,7 @@ import { FaEye } from "react-icons/fa"; // Import Font Awesome
 
 
 const Orderstate = () => {
-    const { orders, getOrders, setLoading, loading, getCurrentUser, StateType } = useContext(StoreContext);
+    const { orders, getOrders, setLoading, loading } = useStore();
 
     const [loadingOrders, setLoadingOrders] = useState(true); // Initialize to true
 

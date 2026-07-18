@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import {
 	FaCheckCircle,
@@ -9,7 +9,7 @@ import {
 	FaMoneyBillWave,
 } from "react-icons/fa";
 import "./OrderConfirmationModal.css";
-import { StoreContext } from "../../context/StoreContext.jsx";
+import { useStore } from "../../store/useStore";
 
 const OrderConfirmationModal = ({
 	openModalValiderHandle,
@@ -29,8 +29,8 @@ const OrderConfirmationModal = ({
 
 	const { setOpenModalErrorHandle,
 		setOpenModalValidatedHandle,
-
-	} = useContext(StoreContext);
+		validerCommande,
+	} = useStore();
 
 	const [formData, setFormData] = useState({
 		fullName: currentUser?.fullName || "",
@@ -38,7 +38,6 @@ const OrderConfirmationModal = ({
 		address: currentUser?.address || "",
 	});
 
-	const { validerCommande } = useContext(StoreContext);
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
