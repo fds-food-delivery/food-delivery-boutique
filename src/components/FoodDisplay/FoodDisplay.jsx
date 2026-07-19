@@ -34,7 +34,7 @@ const FoodDisplay = ({ category }) => {
 				(item) => item.category === "Salade" && item.sousCategory === "Salade"
 			),
 			saladeSauce: foodList.filter((item) => item.sousCategory === "Sauce"),
-			saladeSupplementaire: foodList.filter((item) => item.sousCategory === "Supplement"),
+			saladeSupplementaire: foodList.filter((item) => item.sousCategory === "Supplément"),
 		}),
 		[foodList]
 	);

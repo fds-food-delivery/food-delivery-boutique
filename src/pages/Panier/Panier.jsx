@@ -22,11 +22,19 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 
 import { useStore } from "../../store/useStore";
 import { resolveImageUrl } from "../../utils/resolveImageUrl";
+import { mockProcessPayment } from "../../mocks/payment";
+import { getStatusLabel } from "../../utils/orderStatus";
 
-const PAYMENT_METHODS = [{ id: "delivery", label: "À la livraison" }];
+const PAYMENT_METHODS = [
+	{ id: "delivery", label: "À la livraison", mock: false, color: "#f86c6b", icon: LocalShippingOutlinedIcon },
+	{ id: "wave", label: "Wave", mock: true, color: "#1DC8E5", icon: PhoneIphoneIcon },
+	{ id: "orange_money", label: "Orange Money", mock: true, color: "#FF6600", icon: PhoneIphoneIcon },
+];
 
 const ensureImageExtension = (imageName) => {
 	if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
@@ -47,7 +55,7 @@ const Panier = ({ onClose }) => {
 	} = useStore();
 	const navigate = useNavigate();
 
-	const [step, setStep] = useState("cart"); // cart | form | success | error
+	const [step, setStep] = useState("cart"); // cart | form | paying | success | error
 	const [submitting, setSubmitting] = useState(false);
 	const [formData, setFormData] = useState({ fullName: "", phone: "", address: "" });
 	const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0].id);
@@ -85,20 +93,34 @@ const Panier = ({ onClose }) => {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (!validateForm()) return;
+	const selectedMethod = PAYMENT_METHODS.find((m) => m.id === paymentMethod);
 
-		setSubmitting(true);
+	const finalizeOrder = async (paid) => {
 		const result = await placeOrder({
 			fullName: formData.fullName,
 			phone: formData.phone,
 			address: formData.address,
 			paymentMethod,
+			paid,
 		});
-		setSubmitting(false);
 		setConfirmedOrder(result.success ? result.order : null);
 		setStep(result.success ? "success" : "error");
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (!validateForm()) return;
+
+		if (selectedMethod?.mock) {
+			setStep("paying");
+			const payment = await mockProcessPayment({ method: paymentMethod, phone: formData.phone });
+			await finalizeOrder(payment.success);
+			return;
+		}
+
+		setSubmitting(true);
+		await finalizeOrder(false);
+		setSubmitting(false);
 	};
 
 	const renderCartStep = () => (
@@ -214,7 +236,17 @@ const Panier = ({ onClose }) => {
 					</Typography>
 					<RadioGroup value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
 						{PAYMENT_METHODS.map((method) => (
-							<FormControlLabel key={method.id} value={method.id} control={<Radio />} label={method.label} />
+							<FormControlLabel
+								key={method.id}
+								value={method.id}
+								control={<Radio sx={{ color: method.color, "&.Mui-checked": { color: method.color } }} />}
+								label={
+									<Stack direction="row" spacing={1} alignItems="center">
+										<method.icon sx={{ color: method.color, fontSize: 20 }} />
+										<Typography>{method.label}</Typography>
+									</Stack>
+								}
+							/>
 						))}
 					</RadioGroup>
 				</Box>
@@ -227,11 +259,47 @@ const Panier = ({ onClose }) => {
 						{total} FCFA
 					</Typography>
 				</Stack>
-				<Button type="submit" fullWidth variant="contained" size="large" disabled={submitting}>
-					{submitting ? <CircularProgress size={22} color="inherit" /> : "Confirmer la commande"}
+				<Button
+					type="submit"
+					fullWidth
+					variant="contained"
+					size="large"
+					disabled={submitting}
+					sx={selectedMethod?.mock ? { bgcolor: selectedMethod.color, "&:hover": { bgcolor: selectedMethod.color } } : undefined}
+				>
+					{submitting ? (
+						<CircularProgress size={22} color="inherit" />
+					) : selectedMethod?.mock ? (
+						`Payer avec ${selectedMethod.label}`
+					) : (
+						"Confirmer la commande"
+					)}
 				</Button>
 			</Box>
 		</Box>
+	);
+
+	const renderPayingStep = () => (
+		<Stack alignItems="center" spacing={2} sx={{ flexGrow: 1, justifyContent: "center", p: 3, textAlign: "center" }}>
+			<Box
+				sx={{
+					width: 64,
+					height: 64,
+					borderRadius: "50%",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					bgcolor: selectedMethod ? `${selectedMethod.color}22` : "action.hover",
+				}}
+			>
+				{selectedMethod && <selectedMethod.icon sx={{ fontSize: 32, color: selectedMethod.color }} />}
+			</Box>
+			<CircularProgress size={28} sx={{ color: selectedMethod?.color }} />
+			<Typography variant="h6">Paiement {selectedMethod?.label} en cours</Typography>
+			<Typography color="text.secondary">
+				Confirmez la transaction sur votre téléphone ({formData.phone}).
+			</Typography>
+		</Stack>
 	);
 
 	const renderStatusStep = (isSuccess) => (
@@ -246,7 +314,7 @@ const Panier = ({ onClose }) => {
 			</Typography>
 			<Typography color="text.secondary">
 				{isSuccess
-					? "Nous préparons votre commande, vous pouvez suivre son statut dans Livraison."
+					? "Nous préparons votre commande, vous pouvez suivre son statut dans Mes commandes."
 					: "Vérifiez votre connexion et réessayez."}
 			</Typography>
 			{isSuccess && confirmedOrder && (
@@ -255,7 +323,7 @@ const Panier = ({ onClose }) => {
 						Commande n° {confirmedOrder._id?.slice(-6).toUpperCase()}
 					</Typography>
 					<Typography variant="body2" fontWeight={600}>
-						{confirmedOrder.amount} FCFA — {confirmedOrder.status}
+						{confirmedOrder.amount} FCFA — {getStatusLabel(confirmedOrder.status)}
 					</Typography>
 				</Stack>
 			)}
@@ -283,11 +351,11 @@ const Panier = ({ onClose }) => {
 	);
 
 	const showBack = step === "form";
-	const title = { cart: "Mon panier", form: "Livraison", success: "", error: "" }[step];
+	const title = { cart: "Mon panier", form: "Livraison", paying: "Paiement", success: "", error: "" }[step];
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 400 }}>
-			{(step === "cart" || step === "form") && (
+			{(step === "cart" || step === "form" || step === "paying") && (
 				<Stack direction="row" alignItems="center" sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
 					{showBack && (
 						<IconButton onClick={() => setStep("cart")} aria-label="Retour" sx={{ mr: 1 }}>
@@ -297,14 +365,17 @@ const Panier = ({ onClose }) => {
 					<Typography variant="h6" sx={{ flexGrow: 1 }}>
 						{title}
 					</Typography>
-					<IconButton onClick={handleClose} aria-label="Fermer">
-						<CloseIcon />
-					</IconButton>
+					{step !== "paying" && (
+						<IconButton onClick={handleClose} aria-label="Fermer">
+							<CloseIcon />
+						</IconButton>
+					)}
 				</Stack>
 			)}
 
 			{step === "cart" && renderCartStep()}
 			{step === "form" && renderFormStep()}
+			{step === "paying" && renderPayingStep()}
 			{step === "success" && renderStatusStep(true)}
 			{step === "error" && renderStatusStep(false)}
 		</Box>

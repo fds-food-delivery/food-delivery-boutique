@@ -29,7 +29,7 @@ import Panier from "../../pages/Panier/Panier";
 const NAV_LINKS = [
 	{ label: "Accueil", to: "/home" },
 	{ label: "Menu", to: "/home#menu" },
-	{ label: "Livraison", to: "/livraison" },
+	{ label: "Mes commandes", to: "/livraison" },
 	{ label: "Contact", to: "/contact" },
 ];
 

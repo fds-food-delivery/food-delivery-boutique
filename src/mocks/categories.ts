@@ -28,7 +28,7 @@ export const mockCategories = [
     menu_image: menu3,
     sous_categories: [
       { _id: "mock-subcat-1", sous_category_name: "Sauce", sous_category_image: menu3 },
-      { _id: "mock-subcat-2", sous_category_name: "Supplement", sous_category_image: menu3 },
+      { _id: "mock-subcat-2", sous_category_name: "Supplément", sous_category_image: menu3 },
     ],
   },
   {

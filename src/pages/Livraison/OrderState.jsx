@@ -14,12 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 
 import { useStore } from "../../store/useStore";
-
-const statusColor = (status) => {
-	if (status === "Delivered") return "success";
-	if (status === "Pending") return "warning";
-	return "default";
-};
+import { getStatusLabel, getStatusColor } from "../../utils/orderStatus";
 
 const OrderState = () => {
 	const { orders, getOrders } = useStore();
@@ -78,7 +73,7 @@ const OrderState = () => {
 							<TableRow key={order._id || index}>
 								<TableCell>{new Date(order.date).toLocaleString("fr-FR")}</TableCell>
 								<TableCell>
-									<Chip label={order.status} color={statusColor(order.status)} size="small" />
+									<Chip label={getStatusLabel(order.status)} color={getStatusColor(order.status)} size="small" />
 								</TableCell>
 								<TableCell align="right">{order.amount} FCFA</TableCell>
 							</TableRow>

@@ -13,11 +13,13 @@ export const createOrder = ({
   cartItems,
   address,
   status = "Pending",
+  payment = false,
 }: {
   userId: string;
   cartItems: Record<string, number>;
   address: string;
   status?: string;
+  payment?: boolean;
 }) => {
   try {
     if (!userId) {
@@ -47,11 +49,12 @@ export const createOrder = ({
       0
     );
 
-    // Le backend modélise `payment` comme un booléen "déjà payé" (orderModel.js) —
-    // avec le seul mode actuel (paiement à la livraison), la commande n'est
-    // jamais pré-payée. Le mode de paiement choisi par l'utilisateur reste une
-    // info d'affichage côté client, pas un champ persisté côté backend pour l'instant.
-    return { userId, items, amount, address, status, payment: false };
+    // Le backend modélise `payment` comme un booléen "déjà payé" (orderModel.js),
+    // pas comme un champ "méthode de paiement". Pour le paiement à la livraison
+    // c'est toujours false ; pour Wave/Orange Money c'est true une fois le mock
+    // de paiement confirmé (voir placeOrder). Il n'y a pas de champ backend pour
+    // stocker la méthode elle-même pour l'instant.
+    return { userId, items, amount, address, status, payment };
   } catch (error) {
     console.error("Error creating order:", error);
     return null;
@@ -63,6 +66,7 @@ export type PlaceOrderPayload = {
   phone: string;
   address: string;
   paymentMethod: string;
+  paid?: boolean;
 };
 
 export type PlaceOrderResult = {
@@ -121,7 +125,7 @@ export const useOrderStore = create<{
     }
   },
 
-  placeOrder: async ({ fullName, phone, address }) => {
+  placeOrder: async ({ fullName, phone, address, paid = false }) => {
     useLoadingStore.getState().setLoading(true);
     const { creerCompte, setUserID, setCurrentUser } = useUserStore.getState();
     try {
@@ -141,7 +145,7 @@ export const useOrderStore = create<{
 
       const { cartItems, setCartItems } = useCartStore.getState();
 
-      const order = createOrder({ userId: userID, cartItems, address, status: "Pending" });
+      const order = createOrder({ userId: userID, cartItems, address, status: "Pending", payment: paid });
 
       let confirmedOrder;
       try {

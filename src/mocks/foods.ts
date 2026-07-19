@@ -132,7 +132,7 @@ export const mockFoods = [
     price: 300,
     image: tomates,
     category: "Salade",
-    sousCategory: "Supplement",
+    sousCategory: "Supplément",
   },
   {
     _id: "mock-food-13",
@@ -141,7 +141,7 @@ export const mockFoods = [
     price: 300,
     image: food11,
     category: "Salade",
-    sousCategory: "Supplement",
+    sousCategory: "Supplément",
   },
   {
     _id: "mock-food-14",

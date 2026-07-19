@@ -10,7 +10,7 @@ import MuiLink from "@mui/material/Link";
 const LINKS = [
 	{ label: "Accueil", to: "/" },
 	{ label: "Menu", to: "/home#menu" },
-	{ label: "Livraison", to: "/livraison" },
+	{ label: "Mes commandes", to: "/livraison" },
 	{ label: "Contact", to: "/contact" },
 ];
 
