@@ -123,7 +123,7 @@ export const useOrderStore = create<{
 
   placeOrder: async ({ fullName, phone, address }) => {
     useLoadingStore.getState().setLoading(true);
-    const { creerCompte, setUserID } = useUserStore.getState();
+    const { creerCompte, setUserID, setCurrentUser } = useUserStore.getState();
     try {
       const created = await creerCompte(fullName, phone, address);
 
@@ -134,6 +134,10 @@ export const useOrderStore = create<{
       const userID = created.user._id;
       localStorage.setItem("userID", userID);
       setUserID(userID);
+
+      const currentUser = { fullName, phone, address };
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      setCurrentUser(currentUser);
 
       const { cartItems, setCartItems } = useCartStore.getState();
 

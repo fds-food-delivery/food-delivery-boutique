@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
@@ -58,68 +60,77 @@ function NavigationBar() {
 				elevation={scrolled ? 4 : 0}
 				sx={{ borderBottom: scrolled ? "none" : "1px solid rgba(0,0,0,0.08)" }}
 			>
-				<Toolbar sx={{ py: 1 }}>
-					<Box
-						component={Link}
-						to="/"
-						sx={{ display: "flex", alignItems: "center", textDecoration: "none", mr: 2 }}
-					>
-						<img
-							src="/images/logo.png"
-							alt="Thurquoise Logo"
-							style={{ height: 40 }}
-						/>
-					</Box>
+				<Container maxWidth="lg" disableGutters={false}>
+					<Toolbar sx={{ py: 1.5, gap: 2 }} disableGutters>
+						<Box
+							component={Link}
+							to="/"
+							sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+						>
+							<img
+								src="/images/logo.png"
+								alt="Thurquoise Logo"
+								style={{ height: 40, display: "block" }}
+							/>
+						</Box>
 
-					<Box sx={{ display: { xs: "none", md: "flex" }, gap: 1, flexGrow: 1 }}>
-						{NAV_LINKS.map((link) => (
-							<Button
-								key={link.label}
-								component={Link}
-								to={link.to}
-								color="inherit"
-								sx={{
-									fontWeight: 500,
-									"&:hover": { color: "primary.main" },
-								}}
+						<Stack
+							direction="row"
+							spacing={3}
+							sx={{ display: { xs: "none", md: "flex" }, flexGrow: 1, ml: 2 }}
+						>
+							{NAV_LINKS.map((link) => (
+								<Button
+									key={link.label}
+									component={Link}
+									to={link.to}
+									color="inherit"
+									sx={{
+										fontWeight: 500,
+										px: 1,
+										"&:hover": { color: "primary.main", bgcolor: "transparent" },
+									}}
+								>
+									{link.label}
+								</Button>
+							))}
+						</Stack>
+
+						<Box sx={{ flexGrow: { xs: 1, md: 0 } }} />
+
+						<Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center">
+							<IconButton
+								aria-label="Notifications"
+								onClick={(e) => setNotifAnchor(e.currentTarget)}
 							>
-								{link.label}
-							</Button>
-						))}
-					</Box>
+								<Badge badgeContent={totalNotifications} color="error">
+									<NotificationsIcon />
+								</Badge>
+							</IconButton>
 
-					<Box sx={{ flexGrow: { xs: 1, md: 0 } }} />
+							<IconButton aria-label="Panier" onClick={() => setIsCartOpen(true)}>
+								<Badge badgeContent={totalItems} color="success">
+									<ShoppingCartIcon />
+								</Badge>
+							</IconButton>
 
-					<IconButton
-						aria-label="Notifications"
-						onClick={(e) => setNotifAnchor(e.currentTarget)}
-					>
-						<Badge badgeContent={totalNotifications} color="error">
-							<NotificationsIcon />
-						</Badge>
-					</IconButton>
+							<IconButton aria-label="Mon profil" onClick={() => navigate("/profil")}>
+								<PersonIcon />
+							</IconButton>
 
-					<IconButton aria-label="Panier" onClick={() => setIsCartOpen(true)}>
-						<Badge badgeContent={totalItems} color="success">
-							<ShoppingCartIcon />
-						</Badge>
-					</IconButton>
-
-					<IconButton aria-label="Mon profil" onClick={() => navigate("/profil")}>
-						<PersonIcon />
-					</IconButton>
-
-					<IconButton
-						aria-label="Menu"
-						onClick={() => setIsDrawerOpen(true)}
-						sx={{ display: { xs: "flex", md: "none" } }}
-					>
-						<MenuIcon />
-					</IconButton>
-				</Toolbar>
+							<IconButton
+								aria-label="Menu"
+								onClick={() => setIsDrawerOpen(true)}
+								sx={{ display: { xs: "flex", md: "none" } }}
+							>
+								<MenuIcon />
+							</IconButton>
+						</Stack>
+					</Toolbar>
+				</Container>
 			</AppBar>
 			{/* Compense la hauteur de l'AppBar en position fixed */}
-			<Toolbar sx={{ py: 1 }} />
+			<Toolbar sx={{ py: 1.5 }} />
 
 			{/* Menu mobile (liens de navigation) */}
 			<Drawer anchor="right" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>

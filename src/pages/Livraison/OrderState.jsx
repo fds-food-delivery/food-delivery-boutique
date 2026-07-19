@@ -1,126 +1,98 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+
 import { useStore } from "../../store/useStore";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { ClipLoader } from "react-spinners";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import { FaEye } from "react-icons/fa"; // Import Font Awesome
 
-
-
-const Orderstate = () => {
-    const { orders, getOrders, setLoading, loading } = useStore();
-
-    const [loadingOrders, setLoadingOrders] = useState(true); // Initialize to true
-
-    const fetchOrders = async () => {
-        setLoadingOrders(true); // Set loading state to true before fetching
-        try {
-            const orders = await getOrders();
-            console.log("Orders fetched successfully");
-            console.log("Orders", orders); // Use the fetched orders here
-        } catch (error) {
-            console.error("Error in fetching orders:", error);
-        } finally {
-            setLoadingOrders(false); // Set loading state to false after fetching
-        }
-    };
-
-
-    const fetchOrdersEveryTime = async () => {
-        setInterval(async () => {
-            const orders = await getOrders();
-            setLoadingOrders(true); // Set loading state to true before fetching
-            setLoading(false); // Set loading state to false after fetching
-            console.log("Orders fetched successfully");
-            console.log("Orders", orders); // Use the fetched orders here
-        } , 2000);
-    }
-    useEffect(() => {
-        fetchOrders();
-        setLoading(false);
-        setLoadingOrders(false);
-    },[], [fetchOrdersEveryTime]);
-
-    console.log("loading", loading);
-
-    // if (loadingOrders) {
-    //     return (
-    //         <div className="container mt-5 pt-5 custom-container text-center">
-    //             <ClipLoader color="#f86c6b" size={150} />
-    //         </div>
-    //     );
-    // }
-
-    if (orders === null || orders === undefined || orders.length === 0) {
-        return (
-            <div className="container mt-5 pt-2 custom-container text-center">
-                <h2>Vous n'avez pas encore passé de commande.</h2>
-                <p>Vous pouvez passer une commande en visitant notre menu.</p>
-            </div>
-        );
-    }
-
-    const deliveredOrders = orders.filter(order => order.status === "Delivered");
-    const pendingOrders = orders.filter(order => order.status !== "Delivered");
-    const OrderTable = ({ orders, title, showProgress }) => (
-        <div className="card mb-4">
-            <div className="card-header">
-                <h2 className="mb-0">{title}</h2>
-            </div>
-            <div className="card-body table-responsive">
-                <table className="table table-hover ">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Date</th>
-                            <th>État</th>
-                            <th>Montant</th>
-                            {/*<th>Action</th>*/}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((order, index) => (
-                            <tr key={index}>
-                                <td
-                                    style={{
-                                        color: "black",
-                                        fontSize: "1.2em",
-                                        fontWeight: "bold",
-                                        textAlign: "left",
-                                        whiteSpace: "pre-wrap",
-                                        wordWrap: "break-word",
-                                    }}
-                                >
-                                    {new Date(order.date).toLocaleString()}
-                                </td>
-                               <td className={`font-weight-bold ${order.status === "DELIVERED" ? "text-success" : "text-secondary"}`}>
-                                    {order.status}
-                                </td>
-                                <td>{order.amount} FCFA</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-
-    return (
-        <div className="container mt-4 custom-container">
-            <div className="row mt-5 "></div>
-
-            {/* Commandes Non Livrées */}
-            <OrderTable orders={pendingOrders} title="Commandes en cours" showProgress={true} />
-
-            {/* Historique des Commandes Livrées */}
-            {/*<OrderTable orders={deliveredOrders} title="Historique des Commandes Livrées" showProgress={false} />*/}
-
-            {/* Information de suivi */}
-            <div className="alert alert-info text-center mt-4">
-                <p>Vous pouvez suivre l'état de votre commande ici.</p>
-                <p>Vous pouvez également nous contacter pour plus d'informations.</p>
-            </div>
-        </div>
-    );
+const statusColor = (status) => {
+	if (status === "Delivered") return "success";
+	if (status === "Pending") return "warning";
+	return "default";
 };
 
-export default Orderstate;
+const OrderState = () => {
+	const { orders, getOrders } = useStore();
+	const [loadingOrders, setLoadingOrders] = useState(true);
+
+	useEffect(() => {
+		const fetchOrders = async () => {
+			setLoadingOrders(true);
+			try {
+				await getOrders();
+			} catch (error) {
+				console.error("Error in fetching orders:", error);
+			} finally {
+				setLoadingOrders(false);
+			}
+		};
+		fetchOrders();
+	}, []);
+
+	if (loadingOrders) {
+		return (
+			<Stack alignItems="center" sx={{ mt: 12 }}>
+				<CircularProgress />
+			</Stack>
+		);
+	}
+
+	if (!orders || orders.length === 0) {
+		return (
+			<Container maxWidth="sm" sx={{ mt: { xs: 10, md: 12 }, mb: 6, textAlign: "center" }}>
+				<ReceiptLongOutlinedIcon sx={{ fontSize: 56, color: "text.disabled", mb: 1 }} />
+				<Typography variant="h6">Vous n'avez pas encore passé de commande.</Typography>
+				<Typography color="text.secondary">
+					Vous pouvez passer une commande en visitant notre menu.
+				</Typography>
+			</Container>
+		);
+	}
+
+	return (
+		<Container maxWidth="md" sx={{ mt: { xs: 10, md: 12 }, mb: 6 }}>
+			<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+				Mes commandes
+			</Typography>
+			<TableContainer component={Paper} variant="outlined">
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell>Date</TableCell>
+							<TableCell>État</TableCell>
+							<TableCell align="right">Montant</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{orders.map((order, index) => (
+							<TableRow key={order._id || index}>
+								<TableCell>{new Date(order.date).toLocaleString("fr-FR")}</TableCell>
+								<TableCell>
+									<Chip label={order.status} color={statusColor(order.status)} size="small" />
+								</TableCell>
+								<TableCell align="right">{order.amount} FCFA</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+
+			<Typography variant="body2" color="text.secondary" sx={{ mt: 3 }}>
+				Vous pouvez suivre l'état de votre commande ici, ou nous contacter pour
+				plus d'informations.
+			</Typography>
+		</Container>
+	);
+};
+
+export default OrderState;

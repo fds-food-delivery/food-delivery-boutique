@@ -1,148 +1,93 @@
-import React, { useEffect, useState } from "react";
-import "./FoodDisplay.css";
+import React, { useMemo } from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Stack from "@mui/material/Stack";
 import { useStore } from "../../store/useStore";
 import FoodItem from "../FoodItem/FoodItem";
-import SaladOptions from "../SaladOptions/SaladOptions";
-import { ClipLoader } from "react-spinners";
+
+const FoodGrid = ({ items }) => (
+	<Grid container spacing={2} sx={{ mb: 4 }}>
+		{items.map((item) => (
+			<Grid key={item._id} item xs={12} sm={6} md={4} lg={3}>
+				<FoodItem
+					id={item._id}
+					name={item.name}
+					description={item.description}
+					category={item.category}
+					sousCategory={item.sousCategory}
+					price={item.price}
+					image={item.image}
+				/>
+			</Grid>
+		))}
+	</Grid>
+);
 
 const FoodDisplay = ({ category }) => {
-    const {
-        foodList,
-        cartItems,
-        addToCart,
-        loading,
-        removeFromCart,
-    } = useStore();
+	const { foodList, loading } = useStore();
 
-    const [saladeTypesListe, setSaladeTypesListe] = useState([]);
-    const [saladeSauce, setSaladeSauce] = useState([]);
-    const [saladeSupplementaire, setSaladeSupplementaire] = useState([]);
+	const { saladeTypesListe, saladeSauce, saladeSupplementaire } = useMemo(
+		() => ({
+			saladeTypesListe: foodList.filter(
+				(item) => item.category === "Salade" && item.sousCategory === "Salade"
+			),
+			saladeSauce: foodList.filter((item) => item.sousCategory === "Sauce"),
+			saladeSupplementaire: foodList.filter((item) => item.sousCategory === "Supplement"),
+		}),
+		[foodList]
+	);
 
-    useEffect(() => {
-        setSaladeTypesListe(foodList.filter((item) => item.category === "Salade" && item.sousCategory === "Salade"));
-        setSaladeSauce(foodList.filter((item) => item.sousCategory === "Sauce"));
-        setSaladeSupplementaire(foodList.filter((item) => item.sousCategory === "Supplement"));
-        console.log("foodList", foodList);
-        console.log("saladeTypesListe", saladeTypesListe);
-        console.log("saladeSauce", saladeSauce);
-        console.log("saladeSupplementaire", saladeSupplementaire);
-    }, [foodList]);
+	if (loading) {
+		return (
+			<Stack alignItems="center" sx={{ py: 8 }}>
+				<CircularProgress sx={{ color: "primary.main" }} size={60} />
+			</Stack>
+		);
+	}
 
-    const renderSaladOptions = () => (
-        <div className="food-display-list">
-            {saladeTypesListe.map((item) => (
-                <FoodItem
-                    key={item._id}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    category={item.category}
-                    sousCategory={item.sousCategory}
-                    price={item.price}
-                    image={item.image}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            ))}
-        </div>
-    );
+	if (category === "Salade") {
+		return (
+			<Box id="food-display">
+				<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+					Composez votre salade
+				</Typography>
+				<FoodGrid items={saladeTypesListe} />
 
-    const renderSaladSaucesOptions = () => (
-        <div className="food-display-list">
-            {saladeSauce.map((item) => (
-                <FoodItem
-                    key={item._id}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    category={item.category}
-                    sousCategory={item.sousCategory}
-                    price={item.price}
-                    image={item.image}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            ))}
-        </div>
-    );
+				{saladeSauce.length > 0 && (
+					<>
+						<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+							Composez votre sauce
+						</Typography>
+						<FoodGrid items={saladeSauce} />
+					</>
+				)}
 
-    const renderSaladCondimentsOptions = () => (
-        <div className="food-display-list">
-            {saladeSupplementaire.map((item) => (
-                <FoodItem
-                    key={item._id}
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    category={item.category}
-                    sousCategory={item.sousCategory}
-                    price={item.price}
-                    image={item.image}
-                    cartItems={cartItems}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                />
-            ))}
-        </div>
-    );
+				{saladeSupplementaire.length > 0 && (
+					<>
+						<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+							Composez votre condiment
+						</Typography>
+						<FoodGrid items={saladeSupplementaire} />
+					</>
+				)}
+			</Box>
+		);
+	}
 
-    const renderFoodItems = () => (
-        <div className="food-display-list">
-            {foodList.map((item) => {
-                if (category === "All" || category === item.category) {
-                    return (
-                        <FoodItem
-                            key={item._id}
-                            id={item._id}
-                            name={item.name}
-                            description={item.description}
-                            category={item.category}
-                            sousCategory={item.sousCategory}
-                            price={item.price}
-                            image={item.image}
-                            cartItems={cartItems}
-                            addToCart={addToCart}
-                            removeFromCart={removeFromCart}
-                        />
-                    );
-                }
-                return null;
-            })}
-        </div>
-    );
+	const filteredItems = foodList.filter(
+		(item) => category === "All" || category === item.category
+	);
 
-    return loading ? (
-        <div className="loader">
-            <ClipLoader color="#f86c6b" size={150} />
-        </div>
-    ) : (
-        <div className="food-display" id="food-display">
-            <h2 className="food-display-title">
-                {category === "Salade" ? "Composez votre salade" : "Meilleurs plats"}
-            </h2>
-
-            {category === "Salade" && (
-                <>
-                    {renderSaladOptions()}
-                    {saladeSauce.length > 0 && (
-                        <>
-                            <h2 className="food-display-title">Composez votre sauce</h2>
-                            {renderSaladSaucesOptions()}
-                        </>
-                    )}
-                    {saladeSupplementaire.length > 0 && (
-                        <>
-                            <h2 className="food-display-title">Composez votre condiment</h2>
-                            {renderSaladCondimentsOptions()}
-                        </>
-                    )}
-                </>
-            )}
-            {category !== "Salade" && renderFoodItems()}
-        </div>
-    );
+	return (
+		<Box id="food-display">
+			<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+				Meilleurs plats
+			</Typography>
+			<FoodGrid items={filteredItems} />
+		</Box>
+	);
 };
 
 export default FoodDisplay;

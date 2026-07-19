@@ -12,6 +12,14 @@ export const initStore = async () => {
   if (userID) {
     useUserStore.getState().setUserID(userID);
   }
+  const storedCurrentUser = localStorage.getItem("currentUser");
+  if (storedCurrentUser) {
+    try {
+      useUserStore.getState().setCurrentUser(JSON.parse(storedCurrentUser));
+    } catch {
+      // valeur corrompue, on l'ignore silencieusement
+    }
+  }
   await Promise.all([
     useFoodStore.getState().fetchFoodList(),
     useCategoryStore.getState().fetchCategoriesList(),

@@ -1,42 +1,68 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import MuiLink from "@mui/material/Link";
+
+const LINKS = [
+	{ label: "Accueil", to: "/" },
+	{ label: "Menu", to: "/home#menu" },
+	{ label: "Livraison", to: "/livraison" },
+	{ label: "Contact", to: "/contact" },
+];
 
 const Footer = () => {
 	return (
-		<footer className="bg-dark text-light py-4">
-			<Container>
-				<Row>
-					<Col md={4}>
-						<h5>À propos de nous</h5>
-						<p>
-							Nous sommes une entreprise dédiée à offrir le meilleur service
-							possible à nos clients. Contactez-nous pour plus d'informations.
-						</p>
-					</Col>
-					<Col md={4}>
-						<h5>Liens Utiles</h5>
-						<ul className="list-unstyled">
-							<li><a href="#" className="text-light">Accueil</a></li>
-							<li><a href="#" className="text-light">Services</a></li>
-							<li><a href="#" className="text-light">Contact</a></li>
-						</ul>
-					</Col>
-					<Col md={4}>
-						<h5>Contactez-nous</h5>
-						<p>
-							Email: contact@exemple.com <br />
-							Téléphone: +221 33 123 45 67 <br />
-							Adresse: Dakar, Sénégal
-						</p>
-					</Col>
-				</Row>
-				<Row className="mt-3">
-					<Col className="text-center">
-						<p>© 2024 Tous droits réservés.</p>
-					</Col>
-				</Row>
+		<Box component="footer" sx={{ bgcolor: "grey.900", color: "grey.100", py: 5, mt: 6 }}>
+			<Container maxWidth="lg">
+				<Grid container spacing={4}>
+					<Grid item xs={12} md={4}>
+						<Typography variant="h6" gutterBottom>
+							Thurquoise
+						</Typography>
+						<Typography variant="body2" color="grey.400">
+							Des plats délicieux, préparés rapidement et livrés chez vous.
+						</Typography>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Typography variant="h6" gutterBottom>
+							Liens utiles
+						</Typography>
+						<Stack spacing={0.5}>
+							{LINKS.map((link) => (
+								<MuiLink
+									key={link.label}
+									component={Link}
+									to={link.to}
+									color="grey.300"
+									underline="hover"
+								>
+									{link.label}
+								</MuiLink>
+							))}
+						</Stack>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Typography variant="h6" gutterBottom>
+							Contactez-nous
+						</Typography>
+						<Typography variant="body2" color="grey.400">
+							Dakar, Sénégal
+							<br />
+							+221 33 123 45 67
+							<br />
+							contact@thurquoise.sn
+						</Typography>
+					</Grid>
+				</Grid>
+				<Typography variant="body2" color="grey.500" textAlign="center" sx={{ mt: 4 }}>
+					© {new Date().getFullYear()} Thurquoise — Tous droits réservés.
+				</Typography>
 			</Container>
-		</footer>
+		</Box>
 	);
 };
 

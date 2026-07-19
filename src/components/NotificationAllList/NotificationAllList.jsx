@@ -1,110 +1,59 @@
-import React, { useEffect, useState } from "react";
-import { ListGroup, Button, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import axios from "axios";  // Import Axios for API requests
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";  // Icons for actions
-import "./NotificationAllList.css"; // Add CSS for styling
+import React from "react";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
-const NotificationAllList = ({ onClose }) => {
-    const [notifications, setNotifications] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+import { useStore } from "../../store/useStore";
 
-    useEffect(() => {
-        // Fetch notifications from backend API
-        const fetchNotifications = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get("https://your-backend-api.com/api/notifications"); // Replace with your API endpoint
-                setNotifications(response.data);  // Set the notifications from the response
-                setLoading(false);
-            } catch (error) {
-                setError("Failed to fetch notifications.");  // Set error if fetching fails
-                setLoading(false);
-            }
-        };
+const NotificationAllList = () => {
+	const { notifications, loading } = useStore();
 
-        fetchNotifications();
-    }, []);
+	if (loading) {
+		return (
+			<Stack alignItems="center" sx={{ mt: 12 }}>
+				<CircularProgress />
+			</Stack>
+		);
+	}
 
-    // Function to mark a notification as read
-    const markAsRead = async (id) => {
-        try {
-            await axios.patch(`https://your-backend-api.com/api/notifications/${id}/read`);  // Replace with your API endpoint for marking as read
-            setNotifications(notifications.map((notification) =>
-                notification.id === id ? { ...notification, read: true } : notification
-            ));
-        } catch (error) {
-            console.error("Error marking as read:", error);
-        }
-    };
+	return (
+		<Container maxWidth="sm" sx={{ mt: { xs: 10, md: 12 }, mb: 6 }}>
+			<Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
+				Notifications
+			</Typography>
 
-    // Function to delete a notification
-    const deleteNotification = async (id) => {
-        try {
-            await axios.delete(`https://your-backend-api.com/api/notifications/${id}`);  // Replace with your API endpoint for deletion
-            setNotifications(notifications.filter((notification) => notification.id !== id));
-        } catch (error) {
-            console.error("Error deleting notification:", error);
-        }
-    };
-
-    return (
-        <div className="notification-dropdown custom-container">
-            <hr className="notification-hr" />
-            {loading ? (
-                <div className="text-center">
-                    <Spinner animation="border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </Spinner>
-                </div>
-            ) : error ? (
-                <div className="text-center text-danger">{error}</div>
-            ) : (
-                <ListGroup variant="flush">
-                    {notifications.length > 0 ? (
-                        notifications.map((notification) => (
-                            <ListGroup.Item key={notification.id} className="notification-item">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <span className={notification.read ? "text-muted" : ""}>
-                                            {notification.message}
-                                        </span>
-                                        <small className="text-muted d-block">{notification.date}</small>
-                                    </div>
-                                    <div className="notification-actions">
-                                        {!notification.read && (
-                                            <FaCheckCircle
-                                                className="action-icon"
-                                                onClick={() => markAsRead(notification.id)}
-                                                title="Mark as Read"
-                                            />
-                                        )}
-                                        <FaTimesCircle
-                                            className="action-icon"
-                                            onClick={() => deleteNotification(notification.id)}
-                                            title="Delete Notification"
-                                        />
-                                    </div>
-                                </div>
-                            </ListGroup.Item>
-                        ))
-                    ) : (
-                        <ListGroup.Item className="text-center">
-                            No new notifications
-                        </ListGroup.Item>
-                    )}
-                </ListGroup>
-            )}
-
-            <div className="text-center mt-2">
-                {/* Navigate to the full notifications page */}
-                <Link to="/notifications" onClick={onClose}>
-                    <Button variant="link">See All Notifications</Button>
-                </Link>
-            </div>
-        </div>
-    );
+			{notifications.length === 0 ? (
+				<Stack alignItems="center" spacing={1} sx={{ py: 6 }}>
+					<NotificationsNoneOutlinedIcon sx={{ fontSize: 48, color: "text.disabled" }} />
+					<Typography color="text.secondary">Aucune notification pour le moment.</Typography>
+				</Stack>
+			) : (
+				<List>
+					{notifications.map((notification, index) => (
+						<React.Fragment key={notification._id || index}>
+							<ListItem disableGutters>
+								<ListItemText
+									primary={notification.message}
+									secondary={
+										notification.date
+											? new Date(notification.date).toLocaleString("fr-FR")
+											: null
+									}
+								/>
+							</ListItem>
+							{index < notifications.length - 1 && <Divider />}
+						</React.Fragment>
+					))}
+				</List>
+			)}
+		</Container>
+	);
 };
 
 export default NotificationAllList;
