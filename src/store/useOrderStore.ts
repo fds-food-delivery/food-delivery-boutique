@@ -4,8 +4,8 @@ import { commandeService } from "../services/commandeService";
 import { useLoadingStore } from "./useLoadingStore";
 import { useFoodStore } from "./useFoodStore";
 import { useUserStore } from "./useUserStore";
-import { useUIStore } from "./useUIStore";
 import { useCartStore } from "./useCartStore";
+import { useNotificationStore } from "./useNotificationStore";
 import { mockOrders } from "../mocks/orders";
 
 export const createOrder = ({
@@ -13,13 +13,11 @@ export const createOrder = ({
   cartItems,
   address,
   status = "Pending",
-  payment = false,
 }: {
   userId: string;
   cartItems: Record<string, number>;
   address: string;
   status?: string;
-  payment?: boolean | string | null;
 }) => {
   try {
     if (!userId) {
@@ -49,11 +47,27 @@ export const createOrder = ({
       0
     );
 
-    return { userId, items, amount, address, status, payment };
+    // Le backend modélise `payment` comme un booléen "déjà payé" (orderModel.js) —
+    // avec le seul mode actuel (paiement à la livraison), la commande n'est
+    // jamais pré-payée. Le mode de paiement choisi par l'utilisateur reste une
+    // info d'affichage côté client, pas un champ persisté côté backend pour l'instant.
+    return { userId, items, amount, address, status, payment: false };
   } catch (error) {
     console.error("Error creating order:", error);
     return null;
   }
+};
+
+export type PlaceOrderPayload = {
+  fullName: string;
+  phone: string;
+  address: string;
+  paymentMethod: string;
+};
+
+export type PlaceOrderResult = {
+  success: boolean;
+  order?: { _id: string; amount: number; date: string; status: string };
 };
 
 export const useOrderStore = create<{
@@ -61,13 +75,8 @@ export const useOrderStore = create<{
   setOrders: (orders: any[]) => void;
   fetchOrders: () => Promise<void>;
   getOrdersByCurrentUser: () => Promise<any[] | undefined>;
-  validerCommande: (
-    fullName?: string,
-    phone?: string,
-    address?: string
-  ) => Promise<boolean>;
-  handleConfirmedOrder: () => Promise<void>;
-}>((set, get) => ({
+  placeOrder: (payload: PlaceOrderPayload) => Promise<PlaceOrderResult>;
+}>((set) => ({
   orders: [],
   setOrders: (orders) => set({ orders }),
 
@@ -112,56 +121,56 @@ export const useOrderStore = create<{
     }
   },
 
-  validerCommande: async (fullName = "", phone = "", address = "") => {
+  placeOrder: async ({ fullName, phone, address }) => {
+    useLoadingStore.getState().setLoading(true);
     const { creerCompte, setUserID } = useUserStore.getState();
-    const { selectedPayment } = useUIStore.getState();
     try {
-      const newUserId = await creerCompte(fullName, phone, address);
+      const created = await creerCompte(fullName, phone, address);
 
-      if (!newUserId || !newUserId.user._id) {
+      if (!created || !created.user._id) {
         throw new Error("Impossible de créer l'utilisateur.");
       }
 
-      const userID = newUserId.user._id;
+      const userID = created.user._id;
       localStorage.setItem("userID", userID);
       setUserID(userID);
 
       const { cartItems, setCartItems } = useCartStore.getState();
 
-      const order = createOrder({
-        userId: userID,
-        cartItems,
-        address,
-        status: "Pending",
-        payment: selectedPayment,
-      });
+      const order = createOrder({ userId: userID, cartItems, address, status: "Pending" });
 
-      const response = await commandeService.createOrder(order);
-
-      if (response.status === 200 || response.status === 201) {
-        setCartItems({});
-        return true;
+      let confirmedOrder;
+      try {
+        const response = await commandeService.createOrder(order);
+        if (response.status !== 200 && response.status !== 201) {
+          throw new Error("Erreur lors de la création de la commande.");
+        }
+        confirmedOrder = response.data.order;
+      } catch (apiError) {
+        if (!import.meta.env.DEV) {
+          throw apiError;
+        }
+        console.error("Error creating order:", apiError);
+        console.warn("[mock] commande: API injoignable, commande factice créée");
+        confirmedOrder = { ...order, _id: `mock-order-${Date.now()}`, date: new Date().toISOString() };
       }
-      throw new Error("Erreur lors de la création de la commande.");
+
+      setCartItems({});
+
+      // La commande vient de générer une notification côté backend et doit
+      // apparaître dans l'historique — on rafraîchit les deux sans bloquer
+      // l'affichage de la confirmation si l'un des deux échoue.
+      Promise.allSettled([
+        useOrderStore.getState().getOrdersByCurrentUser(),
+        useNotificationStore.getState().fetchNotifications(),
+      ]);
+
+      return { success: true, order: confirmedOrder };
     } catch (error) {
       console.error("Erreur lors de la validation de la commande :", error);
-      return false;
+      return { success: false };
     } finally {
       useLoadingStore.getState().setLoading(false);
-    }
-  },
-
-  handleConfirmedOrder: async () => {
-    const { validerCommande } = get();
-    const { setOpenModalValiderHandle, setOpenModalValidatedHandle, setOpenModalErrorHandle } =
-      useUIStore.getState();
-    const reponse = await validerCommande();
-    if (reponse) {
-      setOpenModalValiderHandle(false);
-      setOpenModalValidatedHandle(true);
-    } else {
-      setOpenModalValiderHandle(false);
-      setOpenModalErrorHandle(true);
     }
   },
 }));

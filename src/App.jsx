@@ -1,52 +1,26 @@
 // src/App.jsx
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Accueil/Home.jsx";
 import Panier from "./pages/Panier/Panier";
-import Commande from "./pages/Commande/Commande";
 import Footer from "./components/Footer/Footer";
 import OrderState from "./pages/Livraison/OrderState";
 import Apropos from "./pages/Contact/Apropos.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "./components/Modal/Modal";
 import MyLoader from "./Loader/MyLoader";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Navbar3 from "./components/Navbar/Navbar3";
-import OrderConfirmationModal from "./components/ModalValiderCommande/OrderConfirmationModal.jsx";
 import "./App.css";
 import ScrollToTop from "react-scroll-to-top";
-import { useState } from "react";
 import { useStore, initStore } from "./store/useStore";
 import UserProfile from "./components/Profile/UserProfile.jsx";
-import { FaCheckCircle } from "react-icons/fa";
 import NotificationAllList from "./components/NotificationAllList/NotificationAllList.jsx";
 
 const App = () => {
-	const {
-		loading,
-		selectedPayment,
-		setSelectedPayment,
-		totalPrice,
-		setLoading,
-		setOpenModalValiderHandle,
-		openModalValiderHandle,
-		openModalValidatedHandle,
-		setOpenModalValidatedHandle,
-		setOpenModalErrorHandle,
-		openModalErrorHandle,
-	} = useStore();
-
-	// Inside your component
-	const navigate = useNavigate();
+	const { loading, setLoading } = useStore();
 
 	const [loadingApp, setLoadingApp] = useState(true);
-	const [currentUser, setCurrentUser] = useState({
-		username : "",
-		fullName: "",
-		phone: "",
-		address: ""
-	});
 
 	useEffect(() => {
 		initStore();
@@ -77,7 +51,6 @@ const App = () => {
 					<Route path="/" element={<Home />} />
 					<Route path="/accueil" element={<Home />} />
 					<Route path="/panier" element={<Panier />} />
-					<Route path="/commande" element={<Commande />} />
 					<Route path="/notifications" element={<NotificationAllList />} />
 					{/*<Route path="/login" element={<LoginPage/>}/>*/}
 					{/*<Route path="/register" element={<RegisterPage/>}/>*/}
@@ -90,69 +63,6 @@ const App = () => {
 				</Routes>
 			</div>
 
-			<Modal
-				show={openModalValidatedHandle}
-				title="Commande validée"
-				onClose={() => setOpenModalValidatedHandle(false)}
-			>
-				<div className="container">
-					<div className="row">
-						<h4 className="text-center mb-4 text-primary">
-							<span className="text-success mr-2">
-								Votre commande a été validée
-							</span>
-							<FaCheckCircle style={{ color: "green", fontSize: "50px" }} />
-						</h4>
-					</div>
-					<div className="row">
-						<button
-							className="btn btn-secondary col-12"
-							onClick={() => {
-								navigate("/livraison");
-								setOpenModalValidatedHandle(false);
-							}}
-						>
-							Voir mes commandes
-						</button>
-					</div>
-				</div>
-			</Modal>
-			{/*Refect modal*/}
-			<Modal
-				show={openModalErrorHandle}
-				title="Commande non validée"
-				onClose={() => setOpenModalErrorHandle(false)}
-			>
-				<div className="container">
-					<div className="row">
-						<h4 className="text-center mb-4 text-primary">
-							<span className="text-danger mr-2">
-								Votre commande n'a pas été validée
-							</span>
-						</h4>
-					</div>
-					<div className="row">
-						<div className="col-6 mx-auto">
-							<button
-								className="btn btn-secondary col-12"
-								onClick={() => setOpenModalErrorHandle(false)}
-							>
-								Réessayer
-							</button>
-						</div>
-					</div>
-				</div>
-			</Modal>
-			{/* Modal de Confirmation */}
-			<OrderConfirmationModal
-				openModalValiderHandle={openModalValiderHandle}
-				setOpenModalValiderHandle={setOpenModalValiderHandle}
-				currentUser={currentUser}
-				selectedPayment={selectedPayment}
-				setSelectedPayment={setSelectedPayment}
-				totalPrice={totalPrice}
-			/>
-			{/*Modal service non disponible*/}
 			<Footer />
 			<ScrollToTop smooth />
 		</div>

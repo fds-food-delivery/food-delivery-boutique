@@ -1,191 +1,188 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-	Navbar,
-	Container,
-	Nav,
-	NavDropdown,
-	Badge,
-	Button,
-} from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {FaCartPlus, FaUser, FaBars, FaTimes, FaBell} from "react-icons/fa";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Badge from "@mui/material/Badge";
+import Button from "@mui/material/Button";
+import Drawer from "@mui/material/Drawer";
+import Menu from "@mui/material/Menu";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PersonIcon from "@mui/icons-material/Person";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { useStore } from "../../store/useStore";
 import Panier from "../../pages/Panier/Panier";
-import "./NavigationBar.css";
-import NotificationList from "../NotificationList/NotificationList.jsx"; // Assurez-vous de créer ce fichier CSS
+
+const NAV_LINKS = [
+	{ label: "Accueil", to: "/home" },
+	{ label: "Menu", to: "/home#menu" },
+	{ label: "Livraison", to: "/livraison" },
+	{ label: "Contact", to: "/contact" },
+];
 
 function NavigationBar() {
+	const { cartItems, userID, notifications, totalNotifications, setTotalNotifications } =
+		useStore();
+	const navigate = useNavigate();
 
-		const [isPanierOpen, setIsPanierOpen] = useState(false);
-		const [showNotifications, setShowNotifications] = useState(false); // État pour afficher les notifications
-		const { cartItems, userID,
-			notifications,
-			totalNotifications, setTotalNotifications } = useStore();
+	const [isCartOpen, setIsCartOpen] = useState(false);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+	const [notifAnchor, setNotifAnchor] = useState(null);
 
+	const scrolled = useScrollTrigger({ disableHysteresis: true, threshold: 4 });
 
-		const [notifications1, setNotifications1] = useState([
-			{ message: "New order received!", date: "2024-08-24" },
-			{ message: "Delivery on the way", date: "2024-08-23" },
-		]);// Liste fictive de notifications
+	const totalItems = cartItems
+		? Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0)
+		: 0;
 
+	useEffect(() => {
+		setTotalNotifications(userID ? notifications.length : 0);
+	}, [userID, notifications]);
 
-		const navigate = useNavigate();
-		const menuRef = useRef(null);
-
-		const [expanded, setExpanded] = useState(false);
-
-
-		const totalItems = cartItems
-			? Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0)
-			: 0;
-
-		const togglePanier = () => {
-			setIsPanierOpen(!isPanierOpen);
-		};
-
-		const toggleNotifications = () => {
-			setShowNotifications(!showNotifications);
-		};
-
-		const handleProfileClick = () => {
-			navigate("/profil");
-		};
-
-		const handleLogout = async () => {
-			await logout();
-		};
-
-		const handleClickOutside = (event) => {
-			if (menuRef.current && !menuRef.current.contains(event.target)) {
-				setExpanded(false);
-				setShowNotifications(false); // Fermez les notifications si vous cliquez en dehors
-				setIsPanierOpen(false); // Fermez le panier si vous cliquez en dehors
-			}
-		};
-
-		useEffect(() => {
-			console.log("Current User: ", userID);
-			if (userID) {
-				setTotalNotifications(notifications.length);
-			}else{
-				setTotalNotifications(0);
-			}
-			document.addEventListener("mousedown", handleClickOutside);
-			return () => {
-				document.removeEventListener("mousedown", handleClickOutside);
-			};
-		}, [userID, notifications]);
-
-		return (
-			<Navbar
-				ref={menuRef}
-				className="custom-navbar pt-3 pb-3 navbar-expand-lg fixed-top navbar-light"
-				expand="md"
-				expanded={expanded}
-				onToggle={() => setExpanded(!expanded)}
+	return (
+		<>
+			<AppBar
+				position="fixed"
+				color="inherit"
+				elevation={scrolled ? 4 : 0}
+				sx={{ borderBottom: scrolled ? "none" : "1px solid rgba(0,0,0,0.08)" }}
 			>
-				<Container>
-					<Navbar.Brand as={Link} to="/">
+				<Toolbar sx={{ py: 1 }}>
+					<Box
+						component={Link}
+						to="/"
+						sx={{ display: "flex", alignItems: "center", textDecoration: "none", mr: 2 }}
+					>
 						<img
 							src="/images/logo.png"
 							alt="Thurquoise Logo"
-							className="d-inline-block align-top logo"
+							style={{ height: 40 }}
 						/>
-					</Navbar.Brand>
+					</Box>
 
-					{!expanded ? (
-						<div className="d-flex align-items-left" style={{ marginLeft: "auto" }}>
-							<Nav.Link
-								as={Link}
-								to="#notifications"
-								className="custom-nav-link-cart-2 custom-nav-link"
-								onClick={toggleNotifications}
+					<Box sx={{ display: { xs: "none", md: "flex" }, gap: 1, flexGrow: 1 }}>
+						{NAV_LINKS.map((link) => (
+							<Button
+								key={link.label}
+								component={Link}
+								to={link.to}
+								color="inherit"
+								sx={{
+									fontWeight: 500,
+									"&:hover": { color: "primary.main" },
+								}}
 							>
-								<div className="custom-nav-link-notifications">
-									<FaBell size={30} className="text-dark" />
-									{totalNotifications > 0 && (
-										<Badge
-											pill bg="danger" className="ml-2"
-											style={{ position: "relative", top: "-10px", left: "-10px" }}
-										>
-											{totalNotifications}
-										</Badge>
-									)}
-								</div>
-							</Nav.Link>
+								{link.label}
+							</Button>
+						))}
+					</Box>
 
-							<Nav.Link
-								as={Link}
-								to="/home"
-								className="custom-nav-link-cart-2 custom-nav-link"
-								onClick={togglePanier}
-								style={{ marginLeft: "auto" }}
-							>
-								<div className="custom-nav-link-notifications">
-									<FaCartPlus size={30} className="text-dark" />
-									<Badge
-										style={{ position: "relative", top: "-10px", left: "-10px" }}
-										pill bg="success" className="ml-2">
-										{totalItems > 0 && totalItems}
-									</Badge>
-								</div>
-							</Nav.Link>
-						</div>
-					) : (
-						<div></div>
-					)}
+					<Box sx={{ flexGrow: { xs: 1, md: 0 } }} />
 
-					<Navbar.Toggle aria-controls="basic-navbar-nav custom-navbar-nav" style={{ backgroundColor: "white" }}>
-						{expanded ? (
-							<FaTimes size={24} style={{ color: "#f86c6b" }} />
-						) : (
-							<FaBars size={24} style={{ color: "#f86c6b" }} />
-						)}
-					</Navbar.Toggle>
+					<IconButton
+						aria-label="Notifications"
+						onClick={(e) => setNotifAnchor(e.currentTarget)}
+					>
+						<Badge badgeContent={totalNotifications} color="error">
+							<NotificationsIcon />
+						</Badge>
+					</IconButton>
 
-					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav className="ms-auto">
-							<Nav.Link as={Link} to="/home" className="custom-nav-link">
-								Accueil
-							</Nav.Link>
-							<Nav.Link as={Link} to="/home#menu" className="custom-nav-link">
-								Menu
-							</Nav.Link>
-							<Nav.Link as={Link} to="/livraison" className="custom-nav-link">
-								Livraison
-							</Nav.Link>
-							<Nav.Link
-								as={Link}
-								to="#notifications"
-								className="custom-nav-link-cart custom-nav-link"
-								onClick={toggleNotifications}
-							>
-								<div className="custom-nav-link-notifications">
-									<FaBell size={30} className="text-dark" />
-									{totalNotifications > 0 && (
-										<Badge
-											pill bg="danger" className="ml-2"
-											style={{ position: "relative", top: "-10px", left: "-10px" }}
-										>
-											{totalNotifications}
-										</Badge>
-									)}
-								</div>
-							</Nav.Link>
-							<Nav.Link as={Link} to="#menu-item" className="custom-nav-link-cart custom-nav-link" onClick={togglePanier}>
-								<div className="custom-nav-link-cart">
-									<FaCartPlus size={30} className="text-dark" />
-									<Badge pill bg="success" className="ml-2">
-										{totalItems > 0 && totalItems}
-									</Badge>
-								</div>
-							</Nav.Link>
-						</Nav>
-					</Navbar.Collapse>
-				</Container>
-				{isPanierOpen && <Panier onClose={togglePanier} />}
-				{showNotifications && <NotificationList notifications={notifications} onClose={() => setShowNotifications(false)} />} {/* Afficher la liste des notifications */}
-			</Navbar>
-		);
-	}
+					<IconButton aria-label="Panier" onClick={() => setIsCartOpen(true)}>
+						<Badge badgeContent={totalItems} color="success">
+							<ShoppingCartIcon />
+						</Badge>
+					</IconButton>
+
+					<IconButton aria-label="Mon profil" onClick={() => navigate("/profil")}>
+						<PersonIcon />
+					</IconButton>
+
+					<IconButton
+						aria-label="Menu"
+						onClick={() => setIsDrawerOpen(true)}
+						sx={{ display: { xs: "flex", md: "none" } }}
+					>
+						<MenuIcon />
+					</IconButton>
+				</Toolbar>
+			</AppBar>
+			{/* Compense la hauteur de l'AppBar en position fixed */}
+			<Toolbar sx={{ py: 1 }} />
+
+			{/* Menu mobile (liens de navigation) */}
+			<Drawer anchor="right" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+				<Box sx={{ width: 260 }} role="presentation">
+					<Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
+						<IconButton onClick={() => setIsDrawerOpen(false)} aria-label="Fermer le menu">
+							<CloseIcon />
+						</IconButton>
+					</Box>
+					<List>
+						{NAV_LINKS.map((link) => (
+							<ListItem key={link.label} disablePadding>
+								<ListItemButton
+									component={Link}
+									to={link.to}
+									onClick={() => setIsDrawerOpen(false)}
+								>
+									<ListItemText primary={link.label} />
+								</ListItemButton>
+							</ListItem>
+						))}
+					</List>
+				</Box>
+			</Drawer>
+
+			{/* Panier (drawer) */}
+			<Drawer anchor="right" open={isCartOpen} onClose={() => setIsCartOpen(false)}>
+				<Box sx={{ width: { xs: 320, sm: 380 } }} role="presentation">
+					<Panier onClose={() => setIsCartOpen(false)} />
+				</Box>
+			</Drawer>
+
+			{/* Notifications (menu) */}
+			<Menu
+				anchorEl={notifAnchor}
+				open={Boolean(notifAnchor)}
+				onClose={() => setNotifAnchor(null)}
+				PaperProps={{ sx: { width: 320, maxHeight: 400 } }}
+			>
+				{notifications.length === 0 ? (
+					<Box sx={{ p: 2 }}>
+						<Typography variant="body2" color="text.secondary">
+							Aucune notification pour le moment.
+						</Typography>
+					</Box>
+				) : (
+					notifications.map((notif, index) => (
+						<Box key={notif._id || index}>
+							<Box sx={{ px: 2, py: 1.5 }}>
+								<Typography variant="body2">{notif.message}</Typography>
+								{notif.date && (
+									<Typography variant="caption" color="text.secondary">
+										{new Date(notif.date).toLocaleString()}
+									</Typography>
+								)}
+							</Box>
+							{index < notifications.length - 1 && <Divider />}
+						</Box>
+					))
+				)}
+			</Menu>
+		</>
+	);
+}
+
 export default NavigationBar;

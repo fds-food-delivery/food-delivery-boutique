@@ -6,7 +6,6 @@ import { useCartStore } from "./useCartStore";
 import { useUserStore } from "./useUserStore";
 import { useNotificationStore } from "./useNotificationStore";
 import { useOrderStore } from "./useOrderStore";
-import { useUIStore } from "./useUIStore";
 
 export const initStore = async () => {
   const userID = localStorage.getItem("userID");
@@ -22,6 +21,9 @@ export const initStore = async () => {
   } catch {
     // pas de commande / pas d'utilisateur connu, comportement inchangé
   }
+  if (userID) {
+    await useNotificationStore.getState().fetchNotifications();
+  }
 };
 
 /**
@@ -36,7 +38,6 @@ export const useStore = () => {
   const userState = useUserStore();
   const notificationState = useNotificationStore();
   const orderState = useOrderStore();
-  const uiState = useUIStore();
 
   return {
     url: API_BASE_URL,
@@ -49,7 +50,6 @@ export const useStore = () => {
     ...userState,
     ...notificationState,
     ...orderState,
-    ...uiState,
 
     getOrders: orderState.getOrdersByCurrentUser,
   };

@@ -1,133 +1,314 @@
-import React from "react";
-import "./Panier.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import TextField from "@mui/material/TextField";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import CircularProgress from "@mui/material/CircularProgress";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+
 import { useStore } from "../../store/useStore";
-import { assets } from "../../assets/assets";
 import { resolveImageUrl } from "../../utils/resolveImageUrl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faClose, faTrash} from "@fortawesome/free-solid-svg-icons";
-import CommandeForm from "../../components/CommandeForm/CommandeForm";
-import {FaIcons} from "react-icons/fa";
+
+const PAYMENT_METHODS = [{ id: "delivery", label: "À la livraison" }];
+
+const ensureImageExtension = (imageName) => {
+	if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
+		return imageName;
+	}
+	return `${imageName}.png`;
+};
 
 const Panier = ({ onClose }) => {
-    const {
-        cartItems,
-        foodList,
-        addToCart,
-        removeFromCart,
-        deleteFromCart,
-        currentUser,
-        url
+	const {
+		cartItems,
+		foodList,
+		addToCart,
+		removeFromCart,
+		deleteFromCart,
+		url,
+		placeOrder,
+	} = useStore();
+	const navigate = useNavigate();
 
-    } = useStore();
+	const [step, setStep] = useState("cart"); // cart | form | success | error
+	const [submitting, setSubmitting] = useState(false);
+	const [formData, setFormData] = useState({ fullName: "", phone: "", address: "" });
+	const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0].id);
+	const [errors, setErrors] = useState({});
+	const [confirmedOrder, setConfirmedOrder] = useState(null);
 
-    const cartContent = Object.keys(cartItems).map((id) => {
-        const ensureImageExtension = (imageName) => {
-            if (imageName.endsWith(".png") || imageName.endsWith(".jpg")) {
-                return imageName;
-            } else {
-                return `${imageName}.png`;
-            }
-        };
+	const cartEntries = Object.keys(cartItems)
+		.map((id) => {
+			const item = foodList.find((food) => food._id === id);
+			return item ? { ...item, quantity: cartItems[id] } : null;
+		})
+		.filter(Boolean);
 
+	const total = cartEntries.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-        const item = foodList.find((food) => food._id === id);
-        const correctedImageName = item.image ? ensureImageExtension(item.image) : "";
+	const handleClose = () => {
+		setStep("cart");
+		setConfirmedOrder(null);
+		onClose?.();
+	};
 
-        return (
-            <div key={id} className="panier-item">
-                {/*<img src={item.image} alt={item.name} className="panier-item-image" />*/}
-                <img
-                    src={
-                        resolveImageUrl(correctedImageName, `${url}/api/v1/foods/image`) ||
-                        "https://placehold.co/300"
-                    }
-                    alt={item.name}
-                    className="panier-item-image"
-                    onError={(e) => {
-                        e.target.src = "https://placehold.co/300";
-                    }} // Fallback si l'image échoue à se charger
-                />
-                <div className="panier-item-details">
-                    <div className="panier-item-name">
-                        <p>{item.name}</p>
-                        <p
-                            style={{
-                                color: "black",
-                                fontWeight: "bold",
-                                fontSize: "1.2em",
-                            }}>
-                            {item.price}
-                        </p>
-                    </div>
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
 
-                    <div className="panier-item-quantite">
-                        <img
-                            width={20}
-                            onClick={() => removeFromCart(id)}
-                            src={assets.remove_icon_red}
-                            alt="Remove"
-                        />
-                        <p
-                            style={{
-                                margin: "0 10px",
-                                fontSize: "1.5em",
-                            }}>
-                            {cartItems[id]}
-                        </p>
-                        <img
-                            width={20}
-                            onClick={() => {
-                                addToCart(id);
+	const validateForm = () => {
+		const newErrors = {};
+		if (!formData.fullName.trim()) newErrors.fullName = "Nom complet requis";
+		if (!/^\d{9}$/.test(formData.phone)) {
+			newErrors.phone = "Numéro à 9 chiffres requis";
+		}
+		if (!formData.address.trim()) newErrors.address = "Adresse requise";
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
 
-                            }} // Ensure you have defined addToCart function in your context or props
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmHJoeQvmM7xSqWy8PgOPqO6pP7wpQKByPkg&s" // Replace with the actual image path
-                            alt="Add"
-                        />
-                        <span
-                            style={{
-                                cursor: "pointer",
-                                color: "black",
-                                marginLeft: "auto",
-                            }}
-                            onClick={() => deleteFromCart(id)}>
-							<FontAwesomeIcon icon={faTrash}/>
-						</span>
-                    </div>
-                </div>
-            </div>
-        );
-    });
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (!validateForm()) return;
 
-    return (
-        <div className="panier">
-            <div className="panier-header">
-                <h4>Ma Commande</h4>
-                <button onClick={onClose} style={
-                    {
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'red',
-                        fontSize: '20px',
-                    }
-                }>
-                {/*    x iconferme  react icon fa*/}
-                    <FontAwesomeIcon icon={faClose}/>
-                </button>
-            </div>
-            <div className="panier-content">
-                {cartContent.length > 0 ? cartContent : <p>Votre panier est vide</p>}
-            </div>
-            {/* Total quantite , prix */}
-            {cartContent.length > 0 && (
-                <div className="panier-footer">
-                    <div>
-                        <CommandeForm />
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+		setSubmitting(true);
+		const result = await placeOrder({
+			fullName: formData.fullName,
+			phone: formData.phone,
+			address: formData.address,
+			paymentMethod,
+		});
+		setSubmitting(false);
+		setConfirmedOrder(result.success ? result.order : null);
+		setStep(result.success ? "success" : "error");
+	};
+
+	const renderCartStep = () => (
+		<>
+			<Stack sx={{ flexGrow: 1, overflowY: "auto", px: 2 }}>
+				{cartEntries.length === 0 ? (
+					<Stack alignItems="center" spacing={1} sx={{ py: 6 }}>
+						<ShoppingCartOutlinedIcon sx={{ fontSize: 48, color: "text.disabled" }} />
+						<Typography color="text.secondary">Votre panier est vide</Typography>
+					</Stack>
+				) : (
+					cartEntries.map((item) => {
+						const image = item.image
+							? resolveImageUrl(ensureImageExtension(item.image), `${url}/api/v1/foods/image`)
+							: null;
+						return (
+							<Stack key={item._id} direction="row" spacing={1.5} alignItems="center" sx={{ py: 1.5 }}>
+								<Box
+									component="img"
+									src={image || "https://placehold.co/80"}
+									onError={(e) => {
+										e.target.src = "https://placehold.co/80";
+									}}
+									alt={item.name}
+									sx={{ width: 56, height: 56, borderRadius: 2, objectFit: "cover" }}
+								/>
+								<Box sx={{ flexGrow: 1, minWidth: 0 }}>
+									<Typography noWrap fontWeight={500}>
+										{item.name}
+									</Typography>
+									<Typography variant="body2" color="text.secondary">
+										{item.price} FCFA
+									</Typography>
+								</Box>
+								<Stack direction="row" alignItems="center" spacing={0.5}>
+									<IconButton size="small" onClick={() => removeFromCart(item._id)} aria-label="Retirer un article">
+										<RemoveIcon fontSize="small" />
+									</IconButton>
+									<Typography sx={{ minWidth: 16, textAlign: "center" }}>{item.quantity}</Typography>
+									<IconButton size="small" onClick={() => addToCart(item._id)} aria-label="Ajouter un article">
+										<AddIcon fontSize="small" />
+									</IconButton>
+								</Stack>
+								<IconButton
+									size="small"
+									color="error"
+									onClick={() => deleteFromCart(item._id)}
+									aria-label="Supprimer du panier"
+								>
+									<DeleteOutlineIcon fontSize="small" />
+								</IconButton>
+							</Stack>
+						);
+					})
+				)}
+			</Stack>
+
+			{cartEntries.length > 0 && (
+				<Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
+					<Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+						<Typography fontWeight={600}>Total</Typography>
+						<Typography fontWeight={600} color="primary">
+							{total} FCFA
+						</Typography>
+					</Stack>
+					<Button fullWidth variant="contained" size="large" onClick={() => setStep("form")}>
+						Commander
+					</Button>
+				</Box>
+			)}
+		</>
+	);
+
+	const renderFormStep = () => (
+		<Box component="form" onSubmit={handleSubmit} sx={{ px: 2, py: 1, flexGrow: 1, overflowY: "auto" }}>
+			<Stack spacing={2} sx={{ mt: 1 }}>
+				<TextField
+					label="Nom complet"
+					name="fullName"
+					value={formData.fullName}
+					onChange={handleChange}
+					error={Boolean(errors.fullName)}
+					helperText={errors.fullName}
+					InputProps={{ startAdornment: <PersonOutlineIcon sx={{ mr: 1, color: "text.disabled" }} /> }}
+					fullWidth
+				/>
+				<TextField
+					label="Téléphone"
+					name="phone"
+					value={formData.phone}
+					onChange={handleChange}
+					error={Boolean(errors.phone)}
+					helperText={errors.phone}
+					InputProps={{ startAdornment: <PhoneOutlinedIcon sx={{ mr: 1, color: "text.disabled" }} /> }}
+					fullWidth
+				/>
+				<TextField
+					label="Adresse de livraison"
+					name="address"
+					value={formData.address}
+					onChange={handleChange}
+					error={Boolean(errors.address)}
+					helperText={errors.address}
+					InputProps={{ startAdornment: <HomeOutlinedIcon sx={{ mr: 1, color: "text.disabled" }} /> }}
+					fullWidth
+					multiline
+					minRows={2}
+				/>
+
+				<Box>
+					<Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+						Mode de paiement
+					</Typography>
+					<RadioGroup value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+						{PAYMENT_METHODS.map((method) => (
+							<FormControlLabel key={method.id} value={method.id} control={<Radio />} label={method.label} />
+						))}
+					</RadioGroup>
+				</Box>
+			</Stack>
+
+			<Box sx={{ mt: 3, pt: 2, borderTop: "1px solid", borderColor: "divider" }}>
+				<Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+					<Typography fontWeight={600}>Total à payer</Typography>
+					<Typography fontWeight={600} color="primary">
+						{total} FCFA
+					</Typography>
+				</Stack>
+				<Button type="submit" fullWidth variant="contained" size="large" disabled={submitting}>
+					{submitting ? <CircularProgress size={22} color="inherit" /> : "Confirmer la commande"}
+				</Button>
+			</Box>
+		</Box>
+	);
+
+	const renderStatusStep = (isSuccess) => (
+		<Stack alignItems="center" spacing={2} sx={{ flexGrow: 1, justifyContent: "center", p: 3, textAlign: "center" }}>
+			{isSuccess ? (
+				<CheckCircleOutlineIcon color="success" sx={{ fontSize: 64 }} />
+			) : (
+				<ErrorOutlineIcon color="error" sx={{ fontSize: 64 }} />
+			)}
+			<Typography variant="h6">
+				{isSuccess ? "Commande validée !" : "La commande n'a pas pu être validée"}
+			</Typography>
+			<Typography color="text.secondary">
+				{isSuccess
+					? "Nous préparons votre commande, vous pouvez suivre son statut dans Livraison."
+					: "Vérifiez votre connexion et réessayez."}
+			</Typography>
+			{isSuccess && confirmedOrder && (
+				<Stack spacing={0.5} sx={{ bgcolor: "action.hover", borderRadius: 2, p: 1.5, minWidth: 220 }}>
+					<Typography variant="body2" color="text.secondary">
+						Commande n° {confirmedOrder._id?.slice(-6).toUpperCase()}
+					</Typography>
+					<Typography variant="body2" fontWeight={600}>
+						{confirmedOrder.amount} FCFA — {confirmedOrder.status}
+					</Typography>
+				</Stack>
+			)}
+			<Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
+				{isSuccess ? (
+					<Button
+						variant="contained"
+						onClick={() => {
+							handleClose();
+							navigate("/livraison");
+						}}
+					>
+						Voir mes commandes
+					</Button>
+				) : (
+					<Button variant="contained" onClick={() => setStep("form")}>
+						Réessayer
+					</Button>
+				)}
+				<Button variant="outlined" onClick={handleClose}>
+					Fermer
+				</Button>
+			</Stack>
+		</Stack>
+	);
+
+	const showBack = step === "form";
+	const title = { cart: "Mon panier", form: "Livraison", success: "", error: "" }[step];
+
+	return (
+		<Box sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 400 }}>
+			{(step === "cart" || step === "form") && (
+				<Stack direction="row" alignItems="center" sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+					{showBack && (
+						<IconButton onClick={() => setStep("cart")} aria-label="Retour" sx={{ mr: 1 }}>
+							<ArrowBackIcon />
+						</IconButton>
+					)}
+					<Typography variant="h6" sx={{ flexGrow: 1 }}>
+						{title}
+					</Typography>
+					<IconButton onClick={handleClose} aria-label="Fermer">
+						<CloseIcon />
+					</IconButton>
+				</Stack>
+			)}
+
+			{step === "cart" && renderCartStep()}
+			{step === "form" && renderFormStep()}
+			{step === "success" && renderStatusStep(true)}
+			{step === "error" && renderStatusStep(false)}
+		</Box>
+	);
 };
 
 export default Panier;

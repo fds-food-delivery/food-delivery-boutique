@@ -40,6 +40,18 @@ export const useUserStore = create<{
       }
     } catch (error) {
       console.error("Error creating account:", error);
+      if (import.meta.env.DEV) {
+        console.warn("[mock] compte: API injoignable, utilisation d'un compte factice");
+        const mockUser = {
+          _id: `mock-user-${phone || Date.now()}`,
+          username: phone,
+          fullName,
+          phone,
+          address,
+        };
+        localStorage.setItem("userID", mockUser._id);
+        return { user: mockUser };
+      }
       throw error;
     }
   },
