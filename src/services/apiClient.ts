@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "https://dhbq8hhxw5d7.cloudfront.net";
+  import.meta.env.VITE_API_URL || "https://backend-food-ordering.onrender.com";
 
 export const S3_BASE_URL =
   import.meta.env.VITE_S3_URL ||
