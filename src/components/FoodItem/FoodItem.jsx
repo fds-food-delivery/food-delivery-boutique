@@ -40,7 +40,7 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 				},
 			}}
 		>
-			<Box sx={{ position: "relative", pt: "75%" }}>
+			<Box sx={{ position: "relative", pt: "78%" }}>
 				{!imageLoaded && (
 					<Skeleton
 						variant="rectangular"
@@ -76,49 +76,52 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 						onClick={() => addToCart(id)}
 						sx={{
 							position: "absolute",
-							bottom: 12,
-							right: 12,
+							bottom: 14,
+							right: 14,
+							p: 1.5,
 							bgcolor: "background.paper",
 							boxShadow: 2,
 							"&:hover": { bgcolor: "background.paper" },
 						}}
 					>
-						<AddShoppingCartIcon fontSize="small" />
+						<AddShoppingCartIcon />
 					</IconButton>
 				) : (
 					<Stack
 						direction="row"
 						alignItems="center"
-						spacing={0.5}
+						spacing={0.75}
 						sx={{
 							position: "absolute",
-							bottom: 12,
-							right: 12,
+							bottom: 14,
+							right: 14,
 							bgcolor: "background.paper",
 							borderRadius: 5,
 							boxShadow: 2,
-							px: 0.5,
-							py: 0.25,
+							px: 0.75,
+							py: 0.5,
 						}}
 					>
 						<IconButton
-							size="small"
 							color="primary"
 							aria-label="Retirer un article"
 							onClick={() => removeFromCart(id)}
 						>
-							<RemoveIcon fontSize="small" />
+							<RemoveIcon />
 						</IconButton>
-						<Typography variant="body2" sx={{ minWidth: 16, textAlign: "center" }}>
+						<Typography
+							variant="subtitle1"
+							fontWeight={600}
+							sx={{ minWidth: 24, textAlign: "center" }}
+						>
 							{quantity}
 						</Typography>
 						<IconButton
-							size="small"
 							color="primary"
 							aria-label="Ajouter un article"
 							onClick={() => addToCart(id)}
 						>
-							<AddIcon fontSize="small" />
+							<AddIcon />
 						</IconButton>
 					</Stack>
 				)}
@@ -130,15 +133,16 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 					display: "flex",
 					flexDirection: "column",
 					textAlign: "center",
-					p: { xs: 2, sm: 2.5 },
+					p: { xs: 2.5, sm: 3 },
 				}}
 			>
 				<Typography
-					variant="h6"
+					variant="h5"
 					component="h3"
 					sx={{
 						fontWeight: 700,
 						lineHeight: 1.3,
+						fontSize: { xs: "1.2rem", sm: "1.35rem" },
 						display: "-webkit-box",
 						WebkitLineClamp: 2,
 						WebkitBoxOrient: "vertical",
@@ -155,28 +159,26 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 						justifyContent="center"
 						flexWrap="wrap"
 						useFlexGap
-						sx={{ my: 1 }}
+						sx={{ my: 1.5 }}
 					>
-						<Chip label={category} size="small" color="primary" variant="outlined" />
-						{sousCategory && (
-							<Chip label={sousCategory} size="small" variant="outlined" />
-						)}
+						<Chip label={category} color="primary" variant="outlined" />
+						{sousCategory && <Chip label={sousCategory} variant="outlined" />}
 					</Stack>
 				)}
 
 				<Typography
-					variant="body2"
+					variant="body1"
 					color="text.secondary"
-					sx={{ lineHeight: 1.6, mb: 2 }}
+					sx={{ lineHeight: 1.7, fontSize: { xs: "0.95rem", sm: "1rem" }, mb: 2.5 }}
 				>
 					{description}
 				</Typography>
 
 				<Typography
-					variant="subtitle1"
+					variant="h6"
 					color="primary"
 					fontWeight="bold"
-					sx={{ mt: "auto", pt: 1 }}
+					sx={{ mt: "auto", pt: 1, fontSize: { xs: "1.25rem", sm: "1.4rem" } }}
 				>
 					{price} FCFA
 				</Typography>

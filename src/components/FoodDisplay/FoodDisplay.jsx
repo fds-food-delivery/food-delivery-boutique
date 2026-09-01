@@ -16,7 +16,7 @@ const FoodGrid = ({ items }) => (
 	<Box
 		sx={{
 			display: "grid",
-			gap: { xs: 2, sm: 2.5, md: 3 },
+			gap: { xs: 2.5, sm: 3, md: 3.5 },
 			mb: 4,
 			gridTemplateColumns: {
 				xs: "1fr",
