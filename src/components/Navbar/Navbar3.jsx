@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "../Logo/Logo";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -67,11 +68,7 @@ function NavigationBar() {
 							to="/"
 							sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
 						>
-							<img
-								src="/images/logo.png"
-								alt="Thurquoise Logo"
-								style={{ height: 40, display: "block" }}
-							/>
+							<Logo height={40} />
 						</Box>
 
 						<Stack

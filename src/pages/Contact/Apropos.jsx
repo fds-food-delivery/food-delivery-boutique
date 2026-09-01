@@ -13,7 +13,7 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 const CONTACT_INFO = [
 	{ icon: LocationOnOutlinedIcon, label: "Adresse", value: "Dakar, Sénégal" },
 	{ icon: PhoneOutlinedIcon, label: "Téléphone", value: "+221 33 123 45 67" },
-	{ icon: EmailOutlinedIcon, label: "Email", value: "contact@thurquoise.sn" },
+	{ icon: EmailOutlinedIcon, label: "Email", value: "contact@food-delivery.com" },
 	{ icon: AccessTimeOutlinedIcon, label: "Horaires", value: "Tous les jours, 10h – 23h" },
 ];
 
@@ -21,12 +21,12 @@ const APropos = () => {
 	return (
 		<Container maxWidth="md" sx={{ mt: { xs: 10, md: 12 }, mb: 6 }}>
 			<Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 3 }}>
-				À propos de Thurquoise
+				À propos de Food Delivery
 			</Typography>
 
 			<Stack spacing={2} sx={{ mb: 5 }}>
 				<Typography color="text.secondary">
-					Chez Thurquoise, nous croyons en la puissance d'un bon repas pour
+					Chez Food Delivery, nous croyons en la puissance d'un bon repas pour
 					rapprocher les gens. Notre mission est de proposer des plats
 					délicieux, préparés rapidement et à un prix juste.
 				</Typography>

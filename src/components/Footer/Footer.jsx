@@ -21,7 +21,7 @@ const Footer = () => {
 				<Grid container spacing={4}>
 					<Grid item xs={12} md={4}>
 						<Typography variant="h6" gutterBottom>
-							Thurquoise
+							Food Delivery
 						</Typography>
 						<Typography variant="body2" color="grey.400">
 							Des plats délicieux, préparés rapidement et livrés chez vous.
@@ -54,12 +54,12 @@ const Footer = () => {
 							<br />
 							+221 33 123 45 67
 							<br />
-							contact@thurquoise.sn
+							contact@food-delivery.com
 						</Typography>
 					</Grid>
 				</Grid>
 				<Typography variant="body2" color="grey.500" textAlign="center" sx={{ mt: 4 }}>
-					© {new Date().getFullYear()} Thurquoise — Tous droits réservés.
+					© {new Date().getFullYear()} Food Delivery — Tous droits réservés.
 				</Typography>
 			</Container>
 		</Box>
