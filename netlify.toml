@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Fallback SPA : toute route inconnue est servie par index.html
+# (sinon un refresh sur /panier, /livraison, /profil… renvoie un 404)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
