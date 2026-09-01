@@ -29,9 +29,7 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 			elevation={2}
 			sx={{
 				width: "100%",
-				maxWidth: 300,
-				mx: "auto",
-				my: 1.25,
+				height: "100%",
 				borderRadius: 3,
 				display: "flex",
 				flexDirection: "column",
@@ -126,13 +124,39 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 				)}
 			</Box>
 
-			<CardContent sx={{ flexGrow: 1, textAlign: "center" }}>
-				<Typography variant="h6" component="h3" noWrap>
+			<CardContent
+				sx={{
+					flexGrow: 1,
+					display: "flex",
+					flexDirection: "column",
+					textAlign: "center",
+					p: { xs: 2, sm: 2.5 },
+				}}
+			>
+				<Typography
+					variant="h6"
+					component="h3"
+					sx={{
+						fontWeight: 700,
+						lineHeight: 1.3,
+						display: "-webkit-box",
+						WebkitLineClamp: 2,
+						WebkitBoxOrient: "vertical",
+						overflow: "hidden",
+					}}
+				>
 					{name}
 				</Typography>
 
 				{category && (
-					<Stack direction="row" spacing={0.5} justifyContent="center" sx={{ my: 0.75 }}>
+					<Stack
+						direction="row"
+						spacing={0.5}
+						justifyContent="center"
+						flexWrap="wrap"
+						useFlexGap
+						sx={{ my: 1 }}
+					>
 						<Chip label={category} size="small" color="primary" variant="outlined" />
 						{sousCategory && (
 							<Chip label={sousCategory} size="small" variant="outlined" />
@@ -143,17 +167,17 @@ const FoodItem = ({ id, name, price, description, category, sousCategory, image 
 				<Typography
 					variant="body2"
 					color="text.secondary"
-					sx={{
-						display: "-webkit-box",
-						WebkitLineClamp: 2,
-						WebkitBoxOrient: "vertical",
-						overflow: "hidden",
-					}}
+					sx={{ lineHeight: 1.6, mb: 2 }}
 				>
 					{description}
 				</Typography>
 
-				<Typography variant="subtitle1" color="primary" fontWeight="bold" sx={{ mt: 1 }}>
+				<Typography
+					variant="subtitle1"
+					color="primary"
+					fontWeight="bold"
+					sx={{ mt: "auto", pt: 1 }}
+				>
 					{price} FCFA
 				</Typography>
 			</CardContent>

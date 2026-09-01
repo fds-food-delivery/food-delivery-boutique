@@ -1,28 +1,43 @@
 import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import { useStore } from "../../store/useStore";
 import FoodItem from "../FoodItem/FoodItem";
 
+// Grille responsive :
+//  - mobile (xs)        -> 1 carte / ligne
+//  - tablette (sm/md)   -> 2 cartes / ligne (largeur mini pour laisser respirer la description)
+//  - desktop (lg+)      -> 3 cartes / ligne max
+// `minmax(0, 1fr)` évite les débordements de texte, `alignItems: stretch`
+// (défaut) donne des hauteurs de cartes égales par rangée.
 const FoodGrid = ({ items }) => (
-	<Grid container spacing={2} sx={{ mb: 4 }}>
+	<Box
+		sx={{
+			display: "grid",
+			gap: { xs: 2, sm: 2.5, md: 3 },
+			mb: 4,
+			gridTemplateColumns: {
+				xs: "1fr",
+				sm: "repeat(2, minmax(0, 1fr))",
+				lg: "repeat(3, minmax(0, 1fr))",
+			},
+		}}
+	>
 		{items.map((item) => (
-			<Grid key={item._id} item xs={12} sm={6} md={4} lg={3}>
-				<FoodItem
-					id={item._id}
-					name={item.name}
-					description={item.description}
-					category={item.category}
-					sousCategory={item.sousCategory}
-					price={item.price}
-					image={item.image}
-				/>
-			</Grid>
+			<FoodItem
+				key={item._id}
+				id={item._id}
+				name={item.name}
+				description={item.description}
+				category={item.category}
+				sousCategory={item.sousCategory}
+				price={item.price}
+				image={item.image}
+			/>
 		))}
-	</Grid>
+	</Box>
 );
 
 const FoodDisplay = ({ category }) => {
