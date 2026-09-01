@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { notificationService } from "../services/notificationService";
 import { useLoadingStore } from "./useLoadingStore";
 import { mockNotifications } from "../mocks/notifications";
 
+// Pas de backend actif — données factices uniquement, dev comme prod.
 export const useNotificationStore = create<{
   notifications: any[];
   totalNotifications: number;
@@ -15,22 +15,10 @@ export const useNotificationStore = create<{
 
   fetchNotifications: async () => {
     useLoadingStore.getState().setLoading(true);
-    try {
-      const userID = localStorage.getItem("userID");
-      if (userID) {
-        const response = await notificationService.getNotifications(userID);
-        if (response.status === 200 || response.status === 201) {
-          set({ notifications: response.data });
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      if (import.meta.env.DEV) {
-        console.warn("[mock] notifications: API injoignable, utilisation des données factices");
-        set({ notifications: mockNotifications });
-      }
-    } finally {
-      useLoadingStore.getState().setLoading(false);
+    const userID = localStorage.getItem("userID");
+    if (userID) {
+      set({ notifications: mockNotifications });
     }
+    useLoadingStore.getState().setLoading(false);
   },
 }));

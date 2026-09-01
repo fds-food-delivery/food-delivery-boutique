@@ -18,11 +18,9 @@ import { resolveImageUrl } from "../../utils/resolveImageUrl";
 const FALLBACK_IMAGE = "https://placehold.co/300";
 
 const FoodItem = ({ id, name, price, description, category, sousCategory, image }) => {
-	const { cartItems, addToCart, removeFromCart, urlS3 } = useStore();
+	const { cartItems, addToCart, removeFromCart } = useStore();
 	const [imageLoaded, setImageLoaded] = useState(false);
-	const [imageSrc, setImageSrc] = useState(
-		resolveImageUrl(image, urlS3) || FALLBACK_IMAGE
-	);
+	const [imageSrc, setImageSrc] = useState(resolveImageUrl(image) || FALLBACK_IMAGE);
 
 	const quantity = cartItems[id] || 0;
 

@@ -1,4 +1,3 @@
-import { S3_BASE_URL, API_BASE_URL } from "../services/apiClient";
 import { useLoadingStore } from "./useLoadingStore";
 import { useFoodStore } from "./useFoodStore";
 import { useCategoryStore } from "./useCategoryStore";
@@ -48,9 +47,6 @@ export const useStore = () => {
   const orderState = useOrderStore();
 
   return {
-    url: API_BASE_URL,
-    urlS3: S3_BASE_URL,
-
     ...loadingState,
     ...foodState,
     ...categoryState,
