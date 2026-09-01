@@ -69,9 +69,9 @@ function NavigationBar() {
 						>
 							<Box
 								component="img"
-								src="/images/logo-2.png"
+								src="/images/logo-3.png"
 								alt="Food Delivery"
-								sx={{ height: { xs: 44, sm: 52 }, display: "block" }}
+								sx={{ height: { xs: 40, sm: 46 }, display: "block" }}
 							/>
 						</Box>
 
