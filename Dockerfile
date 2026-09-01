@@ -1,20 +1,16 @@
-# Définir l'image de base
-FROM node:14
+# ---- Frontend client (Vite + MUI) — build de production ----
 
-# Définir le répertoire de travail dans le conteneur
+# Étape 1 : build des assets statiques
+FROM node:20-alpine AS build
 WORKDIR /app
-
-# Copier package.json et package-lock.json dans le répertoire de travail
 COPY package*.json ./
-
-# Installer les dépendances
-RUN npm install
-
-# Copier le reste des fichiers de l'application dans le répertoire de travail
+RUN npm ci
 COPY . .
+RUN npm run build
 
-# Exposer le port sur lequel l'application s'exécute
-EXPOSE 3000
-
-# Définir la commande pour démarrer l'application
-CMD [ "npm", "start" ]
+# Étape 2 : service des fichiers statiques via nginx
+FROM nginx:1.27-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
